@@ -1,0 +1,52 @@
+<div class="inner-content">
+    <div style="margin: 20px 0;display: flex;justify-content: flex-end;">
+        <button nz-button [nzType]="'primary'" [nzSize]="sizeButton" (click)="showModalCreate()"><span>Create Hosting</span></button>
+    </div>
+    <nz-table #nzTable [nzData]="listHosting" nzTableLayout="fixed" >
+        <thead>
+          <tr>
+            <th class="text-center" style="width: 80px;">STT</th>
+            <th class="text-center">IP Address</th>
+            <th class="text-center">IP Address F5</th>
+            <th>Hostname</th>
+            <th>Thông tin</th>
+            <th class="text-center">Loại Vlan</th>
+            <th class="text-center" style="width: 120px;">Options</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of nzTable.data; let i = index">
+            <td class="text-center">{{ i + 1}}</td>
+            <td class="text-center"  (click)="showModalInfor(data)"><a>{{ data.ipaddress }}</a></td>
+            <td class="text-center">{{ data.ipaddressf5 }}</td>
+            <td>{{ data.hostname }}</td>
+            <td>{{ data.information }}</td>
+            <td class="text-center">{{ data.vlantype }}</td>
+            <td class="text-center">
+              <button nz-button nz-dropdown [nzDropdownMenu]="menu4" style="border-radius: 50%;">
+                
+                <i nz-icon nzType="ellipsis" nzTheme="outline"></i>
+              </button>
+              <nz-dropdown-menu #menu4="nzDropdownMenu">
+                <ul nz-menu>
+                  <li nz-menu-item (click)="showModalInfor(data)">
+                    <span style="margin-right: 12px;"><i nz-icon nzType="info" nzTheme="outline"></i></span>
+                    Thông tin Hosting
+                  </li>
+                  <li nz-menu-item>
+                    <span style="margin-right: 12px;"><i nz-icon nzType="edit" nzTheme="outline"></i></span>
+                    Chỉnh sửa Hosting
+                  </li>
+                  <li nz-menu-item (click)="showConfirmDelete(data.id)">
+                    <span style="margin-right: 12px;"><i nz-icon nzType="rest" nzTheme="outline"></i></span>
+                    Xóa Hosting
+                  </li>
+                </ul>
+              </nz-dropdown-menu>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+</div>
+<app-dashboard-modal-infor [(checkVisibleInfor)]=checkVisibleInfor [nameHosting]="nameHosting"  [dataHosting]=dataHosting></app-dashboard-modal-infor>
+<app-dashboard-modal-create [(checkVisibleCreate)]=checkVisibleCreate (checkVisibleCreateChange) = "showNotification($event)"></app-dashboard-modal-create>

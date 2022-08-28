@@ -1,0 +1,68 @@
+<nz-modal [(nzVisible)]="checkVisibleInfor" [nzTitle]="nameHosting" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <ng-container *nzModalContent>
+      <p style="margin-bottom: 1.25rem;">{{dataHosting.vlantypeinfor}} <span class="fw-bold">({{dataHosting.vlantype}})</span></p>
+      <div>
+        <nz-table #nzTable [nzData]="['']" nzTableLayout="fixed" [nzShowPagination]="false" [nzScroll]="{ y: '350px' }">
+          <tbody>
+            <tr>
+                <td class="fw-bold">IP Address</td>
+                <td>{{dataHosting.ipaddress}}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold">IP Address F5</td>
+                <td>{{dataHosting.ipaddressF5}}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold">Hostname</td>
+                <td>{{dataHosting.hostname}}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold">Priority</td>
+                <td>{{dataHosting.priority}}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold">ENV</td>
+                <td>{{dataHosting.env}}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold">TYPE</td>
+                <td>{{dataHosting.type}}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold">Middleware</td>
+                <td>{{dataHosting.middleware}}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold">Information</td>
+                <td>{{dataHosting.information}}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold">MachineType</td>
+                <td>{{dataHosting.machineType}}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold">OS</td>
+                <td>{{dataHosting.os}}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold">Note</td>
+                <td>{{dataHosting.note}}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold">NA</td>
+                <td>{{dataHosting.na}}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold">Loại Vlan</td>
+                <td>{{dataHosting.vlantype}}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold">Thông tin loại Vlan</td>
+                <td>{{dataHosting.vlantypeinfor}}</td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </div>
+    </ng-container>
+    <ng-container *nzModalFooter></ng-container>
+</nz-modal>

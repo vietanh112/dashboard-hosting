@@ -2,12 +2,13 @@ import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 import {environment} from "../environments/environment";
 import {CoreComponentLayout} from "../app/_core/components/layout/layout.component";
+import {CustomPreloadingStrategy} from './custom-preloading';
 
 
 const routes: Routes = [
     {
         path: '',
-        redirectTo: '/dashboard/list',
+        redirectTo: '/dashboard/list/uat',
         pathMatch: 'full'
     },
     //auth
@@ -32,11 +33,18 @@ const routes: Routes = [
     /**
      * Page 404
      */
+
+     { path: '**', redirectTo: '/dashboard/list/uat' }
     
 ];
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes, {
+        onSameUrlNavigation: 'reload',
+        preloadingStrategy: CustomPreloadingStrategy,
+        relativeLinkResolution: 'legacy'
+    })],
+    exports: [RouterModule],
+    providers: [CustomPreloadingStrategy]
   })
 
 export class AppRoutingModule {

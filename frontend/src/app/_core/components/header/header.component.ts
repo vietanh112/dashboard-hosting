@@ -17,4 +17,7 @@ export class CoreComponentHeader implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         
     }
+    constructor(public router: Router){
+
+    }
 }

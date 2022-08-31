@@ -10,7 +10,13 @@ import {DashboardListHosting} from './components/list/list.component';
 //Modal
 import {DashboardModalInfor} from './components/modal/infor/infor.component';
 import {DashboardModalCreate} from './components/modal/create/create.component';
-
+import {DashboardModalUpdate} from './components/modal/update/update.component';
+import {DashboardListVlan} from './components/list/vlan/list.component';
+import {DashboardModalUpdateVlan} from './components/modal/update-vlan/update.component';
+import {DashboardModalCreateVlan} from './components/modal/create-vlan/create.component';
+import {DashboardListServer} from './components/list/server/list.component';
+import {DashboardModalCreateServer} from './components/modal/create-server/create.component';
+import {DashboardModalUpdateServer} from './components/modal/update-server/update.component';
 import {AntDesignModule} from '../shared/ant-design.module';
 
 @NgModule({
@@ -18,7 +24,15 @@ import {AntDesignModule} from '../shared/ant-design.module';
         DashboardListHosting,
         //modal
         DashboardModalInfor,
-        DashboardModalCreate
+        DashboardModalCreate,
+        DashboardModalUpdate,
+        DashboardListVlan,
+        DashboardModalCreateVlan,
+        DashboardModalUpdateVlan,
+        DashboardListServer,
+        DashboardModalCreateServer,
+        DashboardModalUpdateServer
+        
     ],
     imports: [
         AntDesignModule,
@@ -26,7 +40,6 @@ import {AntDesignModule} from '../shared/ant-design.module';
         FormsModule,
         ReactiveFormsModule,
         DashboardRoutingModule,
-        
     ],
     providers: [
         

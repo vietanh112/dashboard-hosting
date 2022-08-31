@@ -1,6 +1,6 @@
-<nz-modal [(nzVisible)]="checkVisibleInfor" [nzTitle]="nameHosting" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+<nz-modal [(nzVisible)]="checkVisibleInfor" [nzTitle]="nameHosting" (nzAfterOpen)="loadingOk()" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
     <ng-container *nzModalContent>
-      <p style="margin-bottom: 1.25rem;">{{dataHosting.vlantypeinfor}} <span class="fw-bold">({{dataHosting.vlantype}})</span></p>
+      <p style="margin-bottom: 1.25rem;">{{vlan?.vlanInfor}} <span class="fw-bold">({{vlan?.vlanName}})</span></p>
       <div>
         <nz-table #nzTable [nzData]="['']" nzTableLayout="fixed" [nzShowPagination]="false" [nzScroll]="{ y: '350px' }">
           <tbody>
@@ -54,11 +54,11 @@
             </tr>
             <tr>
                 <td class="fw-bold">Loại Vlan</td>
-                <td>{{dataHosting.vlantype}}</td>
+                <td>{{vlan?.vlanName}}</td>
             </tr>
             <tr>
                 <td class="fw-bold">Thông tin loại Vlan</td>
-                <td>{{dataHosting.vlantypeinfor}}</td>
+                <td>{{vlan?.vlanInfor}}</td>
             </tr>
           </tbody>
         </nz-table>

@@ -1,0 +1,149 @@
+<nz-modal [(nzVisible)]="checkVisibleUpdate" nzTitle="Chỉnh sửa Hosting" (nzOnCancel)="handleCancel()" (nzAfterOpen)="loadingOk()" (nzOnOk)="handleOk()">
+    <ng-container *nzModalContent>
+        <div class="form-group" nz-row>
+          <div nz-col nzSpan="7">
+            <label for="" class="fw-bold">IP Address <span class="color-red">*</span></label>
+          </div>
+          <div nz-col nzSpan="17">
+            <nz-input-group>
+              <input type="text" nz-input [(ngModel)]="formUpdate.ipaddress" />
+            </nz-input-group>
+          </div>
+        </div>
+        <div class="form-group" nz-row>
+          <div nz-col nzSpan="7">
+            <label for="" class="fw-bold">IP Address F5 </label>
+          </div>
+          <div nz-col nzSpan="17">
+            <nz-input-group>
+              <input type="text" nz-input [(ngModel)]="formUpdate.ipaddressf5" />
+            </nz-input-group>
+          </div>
+        </div>
+        <div class="form-group" nz-row>
+          <div nz-col nzSpan="7">
+            <label for="" class="fw-bold">Hostname <span class="color-red">*</span></label>
+          </div>
+          <div nz-col nzSpan="17">
+            <nz-input-group>
+              <input type="text" nz-input [(ngModel)]="formUpdate.hostname" />
+            </nz-input-group>
+          </div>
+        </div>
+        <div class="form-group" nz-row>
+          <div nz-col nzSpan="7">
+            <label for="" class="fw-bold">Priority </label>
+          </div>
+          <div nz-col nzSpan="17">
+            <nz-input-group>
+              <input type="text" nz-input [(ngModel)]="formUpdate.priority" />
+            </nz-input-group>
+          </div>
+        </div>
+        <div class="form-group" nz-row>
+            <div nz-col nzSpan="7">
+                <label for="" class="fw-bold">ENV </label>
+              </div>
+              <div nz-col nzSpan="17">
+                <nz-input-group>
+                  <input type="text" nz-input [(ngModel)]="formUpdate.env" />
+                </nz-input-group>
+              </div>
+        </div>
+        <div class="form-group" nz-row>
+            <div nz-col nzSpan="7">
+                <label for="" class="fw-bold">Type </label>
+              </div>
+              <div nz-col nzSpan="17">
+                <nz-input-group>
+                  <input type="text" nz-input [(ngModel)]="formUpdate.type" />
+                </nz-input-group>
+            </div>
+        </div>
+        <div class="form-group" nz-row>
+            <div nz-col nzSpan="7">
+              <label for="" class="fw-bold">Middleware <span class="color-red">*</span></label>
+            </div>
+            <div nz-col nzSpan="17">
+              <nz-input-group>
+                <input type="text" nz-input [(ngModel)]="formUpdate.middleware" />
+              </nz-input-group>
+            </div>
+        </div>
+        <div class="form-group" nz-row>
+            <div nz-col nzSpan="7">
+              <label for="" class="fw-bold">Thông tin Hệ thống</label>
+            </div>
+            <div nz-col nzSpan="17">
+              <nz-input-group>
+                <input type="text" nz-input [(ngModel)]="formUpdate.information" />
+              </nz-input-group>
+            </div>
+        </div>
+        <div class="form-group" nz-row>
+            <div nz-col nzSpan="7">
+              <label for="" class="fw-bold">Machine Type <span class="color-red">*</span></label>
+            </div>
+            <div nz-col nzSpan="17">
+              <nz-input-group>
+                <input type="text" nz-input [(ngModel)]="formUpdate.machineType" />
+              </nz-input-group>
+            </div>
+        </div>
+        <div class="form-group" nz-row>
+            <div nz-col nzSpan="7">
+              <label for="" class="fw-bold">OS <span class="color-red">*</span></label>
+            </div>
+            <div nz-col nzSpan="17">
+              <nz-input-group>
+                <input type="text" nz-input [(ngModel)]="formUpdate.os" />
+              </nz-input-group>
+            </div>
+        </div>
+        <div class="form-group" nz-row>
+            <div nz-col nzSpan="7">
+              <label for="" class="fw-bold">Note </label>
+            </div>
+            <div nz-col nzSpan="17">
+              <nz-input-group>
+                <input type="text" nz-input [(ngModel)]="formUpdate.note" />
+              </nz-input-group>
+            </div>
+        </div>
+        <div class="form-group" nz-row>
+            <div nz-col nzSpan="7">
+              <label for="" class="fw-bold">N/A </label>
+            </div>
+            <div nz-col nzSpan="17">
+              <nz-input-group>
+                <input type="text" nz-input [(ngModel)]="formUpdate.na" />
+              </nz-input-group>
+            </div>
+        </div>
+        <div class="form-group" nz-row>
+            <div nz-col nzSpan="7">
+              <label for="" class="fw-bold">Loại Vlan</label>
+            </div>
+            <div nz-col nzSpan="17">
+              <nz-select style="width: 100%;" [(ngModel)]="formUpdate.vlanType">
+                <nz-option [nzValue]="data.id" [nzLabel]="data.vlanName" *ngFor="let data of listVlan"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <div class="form-group" nz-row>
+            <div nz-col nzSpan="7">
+              <label for="" class="fw-bold">Loại server</label>
+            </div>
+            <div nz-col nzSpan="17">
+                <nz-select style="width: 100%;" [(ngModel)]="formUpdate.server">
+                  <nz-option [nzValue]="data.id" [nzLabel]="data.serverName" *ngFor="let data of listServer"></nz-option>
+                </nz-select>
+              </div>
+          </div>
+        
+    </ng-container>
+    <ng-container *nzModalFooter>
+      <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+        <button nz-button nzType="primary" (click)="handleOk()">Update Hosting</button>
+    </ng-container>
+</nz-modal>

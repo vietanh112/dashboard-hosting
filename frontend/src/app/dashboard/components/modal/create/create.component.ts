@@ -26,9 +26,12 @@ export class DashboardModalCreate implements OnInit, AfterViewInit {
         os: '',
         note: '',
         na: '',
-        vlanType: '',
-        vlanTypeInfor: ''
+        vlanType: null,
+        server: null
     }
+    listVlan: any = [];
+    listServer: any = [];
+    
     ngOnInit(): void {
         
     }
@@ -38,20 +41,39 @@ export class DashboardModalCreate implements OnInit, AfterViewInit {
     constructor(public productService: DashboardHostingProductService) {
         
     }
-
-    handleOk(): void {
-        this.checkVisibleCreate = false;
+    
+    handleOk():void {
         this.createHosting();
     }
-    
+ 
     handleCancel(): void {
         this.checkVisibleCreate = false;
-        this.checkVisibleCreateChange.emit(this.checkVisibleCreate);
+        this.checkVisibleCreateChange.emit(false);
     }
+
     createHosting() {
-        console.log(this.formCreate);
         this.productService.create(this.formCreate).subscribe((response: any) => {
             this.checkVisibleCreateChange.emit(response);
+            this.checkVisibleCreate = false;
+        })
+    }
+
+    loadingOk() {
+        let queries = {}
+        this.productService.listServer(queries).subscribe(res => {
+            if(res) {
+                this.listServer = res;
+            }
+        })
+    }
+    listVlanChange(event: any) {
+        let queries = {
+            server: event
+        }
+        this.productService.listVlan(queries).subscribe(res => {
+            if(res) {
+                this.listVlan = res;
+            }
         })
     }
 }

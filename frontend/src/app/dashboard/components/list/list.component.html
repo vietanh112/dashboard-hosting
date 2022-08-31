@@ -1,8 +1,31 @@
+<div class="style-loading" *ngIf="loadingState">
+  <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+</div>
+
 <div class="inner-content">
-    <div style="margin: 20px 0;display: flex;justify-content: flex-end;">
-        <button nz-button [nzType]="'primary'" [nzSize]="sizeButton" (click)="showModalCreate()"><span>Create Hosting</span></button>
+    <div style="margin: 20px 0;display: flex;justify-content: space-between;">
+        <div style="display: flex;align-items: center;">
+          <span class="fw-bold">Tìm kiếm: </span>
+          <div style="margin-left: 10px;">
+            <input nz-input placeholder="Từ khóa" [(ngModel)]="search.keyword" nzSize="default" />
+          </div>
+          <div style="margin-left: 10px;">
+            <nz-select style="width: 120px;" [(ngModel)]="search.vlanType">
+              <nz-option [nzValue]="data.id" [nzLabel]="data.vlanName" *ngFor="let data of listVlan"></nz-option>
+            </nz-select>
+          </div>
+          <div style="margin-left: 10px;">
+            <button nz-button nzType="primary" (click)="getList()">
+              <span nz-icon nzType="search"></span>
+              Tìm kiếm
+            </button>
+          </div>
+        </div>
+        <div>
+          <button nz-button [nzType]="'primary'" [nzSize]="sizeButton" (click)="showModalCreate()"><span>Create Hosting</span></button>
+        </div>
     </div>
-    <nz-table #nzTable [nzData]="listHosting" nzTableLayout="fixed" >
+    <nz-table #nzTable [nzData]="listHosting" nzTableLayout="fixed" nzShowSizeChanger [nzPageSizeOptions]="[10, 20, 50]" [nzPageIndex]="page"  [nzShowTotal]="rangeTemplate" (nzPageSizeChange)="pageChange($event)">
         <thead>
           <tr>
             <th class="text-center" style="width: 80px;">STT</th>
@@ -10,7 +33,6 @@
             <th class="text-center">IP Address F5</th>
             <th>Hostname</th>
             <th>Thông tin</th>
-            <th class="text-center">Loại Vlan</th>
             <th class="text-center" style="width: 120px;">Options</th>
           </tr>
         </thead>
@@ -21,7 +43,6 @@
             <td class="text-center">{{ data.ipaddressf5 }}</td>
             <td>{{ data.hostname }}</td>
             <td>{{ data.information }}</td>
-            <td class="text-center">{{ data.vlantype }}</td>
             <td class="text-center">
               <button nz-button nz-dropdown [nzDropdownMenu]="menu4" style="border-radius: 50%;">
                 
@@ -33,7 +54,7 @@
                     <span style="margin-right: 12px;"><i nz-icon nzType="info" nzTheme="outline"></i></span>
                     Thông tin Hosting
                   </li>
-                  <li nz-menu-item>
+                  <li nz-menu-item (click)="showModalUpdate(data)">
                     <span style="margin-right: 12px;"><i nz-icon nzType="edit" nzTheme="outline"></i></span>
                     Chỉnh sửa Hosting
                   </li>
@@ -47,6 +68,14 @@
           </tr>
         </tbody>
       </nz-table>
+      <!-- <ng-template #totalTemplate let-total> Total {{listHosting.length}} / {{ totalList }} items </ng-template> -->
+      <ng-template #rangeTemplate let-range="range" let-total>
+        {{ range[0] }}-{{ range[1] }} of <span class="fw-bold">{{ totalList }}</span> items
+      </ng-template>
+      
 </div>
 <app-dashboard-modal-infor [(checkVisibleInfor)]=checkVisibleInfor [nameHosting]="nameHosting"  [dataHosting]=dataHosting></app-dashboard-modal-infor>
-<app-dashboard-modal-create [(checkVisibleCreate)]=checkVisibleCreate (checkVisibleCreateChange) = "showNotification($event)"></app-dashboard-modal-create>
+<app-dashboard-modal-create [(checkVisibleCreate)]=checkVisibleCreate (checkVisibleCreateChange) = "createHosting($event)"></app-dashboard-modal-create>
+<app-dashboard-modal-update [(checkVisibleUpdate)]=checkVisibleUpdate (checkVisibleUpdateChange) = "updateHosting($event)" [idUpdate]=data></app-dashboard-modal-update>
+<!-- <app-dashboard-modal-create-vlan [(checkVisibleCreateVlan)]=checkVisibleCreateVlan (checkVisibleCreateVlanChange) = "createVlan($event)"></app-dashboard-modal-create-vlan> -->
+<!-- <app-dashboard-modal-create-server [(checkVisibleCreateServer)]=checkVisibleCreateServer (checkVisibleCreateServerChange) = "createServer($event)"></app-dashboard-modal-create-server> -->

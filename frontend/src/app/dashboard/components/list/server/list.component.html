@@ -1,0 +1,60 @@
+<div class="style-loading" *ngIf="loadingState">
+    <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+  </div>
+  
+  <div class="inner-content">
+      <div style="margin: 20px 0;display: flex;justify-content: space-between;">
+          <div style="display: flex;align-items: center;">
+            <span class="fw-bold">Tìm kiếm: </span>
+            <div style="margin-left: 10px;">
+              <input nz-input placeholder="Từ khóa" [(ngModel)]="search.keyword" nzSize="default" />
+            </div>
+            <div style="margin-left: 10px;">
+              <button nz-button nzType="primary" (click)="getList()">
+                <span nz-icon nzType="search"></span>
+                Tìm kiếm
+              </button>
+            </div>
+          </div>
+          <div>
+            <button nz-button [nzType]="'primary'" [nzSize]="sizeButton" (click)="showModalCreateServer()"><span>Create Server</span></button>
+          </div>
+      </div>
+      <nz-table #nzTable [nzData]="listServer" nzTableLayout="fixed" nzShowSizeChanger [nzPageSizeOptions]="[10, 20, 50]" [nzPageIndex]="page">
+          <thead>
+            <tr>
+              <th class="text-center" style="width: 80px;">STT</th>
+              <th class="text-center">Tên Server</th>
+              <th>Thông tin Server</th>
+              <th class="text-center" style="width: 120px;">Options</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of nzTable.data; let i = index">
+              <td class="text-center">{{ i + 1}}</td>
+              <td class="text-center">{{ data.serverName }}</td>
+              <td>{{ data.serverInfor }}</td>
+              <td class="text-center">
+                <button nz-button nz-dropdown [nzDropdownMenu]="menu4" style="border-radius: 50%;">
+                  <i nz-icon nzType="ellipsis" nzTheme="outline"></i>
+                </button>
+                <nz-dropdown-menu #menu4="nzDropdownMenu">
+                  <ul nz-menu>
+                    <li nz-menu-item (click)="showModalUpdateServer(data)">
+                      <span style="margin-right: 12px;"><i nz-icon nzType="edit" nzTheme="outline"></i></span>
+                      Chỉnh sửa Server
+                    </li>
+                    <li nz-menu-item (click)="showConfirmDelete(data.id)">
+                      <span style="margin-right: 12px;"><i nz-icon nzType="rest" nzTheme="outline"></i></span>
+                      Xóa Server
+                    </li>
+                  </ul>
+                </nz-dropdown-menu>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+        
+  </div>
+  <app-dashboard-modal-update-server [(checkVisibleUpdateServer)]=checkVisibleUpdateServer (checkVisibleUpdateServerChange) = "updateServer($event)" [idUpdate]=data></app-dashboard-modal-update-server>
+  <app-dashboard-modal-create-server [(checkVisibleCreateServer)]=checkVisibleCreateServer (checkVisibleCreateServerChange) = "createServer($event)"></app-dashboard-modal-create-server>

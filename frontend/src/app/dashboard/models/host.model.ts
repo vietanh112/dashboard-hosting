@@ -13,28 +13,28 @@ export class HostingModel {
     os: string = '';
     note: string = '';
     na: string = '';
-    vlantype: string = '';
-    vlantypeinfor: string = '';
+    vlanType: number = null;
+    server: number = null;
     createdat: string = '';
     updatedat: string = '';
     
 
     constructor(data: any) {
         this.id = String(data.id) || '';
-        this.ipaddress = data.IPAddress || '';
-        this.ipaddressf5 = data.IPAddressF5 || '';
-        this.hostname = data.Hostname || '';
-        this.priority = data.Priority || '';
-        this.env = data.ENV || '';
-        this.type = data.TYPE || '';
-        this.middleware = data.Middleware || '';
-        this.information = data.Information || '';
-        this.machineType = data.MachineType || '';
-        this.os = data.OS || '';
-        this.note = data.Note || '';
-        this.na = data.NA || '';
-        this.vlantype = data.VlanType || '';
-        this.vlantypeinfor = data.VlanTypeInfor || '';
+        this.ipaddress = data.iPAddress || '';
+        this.ipaddressf5 = data.iPAddressF5 || '';
+        this.hostname = data.hostname || '';
+        this.priority = data.priority || '';
+        this.env = data.env || '';
+        this.type = data.type || '';
+        this.middleware = data.middleware || '';
+        this.information = data.information || '';
+        this.machineType = data.machineType || '';
+        this.os = data.os || '';
+        this.note = data.note || '';
+        this.na = data.na || '';
+        this.vlanType = data.vlanType || null;
+        this.server = data.server || null;
         this.createdat = data.createdAt || '';
         this.updatedat = data.updatedAt || '';
     }

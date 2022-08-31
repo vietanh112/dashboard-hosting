@@ -8,47 +8,47 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER(11)
             },
-            IPAddress: {
+            iPAddress: {
                 type: Sequelize.STRING
             },
-            IPAddressF5: {
+            iPAddressF5: {
                 type: Sequelize.STRING
             },
-            Hostname: {
+            hostname: {
                 type: Sequelize.STRING
             },
-            Priority: {
+            priority: {
                 type: Sequelize.STRING(5)
             },
-            ENV: {
+            env: {
                 type: Sequelize.STRING(5)
             },
-            TYPE: {
+            type: {
                 type: Sequelize.STRING(5)
             },
-            Middleware: {
+            middleware: {
                 type: Sequelize.STRING(5)
             },
-            Information: {
+            information: {
                 type: Sequelize.STRING
             },
-            MachineType: {
+            machineType: {
                 type: Sequelize.STRING
             },
-            OS: {
+            os: {
                 type: Sequelize.STRING(5)
             },
-            Note: {
+            note: {
                 type: Sequelize.STRING
             },
-            NA: {
+            na: {
                 type: Sequelize.STRING
             },
-            VlanType: {
-                type: Sequelize.STRING
+            vlanType: {
+                type: Sequelize.INTEGER(3)
             },
-            VlanTypeInfor: {
-                type: Sequelize.STRING
+            server: {
+                type: Sequelize.INTEGER(3)
             },
             createdAt: {
                 allowNull: false,

@@ -12,7 +12,16 @@ export const environment = {
         product: {
           list: 'dashboard/product/list',
           create: 'dashboard/product/create',
-          delete: 'dashboard/product/{HOSTING_ID}/delete'
+          delete: 'dashboard/product/{HOSTING_ID}/delete',
+          update: 'dashboard/product/{HOSTING_ID}/update',
+          listVlan: 'dashboard/product/list-vlan',
+          createVlan: 'dashboard/product/create-vlan',
+          updateVlan: 'dashboard/product/{VLAN_ID}/update-vlan',
+          deleteVlan: 'dashboard/product/{VLAN_ID}/delete-vlan',
+          listServer: 'dashboard/product/list-server',
+          createServer: 'dashboard/product/create-server',
+          updateServer: 'dashboard/product/{SERVER_ID}/update-server',
+          deleteServer: 'dashboard/product/{SERVER_ID}/delete-server',
         }
       }
   }

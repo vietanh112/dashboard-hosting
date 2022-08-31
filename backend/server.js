@@ -63,3 +63,34 @@ app.route(`/dashboard/product/create`).post([], async(req, res) => {
 app.route(`/dashboard/product/:hostingId/delete`).delete([], async(req, res) => {
     return productController.deleteHosting(req, res);
 })
+app.route(`/dashboard/product/:hostingId/update`).patch([], async(req, res) => {
+    return productController.updateHosting(req, res);
+})
+
+//Vlan
+app.route(`/dashboard/product/list-vlan`).get([], async(req, res) => {
+    return productController.getListVlan(req, res);
+})
+app.route(`/dashboard/product/create-vlan`).post([], async(req, res) => {
+    return productController.createVlan(req, res);
+})
+app.route(`/dashboard/product/:vlanId/update-vlan`).patch([], async(req, res) => {
+    return productController.updateVlan(req, res);
+})
+app.route(`/dashboard/product/:vlanId/delete-vlan`).delete([], async(req, res) => {
+    return productController.deleteVlan(req, res);
+})
+
+//Server
+app.route(`/dashboard/product/list-server`).get([], async(req, res) => {
+    return productController.getListServer(req, res);
+})
+app.route(`/dashboard/product/create-server`).post([], async(req, res) => {
+    return productController.createServer(req, res);
+})
+app.route(`/dashboard/product/:serverId/update-server`).patch([], async(req, res) => {
+    return productController.updateServer(req, res);
+})
+app.route(`/dashboard/product/:serverId/delete-server`).delete([], async(req, res) => {
+    return productController.deleteServer(req, res);
+})

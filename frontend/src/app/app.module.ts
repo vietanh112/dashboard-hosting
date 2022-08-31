@@ -7,6 +7,7 @@ import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { RouterModule } from '@angular/router';
 //Core components
 import {CoreComponentLayout} from './_core/components/layout/layout.component';
 import {CoreComponentSidebar} from './_core/components/sidebar/sidebar.component';
@@ -36,6 +37,7 @@ import {AntDesignModule} from './shared/ant-design.module';
     BrowserAnimationsModule,
     ScrollingModule,
     DragDropModule,
+    RouterModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,0 +1,71 @@
+<div class="style-loading" *ngIf="loadingState">
+    <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+  </div>
+  
+  <div class="inner-content">
+      <div style="margin: 20px 0;display: flex;justify-content: space-between;">
+          <div style="display: flex;align-items: center;">
+            <span class="fw-bold">Tìm kiếm: </span>
+            <div style="margin-left: 10px;">
+              <input nz-input placeholder="Từ khóa" [(ngModel)]="search.keyword" nzSize="default" />
+            </div>
+            <div style="margin-left: 10px;">
+              <nz-select style="width: 120px;" [(ngModel)]="search.server">
+                <nz-option [nzValue]="data?.id" [nzLabel]="data?.serverName" *ngFor="let data of listServer"></nz-option>
+              </nz-select>
+            </div>
+            <div style="margin-left: 10px;">
+              <button nz-button nzType="primary" (click)="getList()">
+                <span nz-icon nzType="search"></span>
+                Tìm kiếm
+              </button>
+            </div>
+          </div>
+          <div>
+            <button nz-button [nzType]="'primary'" [nzSize]="sizeButton" (click)="showModalCreateVlan()"><span>Create Vlan</span></button>
+          </div>
+      </div>
+      <nz-table #nzTable [nzData]="listVlan" nzTableLayout="fixed" nzShowSizeChanger [nzPageSizeOptions]="[10, 20, 50]" [nzPageIndex]="page">
+          <thead>
+            <tr>
+              <th class="text-center" style="width: 80px;">STT</th>
+              <th class="text-center">Loại Vlan</th>
+              <th>Thông tin Vlan</th>
+              <th class="text-center">Server</th>
+              <th class="text-center" style="width: 120px;">Options</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of nzTable.data; let i = index">
+              <td class="text-center">{{ i + 1}}</td>
+              <td class="text-center">{{ data.vlanName }}</td>
+              <td>{{ data.vlanInfor }}</td>
+              <td class="text-center">
+                <span *ngFor="let ser of listServer">
+                    <span *ngIf="data.server == ser.id">{{ser.serverName}}</span>
+                </span>
+              </td>
+              <td class="text-center">
+                <button nz-button nz-dropdown [nzDropdownMenu]="menu4" style="border-radius: 50%;">
+                  <i nz-icon nzType="ellipsis" nzTheme="outline"></i>
+                </button>
+                <nz-dropdown-menu #menu4="nzDropdownMenu">
+                  <ul nz-menu>
+                    <li nz-menu-item (click)="showModalUpdateVlan(data)">
+                      <span style="margin-right: 12px;"><i nz-icon nzType="edit" nzTheme="outline"></i></span>
+                      Chỉnh sửa Vlan
+                    </li>
+                    <li nz-menu-item (click)="showConfirmDelete(data.id)">
+                      <span style="margin-right: 12px;"><i nz-icon nzType="rest" nzTheme="outline"></i></span>
+                      Xóa Vlan
+                    </li>
+                  </ul>
+                </nz-dropdown-menu>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+        
+  </div>
+  <app-dashboard-modal-update-vlan [(checkVisibleUpdateVlan)]=checkVisibleUpdateVlan (checkVisibleUpdateVlanChange) = "updateVlan($event)" [idUpdate]=data></app-dashboard-modal-update-vlan>
+  <app-dashboard-modal-create-vlan [(checkVisibleCreateVlan)]=checkVisibleCreateVlan (checkVisibleCreateVlanChange) = "createVlan($event)"></app-dashboard-modal-create-vlan>

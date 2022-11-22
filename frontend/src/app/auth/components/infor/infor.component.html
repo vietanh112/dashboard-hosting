@@ -1,0 +1,32 @@
+<nz-modal [(nzVisible)]="checkVisibleInfor" nzTitle="Thông tin tài khoản" (nzOnCancel)="handleCancel()" (nzAfterOpen)="loadingOk()">
+    <ng-container *nzModalContent>
+        <div class="form-group" nz-row>
+            <label for="" style="margin-bottom: 5px;">Email</label>
+            <nz-input-group>
+              <input type="password" nz-input [(ngModel)]="form.email" />
+            </nz-input-group>
+        </div>
+        <div class="form-group" nz-row>
+            <label for="" style="margin-bottom: 5px;">Username</label>
+            <nz-input-group>
+              <input type="password" nz-input [(ngModel)]="form.username" disabled/>
+            </nz-input-group>
+        </div>
+        <div class="form-group" nz-row>
+            <label for="" style="margin-bottom: 5px;">Trạng thái</label>
+            <nz-input-group>
+              <input type="password" nz-input [(ngModel)]="form.status" />
+            </nz-input-group>
+        </div>
+        <div class="form-group" nz-row>
+          <label for="" style="margin-bottom: 5px;">Mức quyền</label>
+          <nz-input-group>
+            <input type="password" nz-input [(ngModel)]="form.role" />
+          </nz-input-group>
+      </div>
+        
+    </ng-container>
+    <ng-container *nzModalFooter>
+        <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+    </ng-container>
+</nz-modal>

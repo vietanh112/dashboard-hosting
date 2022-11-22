@@ -9,6 +9,14 @@ export const environment = {
       host: 'localhost:4001',
       prefix: '',
       paths: {
+        auth: {
+          login:'auth/login',
+          logout: 'auth/logout',
+          register: 'auth/register',
+          forgotPassword: '',
+          changePassword: 'auth/change-password',
+          infor: 'auth/{USER_ID}/infor'
+        },
         product: {
           list: 'dashboard/product/list',
           create: 'dashboard/product/create',
@@ -22,6 +30,10 @@ export const environment = {
           createServer: 'dashboard/product/create-server',
           updateServer: 'dashboard/product/{SERVER_ID}/update-server',
           deleteServer: 'dashboard/product/{SERVER_ID}/delete-server',
+          listPort: 'dashboard/product/list-port',
+          createPort: 'dashboard/product/create-port',
+          updatePort: 'dashboard/product/{PORT_ID}/update-port',
+          deletePort: 'dashboard/product/{PORT_ID}/delete-port',
         }
       }
   }

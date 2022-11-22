@@ -4,6 +4,8 @@ import {Location} from "@angular/common";
 import { NzButtonSize } from 'ng-zorro-antd/button';
 import { DashboardHostingProductService } from '../../../services/hosting-product.service';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import {AuthenticationService} from '../../../../_core/services/authentication.service';
+
 
 @Component({
     selector: 'app-dashboard-list-vlan',
@@ -17,7 +19,8 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
     confirmModalDelete?: NzModalRef;
     search: any = {
         keyword: null,
-        server: null
+        server: null,
+        status: null
     };
     loadingState:boolean = false;
     page: number = 1;
@@ -26,13 +29,44 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
     listServer: any = undefined;
     data: any = undefined;
     sizeButton: NzButtonSize = 'large';
+    currentUser: any = undefined;
+
+    status: any = [
+        {id: null, name: 'All'},
+        {id: '-1', name: 'Error'},
+        {id: '0', name: 'Stop'},
+        {id: '1', name: 'Active'}
+    ]
 
     constructor(
         public productService: DashboardHostingProductService,
         private modal: NzModalService,
         private location: Location,
         private router: Router,
-    ){}
+        private authenticationService: AuthenticationService
+    ){
+        this.router.events.subscribe((event: Event) => {
+            if (event instanceof NavigationEnd) {
+                let server = null;
+                if(event.url.length < 11) {
+                    this.search.server = 1;
+                    return
+                }
+                server = event.url.slice(11, 14);
+                switch (server) {
+                    case 'uat':
+                        this.search.server = 1;
+                        break;
+                    case 'pro':
+                        this.search.server = 2;
+                        break;
+                    default:
+                        this.search.server = null;
+                        break;
+                }
+            }
+        });
+    }
     ngOnInit(): void {}
     ngAfterViewInit(): void {
         let queries = {};
@@ -106,6 +140,9 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
         if(this.search.server) {
             queries['server'] = Number(this.search.server);
         }
+        if(this.search.status) {
+            queries['status'] = Number(this.search.status);
+        }
         this.productService.listVlan(queries).subscribe(res => {
             this.loadingState = false;
             this.listVlan = res;
@@ -130,5 +167,8 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
         if(res) {
             this.showNotification(res);
         }
+    }
+    getCurrentUser () {
+        this.currentUser = this.authenticationService.currentUserValue;
     }
 }

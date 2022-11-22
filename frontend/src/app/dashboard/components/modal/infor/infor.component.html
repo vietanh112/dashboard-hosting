@@ -53,6 +53,12 @@
                 <td>{{dataHosting.na}}</td>
             </tr>
             <tr>
+                <td class="fw-bold">Trạng thái</td>
+                <td *ngIf="dataHosting.status == -1"><nz-tag [nzColor]="'red'">Error</nz-tag></td>
+                <td *ngIf="dataHosting.status == 0"><nz-tag [nzColor]="'orange'">Stop</nz-tag></td>
+                <td *ngIf="dataHosting.status == 1"><nz-tag [nzColor]="'green'">Active</nz-tag></td>
+            </tr>
+            <tr>
                 <td class="fw-bold">Loại Vlan</td>
                 <td>{{vlan?.vlanName}}</td>
             </tr>

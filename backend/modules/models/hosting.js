@@ -1,7 +1,7 @@
 'use strict';
 const {Model} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class hosttingProduct extends Model {
+    class hosting extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
         }
     };
-    hosttingProduct.init({
+    hosting.init({
         id: {
             allowNull: false,
             autoIncrement: true,
@@ -29,14 +29,15 @@ module.exports = (sequelize, DataTypes) => {
         os: DataTypes.STRING(5),
         note: DataTypes.STRING,
         na: DataTypes.STRING,
-        vlanType: DataTypes.INTEGER(3),
-        server: DataTypes.INTEGER(3),
+        status: DataTypes.INTEGER,
+        vlanType: DataTypes.INTEGER,
+        server: DataTypes.INTEGER,
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE
     }, {
         sequelize,
-        tableName: 'hosting_product',
-        modelName: 'hosttingProduct',
+        tableName: 'hosting',
+        modelName: 'hosting',
     });
-    return hosttingProduct;
+    return hosting;
 };

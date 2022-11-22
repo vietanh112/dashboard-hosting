@@ -193,4 +193,63 @@ export class DashboardHostingProductService {
             return response;
         }));
     }
+    //PORT
+
+    listPort(queries: any) {
+        let options: any = {
+            params: {},
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        };
+        // tslint:disable-next-line:forin
+        for (const i in queries) {
+            options['params'][i] = queries[i];
+        }
+        return this.apiService.get(this.apiServerPaths.product.listPort, options, map((response: any) => {
+                let rs: any = null;
+                if(response.code == 200 && response.status == 1) {
+                    rs = response.data;
+                }
+                return rs;
+            })
+        )   
+    }
+    deletePort(portId: any) {
+        let options: any = {
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        };
+        let path = this.apiServerPaths.product.deletePort;
+        path = path.replace('{PORT_ID}', String(portId));
+        return this.apiService.delete(path, options, map((response: any) => {
+            return response;
+            }
+        ));
+    }
+    updatePort(body: any, portId: any) {
+        let options: any = {
+            body,
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        };
+        let path = this.apiServerPaths.product.updatePort;
+        path = path.replace('{PORT_ID}', String(portId));
+        return this.apiService.patch(path, options, map((response: any) => {
+            return response;
+        }));
+    }
+    createPort(body: any) {
+        let options: any = {
+            body,
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        };
+        return this.apiService.post(this.apiServerPaths.product.createPort, options, map((response: any) => {
+            return response;
+        }));
+    }
 }

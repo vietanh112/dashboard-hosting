@@ -1,14 +1,14 @@
 {
     "local": {
-        "username": "root",
-        "password": "123456",
-        "database": "dashboard_hosting",
-        "host": "127.0.0.1",
-        "port": "9907",
-        "dialect": "mysql"
+      "username": "root",
+      "password": "123456",
+      "database": "dashboard_hosting",
+      "host": "127.0.0.1",
+      "port": "9907",
+      "dialect": "mysql"
       },
     "development": {
-      "username": "root",
+        "username": "root",
       "password": "123456",
       "database": "dashboard_hosting",
       "host": "127.0.0.1",

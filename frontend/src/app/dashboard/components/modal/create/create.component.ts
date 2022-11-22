@@ -26,6 +26,7 @@ export class DashboardModalCreate implements OnInit, AfterViewInit {
         os: '',
         note: '',
         na: '',
+        status: null,
         vlanType: null,
         server: null
     }

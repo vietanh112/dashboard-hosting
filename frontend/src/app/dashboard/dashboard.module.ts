@@ -6,7 +6,9 @@ import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule, Routes} from '@angular/router';
 //Components
 import {DashboardListHosting} from './components/list/list.component';
-
+import {DashboardListPort} from './components/list/port/list.component';
+import {DashboardModalCreatePort} from './components/modal/create-port/create.component';
+import {DashboardModalUpdatePort} from './components/modal/update-port/update.component';
 //Modal
 import {DashboardModalInfor} from './components/modal/infor/infor.component';
 import {DashboardModalCreate} from './components/modal/create/create.component';
@@ -18,6 +20,7 @@ import {DashboardListServer} from './components/list/server/list.component';
 import {DashboardModalCreateServer} from './components/modal/create-server/create.component';
 import {DashboardModalUpdateServer} from './components/modal/update-server/update.component';
 import {AntDesignModule} from '../shared/ant-design.module';
+
 
 @NgModule({
     declarations: [
@@ -31,8 +34,10 @@ import {AntDesignModule} from '../shared/ant-design.module';
         DashboardModalUpdateVlan,
         DashboardListServer,
         DashboardModalCreateServer,
-        DashboardModalUpdateServer
-        
+        DashboardModalUpdateServer,
+        DashboardListPort,
+        DashboardModalCreatePort,
+        DashboardModalUpdatePort,
     ],
     imports: [
         AntDesignModule,

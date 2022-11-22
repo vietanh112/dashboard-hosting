@@ -12,6 +12,18 @@
         </div>
         <div class="form-group" nz-row>
           <div nz-col nzSpan="7">
+            <label for="" class="fw-bold">Trạng thái</label>
+          </div>
+          <div nz-col nzSpan="17">
+            <nz-select style="width: 100%;" [(ngModel)]="formCreate.status">
+              <nz-option [nzValue]="-1" [nzLabel]="'Error'"></nz-option>
+              <nz-option [nzValue]="'0'" [nzLabel]="'Stop'"></nz-option>
+              <nz-option [nzValue]="1" [nzLabel]="'Active'"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div class="form-group" nz-row>
+          <div nz-col nzSpan="7">
             <label for="" class="fw-bold">Thông tin Server</label>
           </div>
           <div nz-col nzSpan="17">

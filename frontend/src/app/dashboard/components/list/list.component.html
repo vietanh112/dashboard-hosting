@@ -10,8 +10,18 @@
             <input nz-input placeholder="Từ khóa" [(ngModel)]="search.keyword" nzSize="default" />
           </div>
           <div style="margin-left: 10px;">
-            <nz-select style="width: 120px;" [(ngModel)]="search.vlanType">
+            <nz-select style="width: 120px;" [(ngModel)]="search.server" nzPlaceHolder="Server">
+              <nz-option [nzValue]="data?.id" [nzLabel]="data?.serverName" *ngFor="let data of listServer"></nz-option>
+            </nz-select>
+          </div>
+          <div style="margin-left: 10px;">
+            <nz-select style="width: 120px;" [(ngModel)]="search.vlanType" nzPlaceHolder="Vlan">
               <nz-option [nzValue]="data.id" [nzLabel]="data.vlanName" *ngFor="let data of listVlan"></nz-option>
+            </nz-select>
+          </div>
+          <div style="margin-left: 10px;">
+            <nz-select style="width: 120px;" [(ngModel)]="search.status" nzPlaceHolder="Status">
+              <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of status"></nz-option>
             </nz-select>
           </div>
           <div style="margin-left: 10px;">
@@ -22,7 +32,7 @@
           </div>
         </div>
         <div>
-          <button nz-button [nzType]="'primary'" [nzSize]="sizeButton" (click)="showModalCreate()"><span>Create Hosting</span></button>
+          <button *ngIf="currentUser?.roleId < 3" nz-button [nzType]="'primary'" [nzSize]="sizeButton" (click)="showModalCreate()"><span>Tạo mới Hosting</span></button>
         </div>
     </div>
     <nz-table #nzTable [nzData]="listHosting" nzTableLayout="fixed" nzShowSizeChanger [nzPageSizeOptions]="[10, 20, 50]" [nzPageIndex]="page"  [nzShowTotal]="rangeTemplate" (nzPageSizeChange)="pageChange($event)">
@@ -30,8 +40,9 @@
           <tr>
             <th class="text-center" style="width: 80px;">STT</th>
             <th class="text-center">IP Address</th>
-            <th class="text-center">IP Address F5</th>
             <th>Hostname</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Server</th>
             <th>Thông tin</th>
             <th class="text-center" style="width: 120px;">Options</th>
           </tr>
@@ -40,8 +51,17 @@
           <tr *ngFor="let data of nzTable.data; let i = index">
             <td class="text-center">{{ i + 1}}</td>
             <td class="text-center"  (click)="showModalInfor(data)"><a>{{ data.ipaddress }}</a></td>
-            <td class="text-center">{{ data.ipaddressf5 }}</td>
             <td>{{ data.hostname }}</td>
+            <td class="text-center">
+              <nz-tag [nzColor]="'red'" *ngIf="data.status == -1">Error</nz-tag>
+              <nz-tag [nzColor]="'orange'" *ngIf="data.status == 0">Stop</nz-tag>
+              <nz-tag [nzColor]="'green'" *ngIf="data.status == 1">Active</nz-tag>
+            </td>
+            <td class="text-center">
+              <span *ngFor="let ser of listServer">
+                  <span *ngIf="data.server == ser.id">{{ser.serverName}}</span>
+              </span>
+            </td>
             <td>{{ data.information }}</td>
             <td class="text-center">
               <button nz-button nz-dropdown [nzDropdownMenu]="menu4" style="border-radius: 50%;">
@@ -54,11 +74,11 @@
                     <span style="margin-right: 12px;"><i nz-icon nzType="info" nzTheme="outline"></i></span>
                     Thông tin Hosting
                   </li>
-                  <li nz-menu-item (click)="showModalUpdate(data)">
+                  <li *ngIf="currentUser?.roleId < 3" nz-menu-item (click)="showModalUpdate(data)">
                     <span style="margin-right: 12px;"><i nz-icon nzType="edit" nzTheme="outline"></i></span>
                     Chỉnh sửa Hosting
                   </li>
-                  <li nz-menu-item (click)="showConfirmDelete(data.id)">
+                  <li *ngIf="currentUser?.roleId < 3" nz-menu-item (click)="showConfirmDelete(data.id)">
                     <span style="margin-right: 12px;"><i nz-icon nzType="rest" nzTheme="outline"></i></span>
                     Xóa Hosting
                   </li>

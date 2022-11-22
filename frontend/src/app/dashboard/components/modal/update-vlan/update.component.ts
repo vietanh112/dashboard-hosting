@@ -15,6 +15,7 @@ export class DashboardModalUpdateVlan implements OnInit, AfterViewInit {
     formUpdate: any = {
         id: '',
         vlanName: '',
+        status: null,
         vlanInfor: '',
         server: null
     };
@@ -55,10 +56,13 @@ export class DashboardModalUpdateVlan implements OnInit, AfterViewInit {
             id: this.idUpdate
         }
         this.productService.listVlan(queries).subscribe(res => {
-            this.formUpdate.id = res[0].id;
-            this.formUpdate.vlanName = res[0].vlanName;
-            this.formUpdate.vlanInfor = res[0].vlanInfor;
-            this.formUpdate.server = res[0].server;
+            if(res) {
+                this.formUpdate.id = res[0].id;
+                this.formUpdate.vlanName = res[0].vlanName;
+                this.formUpdate.status = res[0].status;
+                this.formUpdate.vlanInfor = res[0].vlanInfor;
+                this.formUpdate.server = res[0].server;
+            }
         })
     }
 

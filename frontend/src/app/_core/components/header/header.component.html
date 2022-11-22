@@ -1,35 +1,67 @@
 <nz-header nzTheme="light">
     <div class="container">
-      <div class="logo">
-        <a href="#">
-          <img src="../../../../assets/images/logo.png" alt="logo">
-        </a>
-      </div>
-      <ul nz-menu nzMode="horizontal">
-        <li style="font-weight: 600;" nz-submenu nzTitle="HOSTING">
-          <ul>
-            <li nz-menu-item [nzSelected]="this.router.url.indexOf('dashboard/list/uat') != -1">
-              <a [routerLink]="['/dashboard', 'list', 'uat']">
-                UAT
+      <div class="div-flex">
+        <div class="left">
+          <div class="logo">
+            <a href="#">
+              <img src="../../../../assets/images/logo.png" alt="logo">
+            </a>
+          </div>
+          <ul nz-menu nzMode="horizontal">
+            <li nz-menu-item [nzSelected]="this.router.url.indexOf('dashboard/server/list') != -1">
+              <a [routerLink]="['/dashboard', 'server', 'list']">
+                SERVER
               </a>
             </li>
-            <li nz-menu-item [nzSelected]="this.router.url.indexOf('dashboard/list/product') != -1">
-              <a [routerLink]="['/dashboard', 'list', 'product']">
-                PRODUCT
+            <!-- <li style="font-weight: 600;" nz-submenu nzTitle="HOSTING">
+              <ul>
+                <li nz-menu-item [nzSelected]="this.router.url.indexOf('dashboard/uat/list') != -1">
+                  <a [routerLink]="['/dashboard', 'uat', 'list']">
+                    UAT
+                  </a>
+                </li>
+                <li nz-menu-item [nzSelected]="this.router.url.indexOf('dashboard/product/list') != -1">
+                  <a [routerLink]="['/dashboard', 'product', 'list']">
+                    PRODUCT
+                  </a>
+                </li>
+              </ul>
+            </li> -->
+            
+            <li nz-menu-item [nzSelected]="this.router.url.indexOf('dashboard/vlan/list') != -1">
+              <a [routerLink]="['/dashboard', 'vlan', 'list']">
+                VLAN
+              </a>
+            </li>
+            <li nz-menu-item [nzSelected]="this.router.url.indexOf('dashboard/port/list') != -1">
+              <a [routerLink]="['/dashboard', 'port', 'list']">
+                PORT
+              </a>
+            </li>
+            <li nz-menu-item [nzSelected]="this.router.url.indexOf('dashboard/hosting/list') != -1">
+              <a [routerLink]="['/dashboard', 'hosting', 'list']">
+                HOSTING
               </a>
             </li>
           </ul>
-        </li>
-        <li nz-menu-item [nzSelected]="this.router.url.indexOf('dashboard/list/vlan') != -1">
-          <a [routerLink]="['/dashboard', 'list', 'vlan']">
-            VLAN
-          </a>
-        </li>
-        <li nz-menu-item [nzSelected]="this.router.url.indexOf('dashboard/list/server') != -1">
-          <a [routerLink]="['/dashboard', 'list', 'server']">
-            SERVER
-          </a>
-        </li>
-      </ul>
+        </div>
+        <div class="right">
+          <button nz-button nz-dropdown [nzDropdownMenu]="menu2"  nzPlacement="bottomRight">
+            <span nz-icon nzType="user"></span>
+          </button>
+          <nz-dropdown-menu #menu2="nzDropdownMenu" >
+            <ul nz-menu>
+              <li nz-menu-item (click)="showModalInfor()"><span style="margin-right: 7px;" nz-icon nzType="user" nzTheme="outline"></span> Thông tin User</li>
+              <li *ngIf="currentUser.roleId == 1" nz-menu-item  [routerLink]="['/manage']"><span style="margin-right: 7px;" nz-icon nzType="ordered-list" nzTheme="outline"></span>Quản lý User</li>
+              <li nz-menu-item (click)="showModalChangePassword()"><span style="margin-right: 7px;" nz-icon nzType="undo" nzTheme="outline"></span> Thay đổi mật khẩu</li>
+              <li nz-menu-item  [routerLink]="['/auth', 'logout']"><span style="margin-right: 7px;" nz-icon nzType="logout" nzTheme="outline"></span>Đăng xuất</li>
+            </ul>
+          </nz-dropdown-menu>
+        </div>
+      </div>
     </div>
 </nz-header>
+
+<app-auth-change-password [(checkVisibleChangePassword)]=checkVisibleChangePassword (checkVisibleChangePasswordChange) = "changePassword($event)" [idUpdate]=data></app-auth-change-password>
+
+<app-auth-infor [(checkVisibleInfor)]=checkVisibleInfor (checkVisibleInforChange) = "changeInfor($event)" [idUpdate]=data></app-auth-infor>

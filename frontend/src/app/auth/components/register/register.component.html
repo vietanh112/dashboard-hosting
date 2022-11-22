@@ -1,0 +1,36 @@
+<div class="style-loading" *ngIf="loadingState">
+    <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+  </div>
+  
+
+<div class="form-style">
+    <h2 class="text-center">
+        Đăng kí
+    </h2>
+    <form nz-form [formGroup]="registerForm" class="register-form" (ngSubmit)="submitForm()">
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Email not validated!">
+              <nz-input-group nzPrefixIcon="form">
+                <input type="text" nz-input formControlName="email" placeholder="Email" />
+              </nz-input-group>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Username not validated!">
+            <nz-input-group nzPrefixIcon="user">
+              <input type="text" nz-input formControlName="username" placeholder="Username" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Password not validated!">
+            <nz-input-group nzPrefixIcon="lock">
+              <input type="password" nz-input formControlName="password" placeholder="Password" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+        
+        <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'" [disabled]="checkFormValid()">Đăng kí</button>
+        <a [routerLink]="['/auth', 'login']" >Đăng nhập!</a>
+      </form>
+</div>

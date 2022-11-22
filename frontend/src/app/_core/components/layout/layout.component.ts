@@ -10,7 +10,7 @@ import {Location} from "@angular/common";
     styleUrls: ['./layout.component.scss']
 })
 
-export class CoreComponentLayout implements OnInit, AfterViewInit {
+export class DashboardComponentLayout implements OnInit, AfterViewInit {
     ngOnInit(): void {
         
     }

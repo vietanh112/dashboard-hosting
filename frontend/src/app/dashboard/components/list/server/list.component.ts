@@ -4,6 +4,8 @@ import {Location} from "@angular/common";
 import { NzButtonSize } from 'ng-zorro-antd/button';
 import { DashboardHostingProductService } from '../../../services/hosting-product.service';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import {AuthenticationService} from '../../../../_core/services/authentication.service';
+
 
 @Component({
     selector: 'app-dashboard-list-server-server',
@@ -17,7 +19,8 @@ export class DashboardListServer implements OnInit, AfterViewInit {
     confirmModalDelete?: NzModalRef;
     search: any = {
         keyword: null,
-        server: null
+        server: null,
+        status: null
     };
     loadingState:boolean = false;
     page: number = 1;
@@ -25,12 +28,21 @@ export class DashboardListServer implements OnInit, AfterViewInit {
     listServer: any = undefined;
     data: any = undefined;
     sizeButton: NzButtonSize = 'large';
+    currentUser: any = undefined;
+
+    status: any = [
+        {id: null, name: 'All'},
+        {id: '-1', name: 'Error'},
+        {id: '0', name: 'Stop'},
+        {id: '1', name: 'Active'}
+    ]
 
     constructor(
         public productService: DashboardHostingProductService,
         private modal: NzModalService,
         private location: Location,
         private router: Router,
+        private authenticationService: AuthenticationService
     ){}
     ngOnInit(): void {}
     ngAfterViewInit(): void {
@@ -96,6 +108,9 @@ export class DashboardListServer implements OnInit, AfterViewInit {
         if(this.search.keyword) {
             queries['keyword'] = this.search.keyword;
         }
+        if(this.search.status) {
+            queries['status'] = this.search.status;
+        }
         this.productService.listServer(queries).subscribe(res => {
             this.loadingState = false;
             this.listServer = res;
@@ -120,5 +135,8 @@ export class DashboardListServer implements OnInit, AfterViewInit {
         if(res) {
             this.showNotification(res);
         }
+    }
+    getCurrentUser () {
+        this.currentUser = this.authenticationService.currentUserValue;
     }
 }

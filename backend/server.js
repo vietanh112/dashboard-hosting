@@ -1,5 +1,5 @@
 require('dotenv').config();
-const express = require('express')
+const express = require('express');
 
 express.application.prefix = express.Router.prefix = function (path, configure) {
     const router = express.Router();
@@ -18,7 +18,8 @@ const port = process.env.PORT || 3000
 const prefixPath = process.env.PREFIX_PATH || '/';
 
 //
-const productController = require('./modules/controllers/productController')
+const productController = require('./modules/controllers/productController');
+const authController = require('./modules/controllers/authController');
 
 app.use(cors());
 // parse requests of content-type - application/json
@@ -52,8 +53,25 @@ app.prefix(`${prefixPath}`, function (appGroup) {
     });
 })
 
-//Routes
+//auth
+app.route(`/auth/login`).post([], async(req, res) => {
+    return authController.login(req, res);
+})
+app.route(`/auth/register`).post([], async(req, res) => {
+    return authController.register(req, res);
+})
+app.route(`/auth/logout`).get([], async(req, res) => {
+    return authController.logout(req, res);
+})
+app.route(`/auth/change-password`).post([], async(req, res) => {
+    return authController.changePassword(req, res);
+})
+app.route(`/auth/:userId/infor`).get([], async(req, res) => {
+    return authController.infor(req, res);
+})
 
+
+//Routes
 app.route(`/dashboard/product/list`).get([], async(req, res) => {
     return productController.getList(req, res);
 })
@@ -93,4 +111,18 @@ app.route(`/dashboard/product/:serverId/update-server`).patch([], async(req, res
 })
 app.route(`/dashboard/product/:serverId/delete-server`).delete([], async(req, res) => {
     return productController.deleteServer(req, res);
+})
+
+//Port
+app.route(`/dashboard/product/list-port`).get([], async(req, res) => {
+    return productController.getListPort(req, res);
+})
+app.route(`/dashboard/product/create-port`).post([], async(req, res) => {
+    return productController.createPort(req, res);
+})
+app.route(`/dashboard/product/:portId/update-port`).patch([], async(req, res) => {
+    return productController.updatePort(req, res);
+})
+app.route(`/dashboard/product/:portId/delete-port`).delete([], async(req, res) => {
+    return productController.deletePort(req, res);
 })

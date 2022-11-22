@@ -10,7 +10,12 @@
               <input nz-input placeholder="Từ khóa" [(ngModel)]="search.keyword" nzSize="default" />
             </div>
             <div style="margin-left: 10px;">
-              <nz-select style="width: 120px;" [(ngModel)]="search.server">
+              <nz-select style="width: 120px;" [(ngModel)]="search.status" nzPlaceHolder="Status">
+                <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of status"></nz-option>
+              </nz-select>
+            </div>
+            <div style="margin-left: 10px;">
+              <nz-select style="width: 120px;" [(ngModel)]="search.server" nzPlaceHolder="Server">
                 <nz-option [nzValue]="data?.id" [nzLabel]="data?.serverName" *ngFor="let data of listServer"></nz-option>
               </nz-select>
             </div>
@@ -22,7 +27,7 @@
             </div>
           </div>
           <div>
-            <button nz-button [nzType]="'primary'" [nzSize]="sizeButton" (click)="showModalCreateVlan()"><span>Create Vlan</span></button>
+            <button *ngIf="currentUser?.roleId < 3" nz-button [nzType]="'primary'" [nzSize]="sizeButton" (click)="showModalCreateVlan()"><span>Tạo mới Vlan</span></button>
           </div>
       </div>
       <nz-table #nzTable [nzData]="listVlan" nzTableLayout="fixed" nzShowSizeChanger [nzPageSizeOptions]="[10, 20, 50]" [nzPageIndex]="page">
@@ -30,6 +35,7 @@
             <tr>
               <th class="text-center" style="width: 80px;">STT</th>
               <th class="text-center">Loại Vlan</th>
+              <th class="text-center">Status</th>
               <th>Thông tin Vlan</th>
               <th class="text-center">Server</th>
               <th class="text-center" style="width: 120px;">Options</th>
@@ -39,6 +45,11 @@
             <tr *ngFor="let data of nzTable.data; let i = index">
               <td class="text-center">{{ i + 1}}</td>
               <td class="text-center">{{ data.vlanName }}</td>
+              <td class="text-center">
+                <nz-tag [nzColor]="'red'" *ngIf="data.status == -1">Error</nz-tag>
+                <nz-tag [nzColor]="'orange'" *ngIf="data.status == 0">Stop</nz-tag>
+                <nz-tag [nzColor]="'green'" *ngIf="data.status == 1">Active</nz-tag>
+              </td>
               <td>{{ data.vlanInfor }}</td>
               <td class="text-center">
                 <span *ngFor="let ser of listServer">
@@ -51,11 +62,11 @@
                 </button>
                 <nz-dropdown-menu #menu4="nzDropdownMenu">
                   <ul nz-menu>
-                    <li nz-menu-item (click)="showModalUpdateVlan(data)">
+                    <li *ngIf="currentUser?.roleId < 3" nz-menu-item (click)="showModalUpdateVlan(data)">
                       <span style="margin-right: 12px;"><i nz-icon nzType="edit" nzTheme="outline"></i></span>
                       Chỉnh sửa Vlan
                     </li>
-                    <li nz-menu-item (click)="showConfirmDelete(data.id)">
+                    <li *ngIf="currentUser?.roleId < 3" nz-menu-item (click)="showConfirmDelete(data.id)">
                       <span style="margin-right: 12px;"><i nz-icon nzType="rest" nzTheme="outline"></i></span>
                       Xóa Vlan
                     </li>

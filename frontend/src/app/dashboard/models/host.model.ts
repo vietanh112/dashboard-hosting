@@ -13,6 +13,7 @@ export class HostingModel {
     os: string = '';
     note: string = '';
     na: string = '';
+    status: number = null;
     vlanType: number = null;
     server: number = null;
     createdat: string = '';
@@ -33,6 +34,7 @@ export class HostingModel {
         this.os = data.os || '';
         this.note = data.note || '';
         this.na = data.na || '';
+        this.status = data.status ?? null;
         this.vlanType = data.vlanType || null;
         this.server = data.server || null;
         this.createdat = data.createdAt || '';

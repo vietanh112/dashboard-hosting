@@ -26,6 +26,7 @@ export class DashboardModalUpdate implements OnInit, AfterViewInit {
         os: '',
         note: '',
         na: '',
+        status: null,
         vlanType: null,
         server: null
     };
@@ -86,6 +87,7 @@ export class DashboardModalUpdate implements OnInit, AfterViewInit {
             this.formUpdate.os = res.list[0].os;
             this.formUpdate.note = res.list[0].note;
             this.formUpdate.na = res.list[0].na;
+            this.formUpdate.status = res.list[0].status;
             this.formUpdate.vlanType = res.list[0].vlanType;
             this.formUpdate.server = res.list[0].server;
         })

@@ -1,108 +1,92 @@
 const { Sequelize, Model, DataTypes } = require("sequelize");
 const coreModels = require('../models/index');
 const { Op } = require("sequelize");
+const db =  require('../models');
 
 const productServices = {
     getList: async (criteria, page, limit) => {
         let data = null;
         let total = 0;
-        if (criteria) {
-            if(Object.keys(criteria).length > 2) {
-                data = await coreModels.hosttingProduct.findAll({
-                    where: {
-                        [Op.and]: [
-                            {
-                                [Op.or]: {
-                                    iPAddress: {
-                                        [Op.like]: `%${criteria.keyword}%`
-                                    },
-                                    hostName: {
-                                        [Op.like]: `%${criteria.keyword}%`
-                                    }
-                                }
-                            },
-                            {
-                                vlanType: {
-                                    [Op.like]: `%${Number(criteria.vlanType)}%`
-                                }
-                            }
-                        ]   
-                    }
-                });
-                total = await coreModels.hosttingProduct.count({
-                    where: {
-                        [Op.and]: [
-                            {
-                                [Op.or]: {
-                                    iPAddress: {
-                                        [Op.like]: `%${criteria.keyword}%`
-                                    },
-                                    hostName: {
-                                        [Op.like]: `%${criteria.keyword}%`
-                                    }
-                                }
-                            },
-                            {
-                                vlanType: {
-                                    [Op.like]: `%${Number(criteria.vlanType)}%`
-                                }
-                            }
-                        ]   
-                    }
-                })
-            }
-            else {
-                if(criteria.keyword) {
-                    data = await coreModels.hosttingProduct.findAll({
-                        where: {
-                            [Op.or]: {
-                                iPAddress: {
-                                    [Op.like]: `%${criteria.keyword}%`
-                                },
-                                hostName: {
-                                    [Op.like]: `%${criteria.keyword}%`
-                                }
-                            }
+        let log = {
+            code: 204,
+            status: 0,
+            data: null,
+            total: null,
+        }
+        try {
+            if (criteria) {
+                if(Object.keys(criteria).length > 2) {
+                    let newCriteria = {};
+                    for (const [key, value] of Object.entries(criteria)) {
+                        if(key != 'keyword') {
+                            newCriteria[key] = value
                         }
-                    })
-                    total = await coreModels.hosttingProduct.findAll({
+                    }
+                    data = await coreModels.hosting.findAll({
                         where: {
-                            [Op.or]: {
-                                iPAddress: {
-                                    [Op.like]: `%${criteria.keyword}%`
+                            [Op.and]: [
+                                {
+                                    [Op.or]: {
+                                        iPAddress: {
+                                            [Op.like]: `%${criteria.keyword}%`
+                                        },
+                                        hostName: {
+                                            [Op.like]: `%${criteria.keyword}%`
+                                        }
+                                    }
                                 },
-                                hostName: {
-                                    [Op.like]: `%${criteria.keyword}%`
-                                }
-                            }
+                                newCriteria
+                            ]   
                         }
-                    })
+                    });
+                    total = data.length ?? 0;
                 }
                 else {
-                    data = await coreModels.hosttingProduct.findAll(
-                        {where: criteria}
-                    );
-                    total = await coreModels.hosttingProduct.count({where: criteria})
+                    if(criteria.keyword) {
+                        data = await coreModels.hosting.findAll({
+                            where: {
+                                [Op.or]: {
+                                    iPAddress: {
+                                        [Op.like]: `%${criteria.keyword}%`
+                                    },
+                                    hostName: {
+                                        [Op.like]: `%${criteria.keyword}%`
+                                    }
+                                }
+                            }
+                        })
+                        total = data.length ?? 0;
+                    }
+                    else {
+                        data = await coreModels.hosting.findAll(
+                            {where: criteria}
+                        );
+                        total = data.length ?? 0;
+                    }
                 }
             }
+            else {
+                data = await coreModels.hosting.findAll();
+                total = await coreModels.hosting.count()
+            }
+            log.code = 200;
+            log.status = 1;
+            log.data = data;
+            log.total = total;
+            
+        } catch (error) {
+            return log;
         }
-        else {
-            data = await coreModels.hosttingProduct.findAll();
-            total = await coreModels.hosttingProduct.count()
-        }
-        let response = {
-            data: data,
-            total: total,
-        }
-        return await response;
+
+        return log;
     },
     createHosting: async (body) => {
         let log = {
-            code: 400,
+            code: 204,
             msg: 'error'
         };
         try {
-            const data = await coreModels.hosttingProduct.create({
+            const data = await coreModels.hosting.create({
                 iPAddress: body.ipaddress,
                 iPAddressF5: body.ipaddressf5,
                 hostname: body.hostname,
@@ -115,6 +99,7 @@ const productServices = {
                 os: body.os,
                 note: body.note,
                 na: body.na,
+                status: body.status,
                 vlanType: body.vlanType,
                 server: body.server
             })
@@ -130,12 +115,12 @@ const productServices = {
     },
     deleteHosting: async(hostingId) => {
         let log = {
-            code: 400,
+            code: 204,
             msg: 'error'
         };
         if(hostingId) {
             try {
-                const data = await coreModels.hosttingProduct.destroy({
+                const data = await coreModels.hosting.destroy({
                     where: {
                         id: hostingId
                     }
@@ -154,11 +139,11 @@ const productServices = {
     },
     updateHosting: async (body, hostingId) => {
         let log = {
-            code: 400,
+            code: 204,
             msg: 'error'
         };
         try {
-            const data = await coreModels.hosttingProduct.update(
+            const data = await coreModels.hosting.update(
                 {
                     iPAddress: body.ipaddress,
                     iPAddressF5: body.ipaddressf5,
@@ -172,6 +157,7 @@ const productServices = {
                     os: body.os,
                     note: body.note,
                     na: body.na,
+                    status: body.status,
                     vlanType: body.vlanType,
                     server: body.server,
                     updatedAt: new Date()
@@ -194,7 +180,7 @@ const productServices = {
         let data;
         if(Object.keys(criteria).length == 1){
             if(criteria.keyword) {
-                data = await coreModels.vlanInfor.findAll({
+                data = await coreModels.vlan.findAll({
                     where: {
                         [Op.or]: {
                             vlanName: {
@@ -207,14 +193,73 @@ const productServices = {
                     }
                 });
             }
-            else if (criteria.server || criteria.id) {
-                data = await coreModels.vlanInfor.findAll({
+            else if (criteria.server || criteria.id || criteria.status) {
+                console.log(criteria);
+                data = await coreModels.vlan.findAll({
                     where: criteria
                 });
             }
         }
         else if (Object.keys(criteria).length == 2) {
-            data = await coreModels.vlanInfor.findAll({
+            if(criteria.keyword && criteria.server) {
+                data = await coreModels.vlan.findAll({
+                    where: {
+                        [Op.and]: [
+                            {
+                                [Op.or]: {
+                                    vlanName: {
+                                        [Op.like]: `%${criteria.keyword}%`
+                                    },
+                                    vlanInfor: {
+                                        [Op.like]: `%${criteria.keyword}%`
+                                    }
+                                }
+                            },
+                            {
+                                server: `${Number(criteria.server)}`
+                            }
+                        ]   
+                    }
+                })
+            }
+            else if (criteria.keyword && criteria.status) {
+                data = await coreModels.vlan.findAll({
+                    where: {
+                        [Op.and]: [
+                            {
+                                [Op.or]: {
+                                    vlanName: {
+                                        [Op.like]: `%${criteria.keyword}%`
+                                    },
+                                    vlanInfor: {
+                                        [Op.like]: `%${criteria.keyword}%`
+                                    }
+                                }
+                            },
+                            {
+                                status: `${Number(criteria.status)}`
+                            }
+                        ]   
+                    }
+                })
+            }
+            else if (criteria.server && criteria.status) {
+                data = await coreModels.vlan.findAll({
+                    where: {
+                        [Op.and]: [
+                            {
+                                server: `${Number(criteria.server)}`
+                            },
+                            {
+                                status: `${Number(criteria.status)}`
+                            }
+                        ]   
+                    }
+                })
+            }
+        }
+        else if (Object.keys(criteria).length == 3) {
+            data = await coreModels.vlan.findAll({
                 where: {
                     [Op.and]: [
                         {
@@ -228,28 +273,30 @@ const productServices = {
                             }
                         },
                         {
-                            server: {
-                                [Op.like]: `%${Number(criteria.server)}%`
-                            }
+                            server: `${Number(criteria.server)}`
+                        },
+                        {
+                            status: `${Number(criteria.status)}`
                         }
                     ]   
                 }
             })
         }
         else {
-            data = await coreModels.vlanInfor.findAll({});
+            data = await coreModels.vlan.findAll({});
         }
         return data;
     },
     updateVlan: async (body, vlanId) => {
         let log = {
-            code: 400,
+            code: 204,
             msg: 'error'
         };
         try {
-            const data = await coreModels.vlanInfor.update(
+            const data = await coreModels.vlan.update(
                 {
                     vlanName: body.vlanName,
+                    status: body.status,
                     vlanInfor: body.vlanInfor,
                     server: body.server,
                     updatedAt: new Date()
@@ -270,13 +317,15 @@ const productServices = {
     },
     createVlan: async (body) => {
         let log = {
-            code: 400,
+            code: 204,
             msg: 'error'
         };
         try {
-            const data = await coreModels.vlanInfor.create({
+            const data = await coreModels.vlan.create({
                 vlanName: body.vlanName,
+                status: body.status,
                 vlanInfor: body.vlanInfor,
+                status: body.status,
                 server: body.server
             })
             if(data) {
@@ -291,12 +340,12 @@ const productServices = {
     },
     deleteVlan: async(vlanId) => {
         let log = {
-            code: 400,
+            code: 204,
             msg: 'error'
         };
         if(vlanId) {
             try {
-                const data = await coreModels.vlanInfor.destroy({
+                const data = await coreModels.vlan.destroy({
                     where: {
                         id: vlanId
                     }
@@ -312,12 +361,11 @@ const productServices = {
         }
         return log
     },
-
     getListServer: async (criteria) => {
         let data;
         if (Object.keys(criteria).length == 1) {
             if(criteria.keyword) {
-                data = await coreModels.serverInfor.findAll({
+                data = await coreModels.server.findAll({
                     where: {
                         [Op.or]: {
                             serverName: {
@@ -331,13 +379,36 @@ const productServices = {
                 });
             }
             else {
-                data = await coreModels.serverInfor.findAll({
+                data = await coreModels.server.findAll({
                     where: criteria 
                 })
             }
         }
+        else if (Object.keys(criteria).length == 2) {
+            data = await coreModels.server.findAll({
+                where: {
+                    [Op.and]: [
+                        {
+                            [Op.or]: {
+                                serverName: {
+                                    [Op.like]: `%${criteria.keyword}%`
+                                },
+                                serverInfor: {
+                                    [Op.like]: `%${criteria.keyword}%`
+                                }
+                            }
+                        },
+                        {
+                            status: `${Number(criteria.status)}`
+                        }
+                    ]   
+                }
+            })
+        }
         else if (Object.keys(criteria).length == 0) {
-            data = await coreModels.serverInfor.findAll();
+            data = await db.sequelize.query('select * from server', {
+                model: coreModels.server
+            });
         }
         else {
             data = null;
@@ -347,12 +418,12 @@ const productServices = {
     },
     deleteServer: async(serverId) => {
         let log = {
-            code: 400,
+            code: 204,
             msg: 'error'
         };
         if(serverId) {
             try {
-                const data = await coreModels.serverInfor.destroy({
+                const data = await coreModels.server.destroy({
                     where: {
                         id: serverId
                     }
@@ -370,13 +441,14 @@ const productServices = {
     },
     updateServer: async (body, serverId) => {
         let log = {
-            code: 400,
+            code: 204,
             msg: 'error'
         };
         try {
-            const data = await coreModels.serverInfor.update(
+            const data = await coreModels.server.update(
                 {
                     serverName: body.serverName,
+                    status: body.status,
                     serverInfor: body.serverInfor,
                     updatedAt: new Date()
                 },
@@ -396,13 +468,15 @@ const productServices = {
     },
     createServer: async (body) => {
         let log = {
-            code: 400,
+            code: 204,
             msg: 'error'
         };
         try {
-            const data = await coreModels.serverInfor.create({
+            const data = await coreModels.server.create({
                 serverName: body.serverName,
+                status: body.status,
                 serverInfor: body.serverInfor,
+                status: body.status
             })
             if(data) {
                 log.code = 200;
@@ -414,6 +488,135 @@ const productServices = {
             return log
         }
     },
+    //port
+    getListPort: async (criteria) => {
+        let data;
+        if (Object.keys(criteria).length == 1) {
+            if(criteria.keyword) {
+                data = await db.sequelize.query(`select * from port a where a.port like '%${criteria.keyword}%' OR a.ipAddress like '%${criteria.keyword}%' OR a.description like '%${criteria.keyword}%'`, {
+                    model: coreModels.port
+                });
+            }
+            else {
+                data = await coreModels.port.findAll({
+                    where: criteria 
+                })
+            }
+        }
+        else if (Object.keys(criteria).length == 2) {
+            if(criteria.keyword && criteria.status) {
+                data = await db.sequelize.query(`select * from port a where (a.port like '%${criteria.keyword}%' OR a.ipAddress like '%${criteria.keyword}%' OR a.description like '%${criteria.keyword}%') and 
+                    a.status = ${Number(criteria.status)};`, {
+                    model: coreModels.port
+                });
+            }
+            else if (criteria.keyword && criteria.server) {
+                data = await db.sequelize.query(`select * from port a where (a.port like '%${criteria.keyword}%' OR a.ipAddress like '%${criteria.keyword}%' OR a.description like '%${criteria.keyword}%') and 
+                    a.server = ${Number(criteria.server)};`, {
+                    model: coreModels.port
+                });
+            }
+            else if (criteria.server && criteria.status) {
+                data = await db.sequelize.query(`select * from port a where a.status = ${Number(criteria.status)} and 
+                    a.server = ${Number(criteria.server)};`, {
+                    model: coreModels.port
+                });
+            }
+        }
+        else if (Object.keys(criteria).length == 0) {
+            data = await db.sequelize.query('select * from port', {
+                model: coreModels.port
+            });
+        }
+        else if (Object.keys(criteria).length == 3) {
+            data = await db.sequelize.query(`select * from port a where a.status = ${Number(criteria.status)} and 
+                a.server = ${Number(criteria.server)} and
+                (a.port like '%${criteria.keyword}%' OR a.ipAddress like '%${criteria.keyword}%' OR a.description like '%${criteria.keyword}%');`, {
+                model: coreModels.port
+            });
+        }
+        else {
+            data = null;
+        }
+        return await data;
+    },
+    deletePort: async(portId) => {
+        let log = {
+            code: 204,
+            msg: 'error'
+        };
+        if(portId) {
+            try {
+                const data = await coreModels.port.destroy({
+                    where: {
+                        id: portId
+                    }
+                })
+                if(data) {
+                    log.code = 200;
+                    log.msg = 'success';
+                }
+                return log
+            } catch (error) {
+                return log;
+            }
+        }
+        return log
+    },
+    updatePort: async (body, portId) => {
+        let log = {
+            code: 204,
+            msg: 'error'
+        };
+        try {
+            const data = await coreModels.port.update(
+                {
+                    port: body.port,
+                    status: body.status,
+                    ipAddress: body.ipAddress,
+                    description: body.description,
+                    server: body.server,
+                    updatedAt: new Date()
+                },
+                {
+                    where: {id: portId}
+                }
+            )
+            if(data) {
+                log.code = 200;
+                log.msg = 'success';
+            }
+            return log
+        } catch (error) {
+            console.log(error);
+            return log
+        }
+    },
+    createPort: async (body) => {
+        let log = {
+            code: 204,
+            msg: 'error'
+        };
+        try {
+            const data = await coreModels.port.create({
+                port: body.port,
+                status: body.status,
+                ipAddress: body.ipAddress,
+                description: body.description,
+                status: body.status,
+                server: body.server
+            })
+            if(data) {
+                log.code = 200;
+                log.msg = 'success';
+            }
+            return log
+        } catch (error) {
+            console.log(error);
+            return log
+        }
+    },
+
 }
 
 module.exports = productServices

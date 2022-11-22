@@ -9,22 +9,33 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { RouterModule } from '@angular/router';
 //Core components
-import {CoreComponentLayout} from './_core/components/layout/layout.component';
+import {DashboardComponentLayout} from './_core/components/layout/layout.component';
 import {CoreComponentSidebar} from './_core/components/sidebar/sidebar.component';
 import {CoreComponentHeader} from './_core/components/header/header.component';
 import {CoreComponentFooter} from './_core/components/footer/footer.component';
 
+import {AuthComponentChangePassword} from './auth/components/change-password/change-password.component';
+import {AuthComponentInfor} from './auth/components/infor/infor.component';
+
 import {AntDesignModule} from './shared/ant-design.module';
-//Prj components
+
+//auth
+import {AuthComponentLayout} from './_core/components/layout-auth/layout.component';
+import {AuthComponentHeader} from './_core/components/header-auth/header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     //Core Components
-    CoreComponentLayout,
+    DashboardComponentLayout,
     CoreComponentSidebar,
     CoreComponentHeader,
-    CoreComponentFooter
+    CoreComponentFooter,
+    AuthComponentChangePassword,
+    AuthComponentInfor,
+    //auth
+    AuthComponentLayout,
+    AuthComponentHeader
   ],
   imports: [
     BrowserModule,

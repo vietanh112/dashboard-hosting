@@ -14,7 +14,8 @@ export class DashboardModalCreateServer implements OnInit, AfterViewInit {
     @Input() checkVisibleCreateServer: boolean = false;
     @Output() checkVisibleCreateServerChange: EventEmitter<boolean> = new EventEmitter<boolean>();
     formCreate: any = {
-        serverName: null,
+        serverName: '',
+        status: null,
         serverInfor: '',
     }
     listServer: any = undefined;

@@ -15,6 +15,7 @@ export class DashboardModalUpdateServer implements OnInit, AfterViewInit {
     formUpdate: any = {
         id: '',
         serverName: '',
+        status: null,
         serverInfor: '',
     };
     @Output() checkVisibleUpdateServerChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -49,6 +50,7 @@ export class DashboardModalUpdateServer implements OnInit, AfterViewInit {
         this.productService.listServer(queries).subscribe(res => {
             this.formUpdate.id = res[0].id;
             this.formUpdate.serverName = res[0].serverName;
+            this.formUpdate.status = res[0].status;
             this.formUpdate.serverInfor = res[0].serverInfor;
         })
     }

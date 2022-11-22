@@ -1,12 +1,12 @@
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('hosting_product', {
+        await queryInterface.createTable('hosting', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
-                type: Sequelize.INTEGER(11)
+                type: Sequelize.INTEGER
             },
             iPAddress: {
                 type: Sequelize.STRING
@@ -44,11 +44,14 @@ module.exports = {
             na: {
                 type: Sequelize.STRING
             },
+            status: {
+                type: Sequelize.INTEGER
+            },
             vlanType: {
-                type: Sequelize.INTEGER(3)
+                type: Sequelize.INTEGER
             },
             server: {
-                type: Sequelize.INTEGER(3)
+                type: Sequelize.INTEGER
             },
             createdAt: {
                 allowNull: false,
@@ -61,6 +64,6 @@ module.exports = {
         }, {charset: 'utf8', collate: 'utf8_unicode_ci'});
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('hosting_product');
+        await queryInterface.dropTable('hosting');
     }
 };

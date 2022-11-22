@@ -10,14 +10,20 @@
               <input nz-input placeholder="Từ khóa" [(ngModel)]="search.keyword" nzSize="default" />
             </div>
             <div style="margin-left: 10px;">
+              <nz-select style="width: 120px;" [(ngModel)]="search.status" nzPlaceHolder="Status">
+                <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of status"></nz-option>
+              </nz-select>
+            </div>
+            <div style="margin-left: 10px;">
               <button nz-button nzType="primary" (click)="getList()">
                 <span nz-icon nzType="search"></span>
                 Tìm kiếm
               </button>
             </div>
           </div>
+          
           <div>
-            <button nz-button [nzType]="'primary'" [nzSize]="sizeButton" (click)="showModalCreateServer()"><span>Create Server</span></button>
+            <button *ngIf="currentUser?.roleId < 3" nz-button [nzType]="'primary'" [nzSize]="sizeButton" (click)="showModalCreateServer()"><span>Tạo mới Server</span></button>
           </div>
       </div>
       <nz-table #nzTable [nzData]="listServer" nzTableLayout="fixed" nzShowSizeChanger [nzPageSizeOptions]="[10, 20, 50]" [nzPageIndex]="page">
@@ -25,6 +31,7 @@
             <tr>
               <th class="text-center" style="width: 80px;">STT</th>
               <th class="text-center">Tên Server</th>
+              <th class="text-center">Trạng thái</th>
               <th>Thông tin Server</th>
               <th class="text-center" style="width: 120px;">Options</th>
             </tr>
@@ -33,6 +40,11 @@
             <tr *ngFor="let data of nzTable.data; let i = index">
               <td class="text-center">{{ i + 1}}</td>
               <td class="text-center">{{ data.serverName }}</td>
+              <td class="text-center">
+                <nz-tag [nzColor]="'red'" *ngIf="data.status == -1">Error</nz-tag>
+                <nz-tag [nzColor]="'orange'" *ngIf="data.status == 0">Stop</nz-tag>
+                <nz-tag [nzColor]="'green'" *ngIf="data.status == 1">Active</nz-tag>
+              </td>
               <td>{{ data.serverInfor }}</td>
               <td class="text-center">
                 <button nz-button nz-dropdown [nzDropdownMenu]="menu4" style="border-radius: 50%;">
@@ -40,11 +52,11 @@
                 </button>
                 <nz-dropdown-menu #menu4="nzDropdownMenu">
                   <ul nz-menu>
-                    <li nz-menu-item (click)="showModalUpdateServer(data)">
+                    <li nz-menu-item *ngIf="currentUser?.roleId < 3" (click)="showModalUpdateServer(data)">
                       <span style="margin-right: 12px;"><i nz-icon nzType="edit" nzTheme="outline"></i></span>
                       Chỉnh sửa Server
                     </li>
-                    <li nz-menu-item (click)="showConfirmDelete(data.id)">
+                    <li nz-menu-item *ngIf="currentUser?.roleId < 3" (click)="showConfirmDelete(data.id)">
                       <span style="margin-right: 12px;"><i nz-icon nzType="rest" nzTheme="outline"></i></span>
                       Xóa Server
                     </li>

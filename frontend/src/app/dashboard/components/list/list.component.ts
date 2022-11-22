@@ -4,6 +4,8 @@ import {Location} from "@angular/common";
 import { NzButtonSize } from 'ng-zorro-antd/button';
 import { DashboardHostingProductService } from '../../services/hosting-product.service';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import {AuthenticationService} from '../../../_core/services/authentication.service';
+
 
 @Component({
     selector: 'app-dashboard-list',
@@ -30,7 +32,8 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
     search: any = {
         keyword: null,
         vlanType: null,
-        server: null
+        server: null,
+        status: null
     };
     loadingState:boolean = false;
     routeParams: any = {
@@ -38,35 +41,44 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
     }
     page: number = 1;
     limit: number = 10;
+    listServer: any = undefined;
+    currentUser: any = undefined;
+
+    status: any = [
+        {id: null, name: 'All'},
+        {id: '-1', name: 'Error'},
+        {id: '0', name: 'Stop'},
+        {id: '1', name: 'Active'}
+    ]
     
   constructor(
     public productService: DashboardHostingProductService,
     private modal: NzModalService,
     private location: Location,
     private router: Router,
-    public activatedRoute: ActivatedRoute){
-        this.router.events.subscribe((event: Event) => {
-            if (event instanceof NavigationEnd) {
-                let server = null;
-                if(event.url.length < 16) {
-                    this.search.server = 1;
-                    return
-                }
-                server = event.url.slice(16, 19);
-                switch (server) {
-                    case 'uat':
-                        this.search.server = 1;
-                        break;
-                    case 'pro':
-                        this.search.server = 2;
-                        break;
-                    default:
-                        this.search.server = null;
-                        break;
-                }
-
-            }
-        });
+    public activatedRoute: ActivatedRoute,
+    private authenticationService: AuthenticationService){
+        // this.router.events.subscribe((event: Event) => {
+        //     if (event instanceof NavigationEnd) {
+        //         let server = null;
+        //         if(event.url.length < 16) {
+        //             this.search.server = 1;
+        //             return
+        //         }
+        //         server = event.url.slice(11, 14);
+        //         switch (server) {
+        //             case 'uat':
+        //                 this.search.server = 1;
+        //                 break;
+        //             case 'pro':
+        //                 this.search.server = 2;
+        //                 break;
+        //             default:
+        //                 this.search.server = null;
+        //                 break;
+        //         }
+        //     }
+        // });
     }
 
     ngOnInit(): void {
@@ -81,8 +93,21 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
                     this.listVlan = res;
                 }
             })
-            this.getList();
         }, 0)
+        setTimeout(() => {
+            this.productService.listServer(queries).subscribe(res => {
+                if(res) {
+                    this.listServer = res;
+                }
+            })
+        }, 0)
+        setTimeout(() => {
+            this.getList();
+        }, 0);
+    }
+
+    getCurrentUser () {
+        this.currentUser = this.authenticationService.currentUserValue;
     }
 
     showModalInfor(data: any) {
@@ -122,6 +147,9 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
         }
         if(this.search.server) {
             queries['server'] = Number(this.search.server);
+        }
+        if(this.search.status) {
+            queries['status'] = Number(this.search.status);
         }
         this.productService.list(queries).subscribe(res => {
             this.loadingState = false;

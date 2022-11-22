@@ -145,6 +145,8 @@ module.exports = {
         }
         return res.json(response)
     },
+
+    //SERVER
     getListServer: async (req, res) => {
         let criteria = {};
         for (const [key, value] of Object.entries(req.query)) {
@@ -167,8 +169,6 @@ module.exports = {
 
         return res.json(response)
     },
-    
-    
     deleteServer: async (req, res) => {
         const serverId = req.params.serverId;
         const data = await productServices.deleteServer(serverId);
@@ -204,6 +204,78 @@ module.exports = {
         const serverId = req.params.serverId;
         const body = await req.body.body;
         const data = await productServices.updateServer(body, serverId);
+        let response = {
+            status: 1,
+            code: 200,
+            message: '',
+            data: 'update'
+        }
+        response.code = data.code;
+        response.message = data.msg;
+        if (data.code == 400) {
+            response.data = null;
+        }
+        return res.json(response)
+    },
+
+    //PORT
+    getListPort: async (req, res) => {
+        let criteria = {};
+        for (const [key, value] of Object.entries(req.query)) {
+            if(key != 'page' && key != 'limit') {
+                if(key == 'id' || key == 'status') {
+                    criteria[key] = Number(value);
+                }
+                else {
+                    criteria[key] = value;
+                }
+            }
+        }
+        const data = await productServices.getListPort(criteria);
+        const response = {
+            status: 1,
+            code: 200,
+            message: 'success',
+            data: data ?? []
+        }
+
+        return res.json(response)
+    },
+    deletePort: async (req, res) => {
+        const portId = req.params.portId;
+        const data = await productServices.deletePort(portId);
+        let response = {
+            status: 1,
+            code: 200,
+            message: '',
+            data: 'Delete'
+        }
+        response.code = data.code;
+        response.message = data.msg;
+        if (data.code == 400) {
+            response.data = null;
+        }
+        return res.json(response)
+    },
+    createPort: async (req, res) => {
+        const data = await productServices.createPort(req.body.body);
+        let response = {
+            status: 1,
+            code: 200,
+            message: '',
+            data: 'Create'
+        }
+        response.code = data.code;
+        response.message = data.msg;
+        if (data.code == 400) {
+            response.data = null;
+        }
+        return res.json(response)
+    },
+    updatePort: async (req, res) => {
+        const portId = req.params.portId;
+        const body = await req.body.body;
+        const data = await productServices.updatePort(body, portId);
         let response = {
             status: 1,
             code: 200,

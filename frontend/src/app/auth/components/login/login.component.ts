@@ -42,39 +42,27 @@ export class AuthComponentLogin implements OnInit, AfterViewInit {
 
     submitForm(): void {
         this.loadingState = true;
-        this.authenticationService.login(this.f['email'].value, this.f['username'].value, this.f['password'].value).pipe(first()).subscribe(data => {
-            if(data == false) {
-                this.notification({
-                    title: 'login',
-                    message: 'Error',
-                    method: 'error',
-                    data: `<b>Username</b> or <b>Password</b> failed`
-                });
-                this.loadingState = false;
-            }
-            else {
-                this.notification({
-                    title: 'login',
-                    message: 'Success',
-                    method: 'success',
-                    data: `Login successed`
-                });
-                setTimeout(() => {
-                    const urlData = this.returnUrl ? this.returnUrl.split('?') : [];
-                    const path = urlData.length > 0 ? urlData[0] : '/dashboard/list';
-                    const queries = urlData.length > 1 ? urlData[1].split('&') : [];
-                    let navExt = {};
-                        if (queries.length > 0) {
-                            // tslint:disable-next-line:forin
-                            for (const i in queries) {
-                                navExt = Object.assign(navExt, queries[i]);
-                            }
-                        }
-                    this.router.navigate([path], navExt);
-                }, 1500);
-            }
-        }, error => {
+        this.authenticationService.login(this.f['email'].value, this.f['username'].value, this.f['password'].value).pipe(first()).subscribe(res => {
             this.loadingState = false;
+            
+            let noti: any = {
+                message: 'Success',
+                method: 'success',
+            }
+
+            if(res.code == 200 && res.status == 1) {
+                noti.message == res.message;
+                this.notification(noti);
+                setTimeout(() => {
+                    this.router.navigate(['dashboard', 'list']);
+                }, 1001);
+                return 
+            }
+            else if (res.code != 200 && res.status == 0) {
+                noti.message = res.message;
+                noti.method = 'error';
+                this.notification(noti);
+            }
         })
     }
 
@@ -84,8 +72,8 @@ export class AuthComponentLogin implements OnInit, AfterViewInit {
         this.modal[method]({
             nzWidth:350,
             nzOkText: null,
-            nzTitle: `${event.message} ${event.title}`,
-            nzContent: `${event.data}`,
+            nzTitle: `Login ${method}`,
+            nzContent: `${event.message}`,
             nzStyle: { position: 'absolute', bottom: `0px`, right: `20px`, top: 'auto' }
         })
         setTimeout(() => {

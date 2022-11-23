@@ -8,7 +8,7 @@ const configs = require('../../configs/configs')
 const authServices = {
     register: async (body) => {
         let log = {
-            code: 400,
+            code: 204,
             status: 0,
             msg: 'error'
         };
@@ -20,7 +20,8 @@ const authServices = {
             }
         })
         if(user.length > 0) {
-            log.code = 200;
+            log.code = 201;
+            log.msg = 'Username created';
             return log
         }
         let encryptedPassword = await bcrypt.hash(body.password, 10);
@@ -67,10 +68,11 @@ const authServices = {
     login: async (body) => {
         var tokenUpdate;
         let token;
-        let checkReturn = {
-            code: 400,
+        let log = {
+            code: 204,
             status: 0,
-            data: ''
+            data: null,
+            msg: 'Login error'
         }
         const user = await coreModels.users.findAll({
             where: {
@@ -78,7 +80,9 @@ const authServices = {
             }
         })
         if(!user) {
-            return checkReturn;
+            log.code = 201;
+            log.msg = 'User not exits';
+            return log;
         }
         if(user.length > 0){
             if (user && (await bcrypt.compare(body.password, user[0].dataValues.password))) {
@@ -98,17 +102,23 @@ const authServices = {
                         where: {id: user[0].dataValues.id}
                     })
                     user[0].dataValues.token = token;
-                    checkReturn.status = 1;
-                    checkReturn.data = user[0].dataValues;
+                    log.data = user[0].dataValues;
+                    log.status = 1;
+                    log.code = 200;
+                    log.msg = 'Login success';
+                    console.log(user);
                 }
                 catch(error) {
                     console.log(error);
-                    return checkReturn;
+                    return log;
                 }
             }
+            else {
+                log.code = 202;
+                log.msg = 'Username or password failed';
+            }
         }
-        checkReturn.code = 200;
-        return checkReturn;
+        return log;
     },
     changePassword: async (body) => {
         let checkReturn = {

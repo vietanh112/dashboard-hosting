@@ -194,7 +194,6 @@ const productServices = {
                 });
             }
             else if (criteria.server || criteria.id || criteria.status) {
-                console.log(criteria);
                 data = await coreModels.vlan.findAll({
                     where: criteria
                 });

@@ -13,7 +13,6 @@ module.exports = {
     */
     return queryInterface.bulkInsert('hosting', [
         {
-            id: 1,
             iPAddress: '10.4.28.1',
             iPAddressF5: '',
             hostname: 'Default Gateway',

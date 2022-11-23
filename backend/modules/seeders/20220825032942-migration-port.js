@@ -13,7 +13,6 @@ module.exports = {
     */
     return queryInterface.bulkInsert('port', [
         {
-            id: 1,
             port: '443',
             ipAddress: '10.4.28.1',
             description: 'a',
@@ -23,7 +22,6 @@ module.exports = {
             updatedAt: new Date(),
         },
           {
-            id: 2,
             port: '80',
             ipAddress: '10.4.28.2',
             description: 'b',
@@ -33,7 +31,6 @@ module.exports = {
             updatedAt: new Date(),
         },
           {
-            id: 3,
             port: '8080',
             ipAddress: '10.4.29.0',
             description: 'c',

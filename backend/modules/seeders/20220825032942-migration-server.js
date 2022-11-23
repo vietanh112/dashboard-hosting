@@ -13,7 +13,6 @@ module.exports = {
     */
     return queryInterface.bulkInsert('server', [
         {
-            id: 1,
             serverName: 'UAT',
             serverInfor: '',
             status: 1,
@@ -21,7 +20,6 @@ module.exports = {
             updatedAt: new Date(),
         },
           {
-            id: 2,
             serverName: 'PRODUCT',
             serverInfor: '',
             status: 1,

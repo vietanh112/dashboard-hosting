@@ -26,9 +26,9 @@ export class AuthComponentRegister implements OnInit, AfterViewInit {
     ) {}
     ngOnInit(): void {
         this.registerForm = this.formBuilder.group({
-            email: ["", [Validators.required, Validators.pattern('[a-z0-9](\.?[a-z0-9]){5,}@shb.com.vn')]],
+            email: ["", [Validators.required, Validators.pattern('[a-z0-9](\.?[a-z0-9]){5,}@[a-zA-Z0-9.]{2,30}')]],
             username: ["", [Validators.required, Validators.minLength(4), Validators.maxLength(30)]],
-            password: ["", [Validators.required, Validators.pattern('[A-Za-z0-9]{4,20}')]]
+            password: ["", [Validators.required, Validators.pattern('[A-Za-z0-9!@#$%^&*()-_+=]{4,20}')]]
         })
     }
     ngAfterViewInit(): void {
@@ -46,55 +46,31 @@ export class AuthComponentRegister implements OnInit, AfterViewInit {
             username: this.f['username'].value,
             password: this.f['password'].value,
         }
-        this.authenticationService.register(body).pipe(first()).subscribe(data => {
-            console.log(data);
-            
-            if(data == false) {
-                this.notification({
-                    title: 'register',
-                    message: 'Error',
-                    method: 'error',
-                    data: `<b>Username</b> or <b>Password</b> failed`,
-                    time: 2000
-                });
-                this.loadingState = false;
+        this.authenticationService.register(body).pipe(first()).subscribe(res => {
+            this.loadingState = false;
+            let noti: any = {
+                message: 'Success',
+                method: 'success',
+                data: `Register successed`,
+                time: 1500
+            }
+            if(res.code == 201) {
+                noti.message = 'Error';
+                noti.method = 'warning';
+                noti.data = res.message;
+                return this.notification(noti);
+            }
+            else if (res.code != 200) {
+                noti.message = 'Error';
+                noti.method = 'error';
+                noti.data = res.message;
+                return this.notification(noti);
             }
             else {
-                if(data.code == 200 && data.status == 0) {
-                    this.notification({
-                        title: 'register',
-                        message: 'Error',
-                        method: 'error',
-                        data: `<b>Username</b> failed`,
-                        time: 2000
-                    });
-                    this.loadingState = false;
-                }
-                else {
-                    this.notification({
-                        title: 'register',
-                        message: 'Success',
-                        method: 'success',
-                        data: `Register successed`,
-                        time: 1500
-                    });
-                    setTimeout(() => {
-                        const urlData = this.returnUrl ? this.returnUrl.split('?') : [];
-                        const path = urlData.length > 0 ? urlData[0] : '/dashboard/list';
-                        const queries = urlData.length > 1 ? urlData[1].split('&') : [];
-                        let navExt = {};
-                            if (queries.length > 0) {
-                                // tslint:disable-next-line:forin
-                                for (const i in queries) {
-                                    navExt = Object.assign(navExt, queries[i]);
-                                }
-                            }
-                        this.router.navigate([path], navExt);
-                    }, 1500);
-                }
+                noti.data = res.message;
+                this.notification(noti);
+                this.router.navigate(['auth', 'login']);
             }
-        }, error => {
-            this.loadingState = false;
         })
     }
 
@@ -105,7 +81,7 @@ export class AuthComponentRegister implements OnInit, AfterViewInit {
         this.modal[method]({
             nzWidth:350,
             nzOkText: null,
-            nzTitle: `${event.message} ${event.title}`,
+            nzTitle: `${event.message} Register`,
             nzContent: `${event.data}`,
             nzStyle: { position: 'absolute', bottom: `0px`, right: `20px`, top: 'auto' }
         })

@@ -9,27 +9,19 @@ module.exports = {
             res.status(400).json({
                 status: 0,
                 code: 400,
-                message: 'registerFailed'
+                message: 'registerFailed',
+                data: null
             })
             return res.end()
         }
-        if(rs.code == 200 && rs.status == 0) {
-            return res.json({
-                status: 0,
-                code: 200,
-                message: 'Username already exist',
-                data: {}
-            }).end()
-        }
         return res.json({
-            status: 1,
-            code: 200,
-            message: 'ok',
-            data: {}
+            status: rs.status,
+            code: rs.code,
+            message: rs.msg,
+            data: rs.data
         }).end()
     },
     login: async (req, res) => {
-        
         const rs = await authServices.login(req.body);
         if (rs['code'] == 400) {
             res.status(400).json({
@@ -40,11 +32,12 @@ module.exports = {
             return res.end()
         }
         else{
-            if(rs['code'] == 200 && rs['status'] == 0){
-                return res.status(200).json({
+            if(rs['code'] != 200 && rs['status'] == 0){
+                return res.status(rs.code).json({
                     status: 0,
-                    code: 200,
-                    message: `wrong username or password`
+                    code: rs.code,
+                    message: rs.msg,
+                    data: rs.data
                 }).end()
             }
             return res.json({

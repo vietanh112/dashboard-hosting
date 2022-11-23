@@ -12,10 +12,42 @@ module.exports = {
      * }], {});
     */
     return queryInterface.bulkInsert('users', [
-        {
-            id: 1,
+      {
+        username: 'admin',
+        password: '$2b$10$d2.U.Y.dV0JF1X3FlGcCNeWTb/0YHf4ZPzFPIMPgb4vqUv8xABe3S', //admin123
+        email: '',
+        roleId: 1,
+        allow: 1,
+        status: 1,
+        token: '1',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        username: 'superadmin',
+        password: '$2b$10$.Yylat1mec6H5cEoEVE1o.zD4rsPRrFaD4S4DxueMGR78lT2X2N4y', //superadmin123
+        email: '',
+        roleId: 2,
+        allow: 1,
+        status: 1,
+        token: '1',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        username: 'user',
+        password: '$2b$10$L7UyHqjJjmV9t0BffXMP5.9wgF3O3veQw3V7M1CboDfIvuTI2HtTG', //user123!!
+        email: '',
+        roleId: 3,
+        allow: 1,
+        status: 1,
+        token: '1',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },  
+      {
             username: 'anhnhv',
-            password: '$2b$10$d3EiAQLVYZATD097JxRHmeihGaVA2wjKZByj3HE2sfCFjNchHYxdW',
+            password: '$2b$10$d3EiAQLVYZATD097JxRHmeihGaVA2wjKZByj3HE2sfCFjNchHYxdW', //vanh123
             email: 'anh.nhv@shb.com.vn',
             roleId: 1,
             allow: 1,
@@ -23,7 +55,7 @@ module.exports = {
             token: '1',
             createdAt: new Date(),
             updatedAt: new Date(),
-        }
+        },
       ]);
   },
 

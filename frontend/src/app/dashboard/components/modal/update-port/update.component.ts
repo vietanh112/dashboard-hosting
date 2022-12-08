@@ -9,7 +9,8 @@ import {DashboardHostingProductService} from '../../../services/hosting-product.
 
 export class DashboardModalUpdatePort implements OnInit, AfterViewInit {
     @Input() checkVisibleUpdatePort: boolean = false;
-    @Input() idUpdate: string = null;
+    @Input() portUpdate: any = {};
+    @Input() listServer: any = [];
     formUpdate: any = {
         id: null,
         port: '',
@@ -19,8 +20,13 @@ export class DashboardModalUpdatePort implements OnInit, AfterViewInit {
         server: null,
     };
     @Output() checkVisibleUpdatePortChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-    listServer: any = undefined;
     textValue: string | null = null;
+
+    status: any = [
+        {id: '-1', name: 'Error'},
+        {id: '0', name: 'Stop'},
+        {id: '1', name: 'Active'},
+    ]
     
     ngOnInit(): void {
         
@@ -51,19 +57,12 @@ export class DashboardModalUpdatePort implements OnInit, AfterViewInit {
         })
     }
     getPort() {
-        let queries = {
-            id: this.idUpdate
-        }
-        this.productService.listPort(queries).subscribe(res => {
-            if(res) {
-                this.formUpdate.id = res[0].id;
-                this.formUpdate.port = res[0].port;
-                this.formUpdate.status = res[0].status;
-                this.formUpdate.ipAddress = res[0].ipAddress;
-                this.formUpdate.description = res[0].description;
-                this.formUpdate.server = res[0].server;
-            }
-        })
+        this.formUpdate.id = this.portUpdate.id;
+        this.formUpdate.port = this.portUpdate.port;
+        this.formUpdate.status = this.portUpdate.status;
+        this.formUpdate.ipAddress = this.portUpdate.ipAddress;
+        this.formUpdate.description = this.portUpdate.description;
+        this.formUpdate.server = this.portUpdate.server;
     }
 
     updateVlan() {

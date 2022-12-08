@@ -11,7 +11,8 @@ import {HostingModel} from "../../../models/host.model";
 
 export class DashboardModalUpdateVlan implements OnInit, AfterViewInit {
     @Input() checkVisibleUpdateVlan: boolean = false;
-    @Input() idUpdate: string = null;
+    @Input() vlanUpdate: any = null;
+    @Input() listServer: any = null;
     formUpdate: any = {
         id: '',
         vlanName: '',
@@ -20,13 +21,13 @@ export class DashboardModalUpdateVlan implements OnInit, AfterViewInit {
         server: null
     };
     @Output() checkVisibleUpdateVlanChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-    listServer: any = undefined;
     textValue: string | null = null;
     
     ngOnInit(): void {
         
     }
     ngAfterViewInit(): void {
+
     }
 
     constructor(public productService: DashboardHostingProductService) {
@@ -43,27 +44,16 @@ export class DashboardModalUpdateVlan implements OnInit, AfterViewInit {
     }
 
     loadingOk():void {
-        this.getVlan();
-        let queries = {}
-        this.productService.listServer(queries).subscribe(res => {
-            if(res) {
-                this.listServer = res;
-            }
-        })
+        this.showVlan();
     }
-    getVlan() {
-        let queries = {
-            id: this.idUpdate
+    showVlan() {
+        if(this.vlanUpdate) {
+            this.formUpdate.id = this.vlanUpdate.id;
+            this.formUpdate.vlanName = this.vlanUpdate.vlanName;
+            this.formUpdate.status = this.vlanUpdate.status;
+            this.formUpdate.vlanInfor = this.vlanUpdate.vlanInfor;
+            this.formUpdate.server = this.vlanUpdate.server;
         }
-        this.productService.listVlan(queries).subscribe(res => {
-            if(res) {
-                this.formUpdate.id = res[0].id;
-                this.formUpdate.vlanName = res[0].vlanName;
-                this.formUpdate.status = res[0].status;
-                this.formUpdate.vlanInfor = res[0].vlanInfor;
-                this.formUpdate.server = res[0].server;
-            }
-        })
     }
 
     updateVlan() {

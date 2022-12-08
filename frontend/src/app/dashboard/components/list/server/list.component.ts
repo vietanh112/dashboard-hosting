@@ -26,7 +26,7 @@ export class DashboardListServer implements OnInit, AfterViewInit {
     page: number = 1;
     limit: number = 10;
     listServer: any = undefined;
-    data: any = undefined;
+    dataServer: any = undefined;
     sizeButton: NzButtonSize = 'large';
     currentUser: any = undefined;
 
@@ -37,13 +37,29 @@ export class DashboardListServer implements OnInit, AfterViewInit {
         {id: '1', name: 'Active'}
     ]
 
+    routeParams: any = {
+        keyword: null,
+        status: null
+    };
+
     constructor(
         public productService: DashboardHostingProductService,
         private modal: NzModalService,
         private location: Location,
         private router: Router,
-        private authenticationService: AuthenticationService
-    ){}
+        private authenticationService: AuthenticationService,
+        public activatedRoute: ActivatedRoute,
+    ){
+        this.activatedRoute.queryParams.subscribe(params => {
+            this.routeParams = params;
+            if (typeof (params['keyword']) !== 'undefined') {
+                this.search.keyword = decodeURIComponent(params['keyword']);
+            }
+            if (typeof (params['status']) !== 'undefined') {
+                this.search.status = params['status'];
+            }
+        })
+    }
     ngOnInit(): void {}
     ngAfterViewInit(): void {
         setTimeout(() => {
@@ -57,7 +73,7 @@ export class DashboardListServer implements OnInit, AfterViewInit {
 
     showModalUpdateServer(data: any) {
         this.checkVisibleUpdateServer = true;
-        this.data = data.id;
+        this.dataServer = data;
     }
 
     deleteItem (hostingId: any) {

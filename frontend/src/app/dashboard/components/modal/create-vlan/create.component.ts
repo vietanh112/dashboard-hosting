@@ -12,14 +12,14 @@ import {DashboardHostingProductService} from '../../../services/hosting-product.
 
 export class DashboardModalCreateVlan implements OnInit, AfterViewInit {
     @Input() checkVisibleCreateVlan: boolean = false;
+    @Input() listServer: any = [];
     @Output() checkVisibleCreateVlanChange: EventEmitter<boolean> = new EventEmitter<boolean>();
     formCreate: any = {
         vlanName: '',
-        status: null,
+        status: '0',
         vlanInfor: '',
         server: null
     }
-    listServer: any = undefined;
     textValue: string | null = null;
     
     ngOnInit(): void {
@@ -49,11 +49,6 @@ export class DashboardModalCreateVlan implements OnInit, AfterViewInit {
     }
 
     loadingOk() {
-        let queries = {}
-        this.productService.listServer(queries).subscribe(res => {
-            if(res) {
-                this.listServer = res;
-            }
-        })
+        
     }
 }

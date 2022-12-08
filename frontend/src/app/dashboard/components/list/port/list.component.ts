@@ -27,7 +27,7 @@ export class DashboardListPort implements OnInit, AfterViewInit {
     limit: number = 10;
     listPort: any = undefined;
     listServer: any = undefined;
-    data: any = undefined;
+    dataPort: any = undefined;
     sizeButton: NzButtonSize = 'large';
     currentUser: any = undefined;
 
@@ -64,7 +64,7 @@ export class DashboardListPort implements OnInit, AfterViewInit {
 
     showModalUpdatePort(data: any) {
         this.checkVisibleUpdatePort = true;
-        this.data = data.id;
+        this.dataPort = data;
     }
 
     deleteItem (hostingId: any) {

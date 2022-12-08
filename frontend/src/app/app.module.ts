@@ -3,7 +3,7 @@ import { AppComponent } from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
+import { HttpClientJsonpModule, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ScrollingModule } from '@angular/cdk/scrolling';
@@ -22,6 +22,10 @@ import {AntDesignModule} from './shared/ant-design.module';
 //auth
 import {AuthComponentLayout} from './_core/components/layout-auth/layout.component';
 import {AuthComponentHeader} from './_core/components/header-auth/header.component';
+
+//helper
+
+import {JwtInterceptor} from './_helpers/jwt.interceptor';
 
 @NgModule({
   declarations: [
@@ -50,7 +54,9 @@ import {AuthComponentHeader} from './_core/components/header-auth/header.compone
     DragDropModule,
     RouterModule
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

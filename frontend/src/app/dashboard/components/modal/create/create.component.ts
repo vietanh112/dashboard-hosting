@@ -12,6 +12,8 @@ import {DashboardHostingProductService} from '../../../services/hosting-product.
 
 export class DashboardModalCreate implements OnInit, AfterViewInit {
     @Input() checkVisibleCreate: boolean = false;
+    @Input() listServer: any = [];
+    @Input() listVlanAll: any = [];
     @Output() checkVisibleCreateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
     formCreate: any = {
         ipaddress: '',
@@ -30,8 +32,8 @@ export class DashboardModalCreate implements OnInit, AfterViewInit {
         vlanType: null,
         server: null
     }
+
     listVlan: any = [];
-    listServer: any = [];
     
     ngOnInit(): void {
         
@@ -60,21 +62,13 @@ export class DashboardModalCreate implements OnInit, AfterViewInit {
     }
 
     loadingOk() {
-        let queries = {}
-        this.productService.listServer(queries).subscribe(res => {
-            if(res) {
-                this.listServer = res;
-            }
-        })
+        
     }
     listVlanChange(event: any) {
-        let queries = {
-            server: event
-        }
-        this.productService.listVlan(queries).subscribe(res => {
-            if(res) {
-                this.listVlan = res;
+        for(let item of this.listVlanAll) {
+            if(item.server == event) {
+                this.listVlan.push(item)
             }
-        })
+        }
     }
 }

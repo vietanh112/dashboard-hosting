@@ -78,5 +78,5 @@
         </nz-table>
         
   </div>
-  <app-dashboard-modal-update-vlan [(checkVisibleUpdateVlan)]=checkVisibleUpdateVlan (checkVisibleUpdateVlanChange) = "updateVlan($event)" [idUpdate]=data></app-dashboard-modal-update-vlan>
-  <app-dashboard-modal-create-vlan [(checkVisibleCreateVlan)]=checkVisibleCreateVlan (checkVisibleCreateVlanChange) = "createVlan($event)"></app-dashboard-modal-create-vlan>
+  <app-dashboard-modal-update-vlan [(checkVisibleUpdateVlan)]=checkVisibleUpdateVlan (checkVisibleUpdateVlanChange) = "updateVlan($event)" [vlanUpdate]=dataVlan [listServer]=listServer></app-dashboard-modal-update-vlan>
+  <app-dashboard-modal-create-vlan [(checkVisibleCreateVlan)]=checkVisibleCreateVlan (checkVisibleCreateVlanChange) = "createVlan($event)" [listServer]=listServer></app-dashboard-modal-create-vlan>

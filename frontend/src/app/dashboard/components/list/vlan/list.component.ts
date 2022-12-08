@@ -27,7 +27,7 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
     limit: number = 10;
     listVlan: any = undefined;
     listServer: any = undefined;
-    data: any = undefined;
+    dataVlan: any = undefined;
     sizeButton: NzButtonSize = 'large';
     currentUser: any = undefined;
 
@@ -38,44 +38,59 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
         {id: '1', name: 'Active'}
     ]
 
+    routeParams: any = {
+        keyword: null,
+        status: null,
+        server: null
+    };
+
     constructor(
         public productService: DashboardHostingProductService,
         private modal: NzModalService,
         private location: Location,
         private router: Router,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        public activatedRoute: ActivatedRoute,
     ){
-        this.router.events.subscribe((event: Event) => {
-            if (event instanceof NavigationEnd) {
-                let server = null;
-                if(event.url.length < 11) {
-                    this.search.server = 1;
-                    return
-                }
-                server = event.url.slice(11, 14);
-                switch (server) {
-                    case 'uat':
-                        this.search.server = 1;
-                        break;
-                    case 'pro':
-                        this.search.server = 2;
-                        break;
-                    default:
-                        this.search.server = null;
-                        break;
-                }
+        // this.router.events.subscribe((event: Event) => {
+        //     if (event instanceof NavigationEnd) {
+        //         let server = null;
+        //         if(event.url.length < 11) {
+        //             this.search.server = 1;
+        //             return
+        //         }
+        //         server = event.url.slice(11, 14);
+        //         switch (server) {
+        //             case 'uat':
+        //                 this.search.server = 1;
+        //                 break;
+        //             case 'pro':
+        //                 this.search.server = 2;
+        //                 break;
+        //             default:
+        //                 this.search.server = null;
+        //                 break;
+        //         }
+        //     }
+        // });
+        this.activatedRoute.queryParams.subscribe(params => {
+            this.routeParams = params;
+            if (typeof (params['keyword']) !== 'undefined') {
+                this.search.keyword = decodeURIComponent(params['keyword']);
             }
-        });
+            if (typeof (params['status']) !== 'undefined') {
+                this.search.status = params['status'];
+            }
+            if (typeof (params['server']) !== 'undefined') {
+                this.search.server = params['server'];
+            }
+        })
     }
     ngOnInit(): void {}
+    
     ngAfterViewInit(): void {
-        let queries = {};
         setTimeout(() => {
-            this.productService.listServer(queries).subscribe(res => {
-                if(res) {
-                    this.listServer = res;
-                }
-            })
+            this.getServer();
             this.getList();
         }, 0)
     }
@@ -86,7 +101,7 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
 
     showModalUpdateVlan(data: any) {
         this.checkVisibleUpdateVlan = true;
-        this.data = data.id;
+        this.dataVlan = data;
     }
 
     deleteItem (hostingId: any) {
@@ -126,6 +141,14 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
                 this.deleteItem(hostingId);
             }
           });
+    }
+
+    getServer() {
+        this.productService.listServer({}).subscribe(res => {
+            if(res) {
+                this.listServer = res;
+            }
+        })
     }
 
     getList() {

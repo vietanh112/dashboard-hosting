@@ -2,6 +2,11 @@ const { Sequelize, Model, DataTypes } = require("sequelize");
 const coreModels = require('../models/index');
 const { Op } = require("sequelize");
 const db =  require('../models');
+const redis = require('redis');
+const client = redis.createClient(6379);
+const listVlanRedisKey = 'list:vlan';
+const listServerRedisKey = 'list:server';
+
 
 const productServices = {
     getList: async (criteria, page, limit) => {
@@ -178,6 +183,8 @@ const productServices = {
     },
     getListVlan: async (criteria, page, limit) => {
         let data;
+        
+
         if(Object.keys(criteria).length == 1){
             if(criteria.keyword) {
                 data = await coreModels.vlan.findAll({
@@ -282,7 +289,22 @@ const productServices = {
             })
         }
         else {
-            data = await coreModels.vlan.findAll({});
+            const myPromise = new Promise((resolve, reject) => {
+                client.get(listVlanRedisKey, async (err, vlan) => {
+                    if(vlan != {} && vlan != null && vlan != undefined) {
+                        resolve(JSON.parse(vlan));
+                    }
+                    else if(vlan == null || vlan == undefined || vlan == {} || vlan == []){
+                        data = await coreModels.vlan.findAll({});
+                        client.setex(listVlanRedisKey, 3600, JSON.stringify(data));
+                        resolve(data);
+                    }
+                    else {
+                        reject(false)
+                    }
+                })
+            });
+            return await myPromise
         }
         return data;
     },
@@ -292,7 +314,7 @@ const productServices = {
             msg: 'error'
         };
         try {
-            const data = await coreModels.vlan.update(
+            let data = await coreModels.vlan.update(
                 {
                     vlanName: body.vlanName,
                     status: body.status,
@@ -305,6 +327,8 @@ const productServices = {
                 }
             )
             if(data) {
+                data = await coreModels.vlan.findAll({});
+                client.setex(listVlanRedisKey, 3600, JSON.stringify(data));
                 log.code = 200;
                 log.msg = 'success';
             }
@@ -320,7 +344,7 @@ const productServices = {
             msg: 'error'
         };
         try {
-            const data = await coreModels.vlan.create({
+            let data = await coreModels.vlan.create({
                 vlanName: body.vlanName,
                 status: body.status,
                 vlanInfor: body.vlanInfor,
@@ -328,6 +352,8 @@ const productServices = {
                 server: body.server
             })
             if(data) {
+                data = await coreModels.vlan.findAll({});
+                client.setex(listVlanRedisKey, 3600, JSON.stringify(data));
                 log.code = 200;
                 log.msg = 'success';
             }
@@ -344,12 +370,14 @@ const productServices = {
         };
         if(vlanId) {
             try {
-                const data = await coreModels.vlan.destroy({
+                let data = await coreModels.vlan.destroy({
                     where: {
                         id: vlanId
                     }
                 })
                 if(data) {
+                    data = await coreModels.vlan.findAll({});
+                    client.setex(listVlanRedisKey, 3600, JSON.stringify(data));
                     log.code = 200;
                     log.msg = 'success';
                 }
@@ -362,9 +390,10 @@ const productServices = {
     },
     getListServer: async (criteria) => {
         let data;
+
         if (Object.keys(criteria).length == 1) {
             if(criteria.keyword) {
-                data = await coreModels.server.findAll({
+                return data = await coreModels.server.findAll({
                     where: {
                         [Op.or]: {
                             serverName: {
@@ -378,7 +407,7 @@ const productServices = {
                 });
             }
             else {
-                data = await coreModels.server.findAll({
+                return data = await coreModels.server.findAll({
                     where: criteria 
                 })
             }
@@ -403,16 +432,29 @@ const productServices = {
                     ]   
                 }
             })
+            return await data
         }
         else if (Object.keys(criteria).length == 0) {
-            data = await db.sequelize.query('select * from server', {
-                model: coreModels.server
+            const myPromise = new Promise((resolve, reject) => {
+                client.get(listServerRedisKey, async (err, server) => {
+                    if(server != {} && server != null && server != undefined) {
+                        resolve(JSON.parse(server));
+                    }
+                    else if (server == null || server == undefined || server == {} || server == []) {
+                        data = await coreModels.server.findAll({});
+                        client.setex(listServerRedisKey, 3600, JSON.stringify(data));
+                        resolve(data);
+                    }
+                    else {
+                        reject(false)
+                    }
+                })
             });
+            return await myPromise
         }
         else {
             data = null;
         }
-        
         return await data;
     },
     deleteServer: async(serverId) => {
@@ -422,12 +464,14 @@ const productServices = {
         };
         if(serverId) {
             try {
-                const data = await coreModels.server.destroy({
+                let data = await coreModels.server.destroy({
                     where: {
                         id: serverId
                     }
                 })
                 if(data) {
+                    data = await coreModels.server.findAll({});
+                    client.setex(listServerRedisKey, 3600, JSON.stringify(data));
                     log.code = 200;
                     log.msg = 'success';
                 }
@@ -444,7 +488,7 @@ const productServices = {
             msg: 'error'
         };
         try {
-            const data = await coreModels.server.update(
+            let data = await coreModels.server.update(
                 {
                     serverName: body.serverName,
                     status: body.status,
@@ -456,6 +500,8 @@ const productServices = {
                 }
             )
             if(data) {
+                data = await coreModels.server.findAll({});
+                client.setex(listServerRedisKey, 3600, JSON.stringify(data));
                 log.code = 200;
                 log.msg = 'success';
             }
@@ -471,13 +517,15 @@ const productServices = {
             msg: 'error'
         };
         try {
-            const data = await coreModels.server.create({
+            let data = await coreModels.server.create({
                 serverName: body.serverName,
                 status: body.status,
                 serverInfor: body.serverInfor,
                 status: body.status
             })
             if(data) {
+                data = await coreModels.server.findAll({});
+                client.setex(listServerRedisKey, 3600, JSON.stringify(data));
                 log.code = 200;
                 log.msg = 'success';
             }

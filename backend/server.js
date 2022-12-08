@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const authMiddlewares = require("./modules/middlewares/authMiddlewares");
 
 express.application.prefix = express.Router.prefix = function (path, configure) {
     const router = express.Router();
@@ -72,7 +73,7 @@ app.route(`/auth/:userId/infor`).get([], async(req, res) => {
 
 
 //Routes
-app.route(`/dashboard/product/list`).get([], async(req, res) => {
+app.route(`/dashboard/product/list`).get([authMiddlewares.verifyToken], async(req, res) => {
     return productController.getList(req, res);
 })
 app.route(`/dashboard/product/create`).post([], async(req, res) => {

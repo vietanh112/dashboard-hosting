@@ -1,4 +1,4 @@
-<nz-modal [(nzVisible)]="checkVisibleCreateServer" nzTitle="Tạo mới Vlan" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+<nz-modal [(nzVisible)]="checkVisibleCreateServer" nzTitle="Tạo mới Server" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
     <ng-container *nzModalContent>
         <div class="form-group" nz-row>
           <div nz-col nzSpan="7">
@@ -16,9 +16,7 @@
           </div>
           <div nz-col nzSpan="17">
             <nz-select style="width: 100%;" [(ngModel)]="formCreate.status">
-              <nz-option [nzValue]="-1" [nzLabel]="'Error'"></nz-option>
-              <nz-option [nzValue]="'0'" [nzLabel]="'Stop'"></nz-option>
-              <nz-option [nzValue]="1" [nzLabel]="'Active'"></nz-option>
+              <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of status"></nz-option>
             </nz-select>
           </div>
         </div>

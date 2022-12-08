@@ -11,11 +11,15 @@ import {HostingModel} from "../../../models/host.model";
 
 export class DashboardModalInfor implements OnInit, AfterViewInit {
     @Input() checkVisibleInfor: boolean = false;
-    @Input() dataHosting: any = undefined;
-    @Input() nameHosting: string = '';
+    @Input() dataHosting: any = {};
+    @Input() listVlan: any = [];
     @Output() checkVisibleInforChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-    listVlan: any = undefined;
-    vlan: any = null;
+
+    status: any = [
+        {id: '-1', color: 'red', name: 'Error'},
+        {id: '0', color: 'orange', name: 'Stop'},
+        {id: '1', color: 'green', name: 'Active'},
+    ]
     ngOnInit(): void {
         
     }
@@ -34,16 +38,10 @@ export class DashboardModalInfor implements OnInit, AfterViewInit {
     }
 
     loadingOk():void {
-        let queries = {}
-        this.productService.listVlan(queries).subscribe(res => {
-            if(res) {
-                this.listVlan = res;
-                for (const element of this.listVlan) {
-                    if(element.id == this.dataHosting.vlanType){
-                        this.vlan = element;
-                    } 
-                }
+        for(let item of this.listVlan) {
+            if(item.id == this.dataHosting.vlanType) {
+                this.dataHosting['vlanType'] = item.vlanName
             }
-        })
+        }
     }
 }

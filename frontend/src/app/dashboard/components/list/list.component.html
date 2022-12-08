@@ -94,8 +94,8 @@
       </ng-template>
       
 </div>
-<app-dashboard-modal-infor [(checkVisibleInfor)]=checkVisibleInfor [nameHosting]="nameHosting"  [dataHosting]=dataHosting></app-dashboard-modal-infor>
-<app-dashboard-modal-create [(checkVisibleCreate)]=checkVisibleCreate (checkVisibleCreateChange) = "createHosting($event)"></app-dashboard-modal-create>
-<app-dashboard-modal-update [(checkVisibleUpdate)]=checkVisibleUpdate (checkVisibleUpdateChange) = "updateHosting($event)" [idUpdate]=data></app-dashboard-modal-update>
+<app-dashboard-modal-infor [(checkVisibleInfor)]=checkVisibleInfor [listVlan]=listVlan  [dataHosting]=hosting></app-dashboard-modal-infor>
+<app-dashboard-modal-create [(checkVisibleCreate)]=checkVisibleCreate (checkVisibleCreateChange) = "createHosting($event)" [listServer]=listServer [listVlanAll]=listVlan></app-dashboard-modal-create>
+<app-dashboard-modal-update [(checkVisibleUpdate)]=checkVisibleUpdate (checkVisibleUpdateChange) = "updateHosting($event)" [hosting]=hosting [listServer]=listServer [listVlan]=listVlan></app-dashboard-modal-update>
 <!-- <app-dashboard-modal-create-vlan [(checkVisibleCreateVlan)]=checkVisibleCreateVlan (checkVisibleCreateVlanChange) = "createVlan($event)"></app-dashboard-modal-create-vlan> -->
 <!-- <app-dashboard-modal-create-server [(checkVisibleCreateServer)]=checkVisibleCreateServer (checkVisibleCreateServerChange) = "createServer($event)"></app-dashboard-modal-create-server> -->

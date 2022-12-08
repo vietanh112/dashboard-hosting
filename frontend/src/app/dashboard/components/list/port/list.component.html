@@ -82,5 +82,5 @@
         </nz-table>
         
   </div>
-  <app-dashboard-modal-update-port [(checkVisibleUpdatePort)]=checkVisibleUpdatePort (checkVisibleUpdatePortChange) = "updatePort($event)" [idUpdate]=data></app-dashboard-modal-update-port>
-  <app-dashboard-modal-create-port [(checkVisibleCreatePort)]=checkVisibleCreatePort (checkVisibleCreatePortChange) = "createPort($event)"></app-dashboard-modal-create-port>
+  <app-dashboard-modal-update-port [(checkVisibleUpdatePort)]=checkVisibleUpdatePort (checkVisibleUpdatePortChange) = "updatePort($event)" [portUpdate]=dataPort [listServer]=listServer></app-dashboard-modal-update-port>
+  <app-dashboard-modal-create-port [(checkVisibleCreatePort)]=checkVisibleCreatePort (checkVisibleCreatePortChange) = "createPort($event)" [listServer]=listServer></app-dashboard-modal-create-port>

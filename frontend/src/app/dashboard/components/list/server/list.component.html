@@ -68,5 +68,5 @@
         </nz-table>
         
   </div>
-  <app-dashboard-modal-update-server [(checkVisibleUpdateServer)]=checkVisibleUpdateServer (checkVisibleUpdateServerChange) = "updateServer($event)" [idUpdate]=data></app-dashboard-modal-update-server>
+  <app-dashboard-modal-update-server [(checkVisibleUpdateServer)]=checkVisibleUpdateServer (checkVisibleUpdateServerChange) = "updateServer($event)" [dataServer]=dataServer></app-dashboard-modal-update-server>
   <app-dashboard-modal-create-server [(checkVisibleCreateServer)]=checkVisibleCreateServer (checkVisibleCreateServerChange) = "createServer($event)"></app-dashboard-modal-create-server>

@@ -8,13 +8,13 @@
         Đăng kí
     </h2>
     <form nz-form [formGroup]="registerForm" class="register-form" (ngSubmit)="submitForm()">
-        <nz-form-item>
-            <nz-form-control nzErrorTip="Email not validated!">
-              <nz-input-group nzPrefixIcon="form">
-                <input type="text" nz-input formControlName="email" placeholder="Email" />
-              </nz-input-group>
-            </nz-form-control>
-        </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Email not validated!">
+          <nz-input-group nzPrefixIcon="mail">
+            <input type="text" nz-input formControlName="email" placeholder="Email" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
         <nz-form-item>
           <nz-form-control nzErrorTip="Username not validated!">
             <nz-input-group nzPrefixIcon="user">
@@ -26,6 +26,14 @@
           <nz-form-control nzErrorTip="Password not validated!">
             <nz-input-group nzPrefixIcon="lock">
               <input type="password" nz-input formControlName="password" placeholder="Password" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Confirm password not validated!">
+            <nz-input-group nzPrefixIcon="lock">
+              <input type="password" nz-input formControlName="confirmPassword" placeholder="Confirm password" />
             </nz-input-group>
           </nz-form-control>
         </nz-form-item>

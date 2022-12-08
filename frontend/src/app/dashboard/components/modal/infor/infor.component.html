@@ -1,6 +1,5 @@
-<nz-modal [(nzVisible)]="checkVisibleInfor" [nzTitle]="nameHosting" (nzAfterOpen)="loadingOk()" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+<nz-modal [(nzVisible)]="checkVisibleInfor" [nzTitle]="'Thông tin Hosting'" (nzAfterOpen)="loadingOk()" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
     <ng-container *nzModalContent>
-      <p style="margin-bottom: 1.25rem;">{{vlan?.vlanInfor}} <span class="fw-bold">({{vlan?.vlanName}})</span></p>
       <div>
         <nz-table #nzTable [nzData]="['']" nzTableLayout="fixed" [nzShowPagination]="false" [nzScroll]="{ y: '350px' }">
           <tbody>
@@ -54,18 +53,17 @@
             </tr>
             <tr>
                 <td class="fw-bold">Trạng thái</td>
-                <td *ngIf="dataHosting.status == -1"><nz-tag [nzColor]="'red'">Error</nz-tag></td>
-                <td *ngIf="dataHosting.status == 0"><nz-tag [nzColor]="'orange'">Stop</nz-tag></td>
-                <td *ngIf="dataHosting.status == 1"><nz-tag [nzColor]="'green'">Active</nz-tag></td>
+                <td >
+                    <ng-container *ngFor="let item of status">
+                        <nz-tag *ngIf="dataHosting.status == item.id"  [nzColor]="item.color">{{item.name}}</nz-tag>
+                    </ng-container>
+                </td>
             </tr>
             <tr>
-                <td class="fw-bold">Loại Vlan</td>
-                <td>{{vlan?.vlanName}}</td>
+                <td class="fw-bold">Vlan</td>
+                <td>{{dataHosting.vlanType}}</td>
             </tr>
-            <tr>
-                <td class="fw-bold">Thông tin loại Vlan</td>
-                <td>{{vlan?.vlanInfor}}</td>
-            </tr>
+            
           </tbody>
         </nz-table>
       </div>

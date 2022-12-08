@@ -11,7 +11,10 @@ import {HostingModel} from "../../../models/host.model";
 
 export class DashboardModalUpdate implements OnInit, AfterViewInit {
     @Input() checkVisibleUpdate: boolean = false;
-    @Input() idUpdate: string = null;
+    @Input() hosting: any = {};
+    @Input() listServer: any = [];
+    @Input() listVlan: any = [];
+
     formUpdate: any = {
         id: '',
         ipaddress: '',
@@ -31,8 +34,13 @@ export class DashboardModalUpdate implements OnInit, AfterViewInit {
         server: null
     };
     @Output() checkVisibleUpdateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-    listVlan: any = undefined;
-    listServer: any = undefined;
+    
+
+    status: any = [
+        {id: '-1', name: 'Error'},
+        {id: '0', name: 'Stop'},
+        {id: '1', name: 'Active'},
+    ]
     
     ngOnInit(): void {
         
@@ -55,42 +63,25 @@ export class DashboardModalUpdate implements OnInit, AfterViewInit {
 
     loadingOk():void {
         this.getHosting();
-        let queries = {}
-        this.productService.listVlan(queries).subscribe(res => {
-            if(res) {
-                this.listVlan = res;
-            }
-        })
-        this.productService.listServer(queries).subscribe(res => {
-            if(res) {
-                this.listServer = res;
-            }
-        })
-       
-        
+        console.log(this.hosting);
     }
     getHosting() {
-        let queries = {
-            id: this.idUpdate
-        }
-        this.productService.list(queries).subscribe(res => {
-            this.formUpdate.id = res.list[0].id;
-            this.formUpdate.ipaddress = res.list[0].ipaddress;
-            this.formUpdate.ipaddressf5 = res.list[0].ipaddressf5;
-            this.formUpdate.hostname = res.list[0].hostname;
-            this.formUpdate.priority = res.list[0].priority;
-            this.formUpdate.env = res.list[0].env;
-            this.formUpdate.type = res.list[0].type;
-            this.formUpdate.middleware = res.list[0].middleware;
-            this.formUpdate.information = res.list[0].information;
-            this.formUpdate.machineType = res.list[0].machineType;
-            this.formUpdate.os = res.list[0].os;
-            this.formUpdate.note = res.list[0].note;
-            this.formUpdate.na = res.list[0].na;
-            this.formUpdate.status = res.list[0].status;
-            this.formUpdate.vlanType = res.list[0].vlanType;
-            this.formUpdate.server = res.list[0].server;
-        })
+        this.formUpdate.id = this.hosting.id;
+        this.formUpdate.ipaddress = this.hosting.ipaddress;
+        this.formUpdate.ipaddressf5 = this.hosting.ipaddressf5;
+        this.formUpdate.hostname = this.hosting.hostname;
+        this.formUpdate.priority = this.hosting.priority;
+        this.formUpdate.env = this.hosting.env;
+        this.formUpdate.type = this.hosting.type;
+        this.formUpdate.middleware = this.hosting.middleware;
+        this.formUpdate.information = this.hosting.information;
+        this.formUpdate.machineType = this.hosting.machineType;
+        this.formUpdate.os = this.hosting.os;
+        this.formUpdate.note = this.hosting.note;
+        this.formUpdate.na = this.hosting.na;
+        this.formUpdate.status = this.hosting.status;
+        this.formUpdate.vlanType = Number(this.hosting.vlanType);
+        this.formUpdate.server = this.hosting.server;
     }
 
     updateHosting() {

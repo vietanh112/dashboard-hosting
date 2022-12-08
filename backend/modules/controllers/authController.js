@@ -51,6 +51,7 @@ module.exports = {
                         email: rs.data.email,
                         roleId: rs.data.roleId,
                         status: rs.data.status,
+                        accessToken: rs.data.token,
                         createdTime: (new Date).getTime(),
                         expiresIn: parseInt(configs.jwt.ttl),
                     }

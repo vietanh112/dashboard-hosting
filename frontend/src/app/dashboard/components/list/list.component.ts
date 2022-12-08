@@ -19,15 +19,13 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
     @Input() checkVisibleUpdate: boolean = false;
     @Input() checkVisibleCreateVlan: boolean = false;
     @Input() checkVisibleCreateServer: boolean = false;
-    @Input() dataHosting: any = undefined;
     confirmModalDelete?: NzModalRef;
     searchValue = '';
     visible = false;
     sizeButton: NzButtonSize = 'large';
     listHosting: any = [];
     totalList: number = 0;
-    nameHosting: string = '';
-    data: any = undefined;
+    hosting: any = undefined;
     listVlan: any = undefined;
     search: any = {
         keyword: null,
@@ -112,8 +110,7 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
 
     showModalInfor(data: any) {
         this.checkVisibleInfor = true;
-        this.dataHosting = data;
-        this.nameHosting = data.ipaddress;
+        this.hosting = data;
     }
 
     showModalCreate() {
@@ -130,7 +127,7 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
 
     showModalUpdate(data: any) {
         this.checkVisibleUpdate = true;
-        this.data = data.id;
+        this.hosting = data;
     }
 
     getList() {

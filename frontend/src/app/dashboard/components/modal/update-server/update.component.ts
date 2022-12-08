@@ -11,7 +11,7 @@ import {HostingModel} from "../../../models/host.model";
 
 export class DashboardModalUpdateServer implements OnInit, AfterViewInit {
     @Input() checkVisibleUpdateServer: boolean = false;
-    @Input() idUpdate: string = null;
+    @Input() dataServer: any = {};
     formUpdate: any = {
         id: '',
         serverName: '',
@@ -20,6 +20,12 @@ export class DashboardModalUpdateServer implements OnInit, AfterViewInit {
     };
     @Output() checkVisibleUpdateServerChange: EventEmitter<boolean> = new EventEmitter<boolean>();
     textValue: string | null = null;
+
+    status: any = [
+        {id: '-1', name: 'Error'},
+        {id: '0', name: 'Stop'},
+        {id: '1', name: 'Active'},
+    ]
     
     ngOnInit(): void {
         
@@ -41,18 +47,14 @@ export class DashboardModalUpdateServer implements OnInit, AfterViewInit {
     }
 
     loadingOk():void {
-        this.getServer();
-    }
-    getServer() {
-        let queries = {
-            id: this.idUpdate
-        }
-        this.productService.listServer(queries).subscribe(res => {
-            this.formUpdate.id = res[0].id;
-            this.formUpdate.serverName = res[0].serverName;
-            this.formUpdate.status = res[0].status;
-            this.formUpdate.serverInfor = res[0].serverInfor;
-        })
+        this.showServer();
+    };
+
+    showServer() {
+        this.formUpdate.id = this.dataServer.id;
+        this.formUpdate.serverName = this.dataServer.serverName;
+        this.formUpdate.status = String(this.dataServer.status);
+        this.formUpdate.serverInfor = this.dataServer.serverInfor;
     }
 
     updateServer() {

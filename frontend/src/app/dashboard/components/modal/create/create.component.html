@@ -134,7 +134,7 @@
         </div>
         <div class="form-group" nz-row>
           <div nz-col nzSpan="7">
-            <label for="" class="fw-bold">Loại server</label>
+            <label for="" class="fw-bold">Server</label>
           </div>
           <div nz-col nzSpan="17">
               <nz-select (ngModelChange)="listVlanChange($event)" style="width: 100%;" [(ngModel)]="formCreate.server">
@@ -144,7 +144,7 @@
         </div>
         <div class="form-group" nz-row *ngIf="listVlan.length">
           <div nz-col nzSpan="7">
-            <label for="" class="fw-bold">Loại Vlan</label>
+            <label for="" class="fw-bold">Vlan</label>
           </div>
           <div nz-col nzSpan="17">
             <nz-select style="width: 100%;" [(ngModel)]="formCreate.vlanType">

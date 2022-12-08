@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 import {map} from 'rxjs/operators';
 import {environment} from "../../../environments/environment";
 import {ApiService} from '../../_core/services/api.service';
@@ -15,8 +16,17 @@ export class DashboardHostingProductService {
 
     constructor(
         private http: HttpClient,
-        private apiService: ApiService
+        private apiService: ApiService,
+        private router: Router,
         ) {}
+    invalidToken(res: any) {
+        if(res.code == 208 && res.status == 0) {
+            localStorage.clear();
+            this.router.navigate(['auth', 'login']);
+        }
+        return true;
+    }
+    
     list(queries: any) {
         let options: any = {
             params: {},
@@ -29,6 +39,8 @@ export class DashboardHostingProductService {
             options['params'][i] = queries[i];
         }
         return this.apiService.get(this.apiServerPaths.product.list, options, map((response: any) => {
+                this.invalidToken(response);
+
                 let rs: any = {
                     total: 0,
                     list: []

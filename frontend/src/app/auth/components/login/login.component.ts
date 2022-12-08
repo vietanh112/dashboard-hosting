@@ -26,10 +26,8 @@ export class AuthComponentLogin implements OnInit, AfterViewInit {
     ) {}
     ngOnInit(): void {
         this.loginForm = this.formBuilder.group({
-            email: [""],
             username: ["", [Validators.required, Validators.minLength(4), Validators.maxLength(30)]],
-            password: ["", [Validators.required, Validators.pattern('[A-Za-z0-9]{4,20}')
-        ]]
+            password: ["", [Validators.required, Validators.pattern('[A-Za-z0-9]{4,20}')]],
         })
     }
     ngAfterViewInit(): void {
@@ -42,7 +40,7 @@ export class AuthComponentLogin implements OnInit, AfterViewInit {
 
     submitForm(): void {
         this.loadingState = true;
-        this.authenticationService.login(this.f['email'].value, this.f['username'].value, this.f['password'].value).pipe(first()).subscribe(res => {
+        this.authenticationService.login(this.f['username'].value, this.f['password'].value).pipe(first()).subscribe(res => {
             this.loadingState = false;
             
             let noti: any = {

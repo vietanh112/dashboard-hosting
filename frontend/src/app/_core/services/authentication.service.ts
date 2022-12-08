@@ -28,8 +28,8 @@ export class AuthenticationService {
     }
 
 
-    login(email:string, username: string, password: string) {
-        return this.apiService.post(this.apiServerPaths.auth.login, {email, username, password}, map(response => {
+    login(username: string, password: string) {
+        return this.apiService.post(this.apiServerPaths.auth.login, {username, password}, map(response => {
                 // @ts-ignore
                 const data = response.data;
                 // login successful if there's a jwt token in the response

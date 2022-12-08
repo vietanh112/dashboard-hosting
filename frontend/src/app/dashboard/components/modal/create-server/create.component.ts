@@ -15,11 +15,17 @@ export class DashboardModalCreateServer implements OnInit, AfterViewInit {
     @Output() checkVisibleCreateServerChange: EventEmitter<boolean> = new EventEmitter<boolean>();
     formCreate: any = {
         serverName: '',
-        status: null,
+        status: '0',
         serverInfor: '',
     }
     listServer: any = undefined;
     textValue: string | null = null;
+
+    status: any = [
+        {id: '-1', name: 'Error'},
+        {id: '0', name: 'Stop'},
+        {id: '1', name: 'Active'},
+    ]
     
     ngOnInit(): void {
         

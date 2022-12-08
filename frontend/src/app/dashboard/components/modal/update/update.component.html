@@ -126,9 +126,7 @@
           </div>
           <div nz-col nzSpan="17">
             <nz-select style="width: 100%;" [(ngModel)]="formUpdate.status">
-              <nz-option [nzValue]="-1" [nzLabel]="'Error'"></nz-option>
-              <nz-option [nzValue]="'0'" [nzLabel]="'Stop'"></nz-option>
-              <nz-option [nzValue]="1" [nzLabel]="'Active'"></nz-option>
+              <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of status"></nz-option>
             </nz-select>
           </div>
         </div>

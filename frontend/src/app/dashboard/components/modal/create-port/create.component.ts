@@ -12,15 +12,15 @@ import {DashboardHostingProductService} from '../../../services/hosting-product.
 
 export class DashboardModalCreatePort implements OnInit, AfterViewInit {
     @Input() checkVisibleCreatePort: boolean = false;
+    @Input() listServer: any = [];
     @Output() checkVisibleCreatePortChange: EventEmitter<boolean> = new EventEmitter<boolean>();
     formCreate: any = {
         port: '',
-        status: null,
+        status: '0',
         ipAddress: '',
-        description: null,
+        description: '',
         server: null
     }
-    listServer: any = undefined;
     textValue: string | null = null;
     
     ngOnInit(): void {
@@ -50,11 +50,6 @@ export class DashboardModalCreatePort implements OnInit, AfterViewInit {
     }
 
     loadingOk() {
-        let queries = {}
-        this.productService.listServer(queries).subscribe(res => {
-            if(res) {
-                this.listServer = res;
-            }
-        })
+        
     }
 }

@@ -26,9 +26,9 @@ export class AuthComponentRegister implements OnInit, AfterViewInit {
     ) {}
     ngOnInit(): void {
         this.registerForm = this.formBuilder.group({
-            email: ["", [Validators.required, Validators.pattern('[a-z0-9](\.?[a-z0-9]){5,}@[a-zA-Z0-9.]{2,30}')]],
             username: ["", [Validators.required, Validators.minLength(4), Validators.maxLength(30)]],
-            password: ["", [Validators.required, Validators.pattern('[A-Za-z0-9!@#$%^&*()-_+=]{4,20}')]]
+            password: ["", [Validators.required, Validators.pattern('[A-Za-z0-9!@#$%^&*()-_+=]{4,20}')]],
+            confirmPassword: ["", [Validators.required, Validators.pattern('[A-Za-z0-9!@#$%^&*()_-+=]{4,20}')]],
         })
     }
     ngAfterViewInit(): void {
@@ -41,19 +41,31 @@ export class AuthComponentRegister implements OnInit, AfterViewInit {
 
     submitForm(): void {
         this.loadingState = true;
+        let noti: any = {
+            message: 'Success',
+            method: 'success',
+            data: `Register successed`,
+            time: 1500
+        }
         let body = {
             email: this.f['email'].value,
             username: this.f['username'].value,
             password: this.f['password'].value,
         }
+
+        if(this.f['password'].value != this.f['confirmPassword'].value) {
+            noti.method = 'warning';
+            noti.message = 'Error';
+            noti.data = 'Password and confirm password are not the same';
+            this.f['password'].reset();
+            this.f['confirmPassword'].reset();
+            this.loadingState = false;
+            return this.notification(noti);
+        }
+
         this.authenticationService.register(body).pipe(first()).subscribe(res => {
             this.loadingState = false;
-            let noti: any = {
-                message: 'Success',
-                method: 'success',
-                data: `Register successed`,
-                time: 1500
-            }
+            
             if(res.code == 201) {
                 noti.message = 'Error';
                 noti.method = 'warning';

@@ -27,7 +27,7 @@ export class DashboardListPort implements OnInit, AfterViewInit {
     limit: number = 10;
     listPort: any = undefined;
     listServer: any = undefined;
-    dataPort: any = undefined;
+    port: any = undefined;
     sizeButton: NzButtonSize = 'large';
     currentUser: any = undefined;
 
@@ -38,24 +38,66 @@ export class DashboardListPort implements OnInit, AfterViewInit {
         {id: '1', name: 'Active'}
     ]
 
+    totalPort: number = 0;
+    sizePage: any = [10, 20, 50];
+
+    routeParams: any = {
+        keyword: null,
+        status: null,
+        server: null,
+        page: 0,
+        limit: 10
+    };
+
+    expandSet = new Set<number>();
+
     constructor(
         public productService: DashboardHostingProductService,
         private modal: NzModalService,
         private location: Location,
         private router: Router,
-        private authenticationService: AuthenticationService
-    ){}
+        private authenticationService: AuthenticationService,
+        public activatedRoute: ActivatedRoute,
+    ){
+        this.activatedRoute.queryParams.subscribe(params => {
+            this.routeParams = params;
+            if (typeof (params['keyword']) !== 'undefined') {
+                this.search.keyword = decodeURIComponent(params['keyword']);
+            }
+            if (typeof (params['status']) !== 'undefined') {
+                this.search.status = params['status'];
+            }
+            if (typeof (params['server']) !== 'undefined') {
+                this.search.server = params['server'];
+            }
+            if (typeof (params['page']) !== 'undefined') {
+                this.page = params['page'];
+            }
+            if (typeof (params['limit']) !== 'undefined') {
+                this.limit = params['limit'];
+            }
+        })
+    }
     ngOnInit(): void {}
     ngAfterViewInit(): void {
-        let queries = {};
         setTimeout(() => {
-            this.productService.listServer(queries).subscribe(res => {
-                if(res) {
-                    this.listServer = res;
-                }
-            })
+            this.getListServer();
             this.getList();
         }, 0)
+    }
+
+    onExpandChange(id: number, checked: boolean): void {
+        if (checked) {
+            this.expandSet.add(id);
+        } else {
+            this.expandSet.delete(id);
+        }
+    }
+
+    getListServer() {
+        this.productService.listServer({type: 'query'}).subscribe(res => {
+            this.listServer = res.list;
+        })
     }
 
     showModalCreatePort() {
@@ -64,7 +106,7 @@ export class DashboardListPort implements OnInit, AfterViewInit {
 
     showModalUpdatePort(data: any) {
         this.checkVisibleUpdatePort = true;
-        this.dataPort = data;
+        this.port = data;
     }
 
     deleteItem (hostingId: any) {
@@ -108,10 +150,17 @@ export class DashboardListPort implements OnInit, AfterViewInit {
 
     getList() {
         this.loadingState = true;
+        
         let queries: any = {
             page: this.page,
             limit: this.limit
         }
+        queries['page'] = Number(queries['page']) - 1;
+
+        if(Number(queries['page']) < 0) {
+            queries['page'] = 0;
+        }
+
         if(this.search.keyword) {
             queries['keyword'] = this.search.keyword;
         }
@@ -123,7 +172,8 @@ export class DashboardListPort implements OnInit, AfterViewInit {
         }
         this.productService.listPort(queries).subscribe(res => {
             this.loadingState = false;
-            this.listPort = res;
+            this.listPort = res.list;
+            this.totalPort = res.total;
         })
         const params = [];
         for (const i in queries) {
@@ -146,7 +196,18 @@ export class DashboardListPort implements OnInit, AfterViewInit {
             this.showNotification(res);
         }
     }
+
     getCurrentUser () {
         this.currentUser = this.authenticationService.currentUserValue;
+    }
+
+    pageIndexChange(event: any) {
+        this.page = Number(event);
+        this.getList();
+    }
+
+    pageSizeChange(event: any) {
+        this.limit = event;
+        this.getList()
     }
 }

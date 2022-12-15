@@ -15,9 +15,9 @@ export class DashboardModalCreateVlan implements OnInit, AfterViewInit {
     @Input() listServer: any = [];
     @Output() checkVisibleCreateVlanChange: EventEmitter<boolean> = new EventEmitter<boolean>();
     formCreate: any = {
-        vlanName: '',
+        name: '',
         status: '0',
-        vlanInfor: '',
+        infor: '',
         server: null
     }
     textValue: string | null = null;

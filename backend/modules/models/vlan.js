@@ -17,8 +17,8 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             type: DataTypes.INTEGER
         },
-        vlanName: DataTypes.STRING,
-        vlanInfor: DataTypes.STRING,
+        name: DataTypes.STRING,
+        description: DataTypes.STRING,
         status: DataTypes.INTEGER,
         server: DataTypes.INTEGER,
         createdAt: DataTypes.DATE,

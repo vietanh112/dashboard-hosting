@@ -11,12 +11,17 @@
           </div>
           <div style="margin-left: 10px;">
             <nz-select style="width: 120px;" [(ngModel)]="search.server" nzPlaceHolder="Server">
-              <nz-option [nzValue]="data?.id" [nzLabel]="data?.serverName" *ngFor="let data of listServer"></nz-option>
+              <nz-option [nzValue]="data?.id" [nzLabel]="data?.name" *ngFor="let data of listServer"></nz-option>
             </nz-select>
           </div>
           <div style="margin-left: 10px;">
-            <nz-select style="width: 120px;" [(ngModel)]="search.vlanType" nzPlaceHolder="Vlan">
-              <nz-option [nzValue]="data.id" [nzLabel]="data.vlanName" *ngFor="let data of listVlan"></nz-option>
+            <nz-select style="width: 120px;" [(ngModel)]="search.vlan" nzPlaceHolder="Vlan">
+              <nz-option [nzValue]="data.id" [nzLabel]="data.name" *ngFor="let data of listVlan"></nz-option>
+            </nz-select>
+          </div>
+          <div style="margin-left: 10px;">
+            <nz-select style="width: 120px;" [(ngModel)]="search.port" nzPlaceHolder="Port">
+              <nz-option [nzValue]="item.id" [nzLabel]="item.port" *ngFor="let item of listPort"></nz-option>
             </nz-select>
           </div>
           <div style="margin-left: 10px;">
@@ -35,15 +40,15 @@
           <button *ngIf="currentUser?.roleId < 3" nz-button [nzType]="'primary'" [nzSize]="sizeButton" (click)="showModalCreate()"><span>Tạo mới Hosting</span></button>
         </div>
     </div>
-    <nz-table #nzTable [nzData]="listHosting" nzTableLayout="fixed" nzShowSizeChanger [nzPageSizeOptions]="[10, 20, 50]" [nzPageIndex]="page"  [nzShowTotal]="rangeTemplate" (nzPageSizeChange)="pageChange($event)">
+    <nz-table #nzTable [nzData]="listHosting" nzTableLayout="fixed" nzShowSizeChanger [nzShowPagination]="false">
         <thead>
           <tr>
             <th class="text-center" style="width: 80px;">STT</th>
             <th class="text-center">IP Address</th>
             <th>Hostname</th>
-            <th class="text-center">Status</th>
+            <th class="text-center">Port</th>
+            <th class="text-center" style="width: 120px;">Status</th>
             <th class="text-center">Server</th>
-            <th>Thông tin</th>
             <th class="text-center" style="width: 120px;">Options</th>
           </tr>
         </thead>
@@ -53,16 +58,20 @@
             <td class="text-center"  (click)="showModalInfor(data)"><a>{{ data.ipaddress }}</a></td>
             <td>{{ data.hostname }}</td>
             <td class="text-center">
+              <ng-container *ngFor="let port of listPort" >
+                <span *ngIf="port.id == data.port">{{ port.port }}</span>
+              </ng-container>
+            </td>
+            <td class="text-center">
               <nz-tag [nzColor]="'red'" *ngIf="data.status == -1">Error</nz-tag>
               <nz-tag [nzColor]="'orange'" *ngIf="data.status == 0">Stop</nz-tag>
               <nz-tag [nzColor]="'green'" *ngIf="data.status == 1">Active</nz-tag>
             </td>
             <td class="text-center">
               <span *ngFor="let ser of listServer">
-                  <span *ngIf="data.server == ser.id">{{ser.serverName}}</span>
+                  <span *ngIf="data.server == ser.id">{{ser.name}}</span>
               </span>
             </td>
-            <td>{{ data.information }}</td>
             <td class="text-center">
               <button nz-button nz-dropdown [nzDropdownMenu]="menu4" style="border-radius: 50%;">
                 
@@ -89,13 +98,12 @@
         </tbody>
       </nz-table>
       <!-- <ng-template #totalTemplate let-total> Total {{listHosting.length}} / {{ totalList }} items </ng-template> -->
-      <ng-template #rangeTemplate let-range="range" let-total>
-        {{ range[0] }}-{{ range[1] }} of <span class="fw-bold">{{ totalList }}</span> items
-      </ng-template>
-      
+      <div style="margin-top: 1.5rem;display: flex;justify-content: flex-end;">
+        <nz-pagination [nzPageIndex]="page" [nzTotal]="totalHosting" nzShowSizeChanger [nzPageSize]="10" [nzPageSizeOptions]="sizePage" (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
+      </div>
 </div>
-<app-dashboard-modal-infor [(checkVisibleInfor)]=checkVisibleInfor [listVlan]=listVlan  [dataHosting]=hosting></app-dashboard-modal-infor>
-<app-dashboard-modal-create [(checkVisibleCreate)]=checkVisibleCreate (checkVisibleCreateChange) = "createHosting($event)" [listServer]=listServer [listVlanAll]=listVlan></app-dashboard-modal-create>
-<app-dashboard-modal-update [(checkVisibleUpdate)]=checkVisibleUpdate (checkVisibleUpdateChange) = "updateHosting($event)" [hosting]=hosting [listServer]=listServer [listVlan]=listVlan></app-dashboard-modal-update>
+<app-dashboard-modal-infor [(checkVisibleInfor)]=checkVisibleInfor [listVlan]=listVlan [listPort]=listPort [listServer]=listServer  [dataHosting]=hosting></app-dashboard-modal-infor>
+<app-dashboard-modal-create [(checkVisibleCreate)]=checkVisibleCreate (checkVisibleCreateChange) = "createHosting($event)" [listServer]=listServer [listVlanAll]=listVlan [listPort]=listPort></app-dashboard-modal-create>
+<app-dashboard-modal-update [(checkVisibleUpdate)]=checkVisibleUpdate (checkVisibleUpdateChange) = "updateHosting($event)" [hosting]=hosting [listServer]=listServer [listVlan]=listVlan [listPort]=listPort></app-dashboard-modal-update>
 <!-- <app-dashboard-modal-create-vlan [(checkVisibleCreateVlan)]=checkVisibleCreateVlan (checkVisibleCreateVlanChange) = "createVlan($event)"></app-dashboard-modal-create-vlan> -->
 <!-- <app-dashboard-modal-create-server [(checkVisibleCreateServer)]=checkVisibleCreateServer (checkVisibleCreateServerChange) = "createServer($event)"></app-dashboard-modal-create-server> -->

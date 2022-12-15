@@ -17,8 +17,8 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             type: DataTypes.INTEGER
         },
-        serverName: DataTypes.STRING,
-        serverInfor: DataTypes.STRING,
+        name: DataTypes.STRING,
+        description: DataTypes.STRING,
         status: DataTypes.INTEGER,
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE

@@ -5,6 +5,9 @@ import {map} from 'rxjs/operators';
 import {environment} from "../../../environments/environment";
 import {ApiService} from '../../_core/services/api.service';
 import {HostingModel} from '../models/host.model';
+import {PortModel} from '../models/port.model';
+import {ServerModel} from '../models/server.model';
+import {VlanModel} from '../models/vlan.model';
 
 declare const commons: any;
 @Injectable({
@@ -40,7 +43,6 @@ export class DashboardHostingProductService {
         }
         return this.apiService.get(this.apiServerPaths.product.list, options, map((response: any) => {
                 this.invalidToken(response);
-
                 let rs: any = {
                     total: 0,
                     list: []
@@ -105,11 +107,19 @@ export class DashboardHostingProductService {
             options['params'][i] = queries[i];
         }
         return this.apiService.get(this.apiServerPaths.product.listVlan, options, map((response: any) => {
-                let rs: any = null;
-                if(response.code == 200 && response.status == 1) {
-                    rs = response.data;
+            let rs: any = {
+                total: 0,
+                list: []
+            }
+            if(response.status == 1 && response.code == 200) {
+                if(response.data.data) {
+                    response.data.data.forEach((item: any) => {
+                        rs.list.push(new VlanModel(item));
+                    });
                 }
-                return rs;
+                rs.total = response.data.total ?? rs.list.length;
+            }
+            return rs
             })
         )   
     }
@@ -161,13 +171,21 @@ export class DashboardHostingProductService {
             options['params'][i] = queries[i];
         }
         return this.apiService.get(this.apiServerPaths.product.listServer, options, map((response: any) => {
-                let rs: any = null;
-                if(response.code == 200 && response.status == 1) {
-                    rs = response.data;
+            let rs: any = {
+                total: 0,
+                list: []
+            }
+            if(response.status == 1 && response.code == 200) {
+                if(response.data.data) {
+                    response.data.data.forEach((item: any) => {
+                        rs.list.push(new ServerModel(item));
+                    });
                 }
-                return rs;
-            })
-        )   
+                rs.total = response.data.total ?? rs.list.length;
+            }
+            return rs
+        })
+        )
     }
     deleteServer(serverId: any) {
         let options: any = {
@@ -219,11 +237,19 @@ export class DashboardHostingProductService {
             options['params'][i] = queries[i];
         }
         return this.apiService.get(this.apiServerPaths.product.listPort, options, map((response: any) => {
-                let rs: any = null;
-                if(response.code == 200 && response.status == 1) {
-                    rs = response.data;
+            let rs: any = {
+                total: 0,
+                list: []
+            }
+            if(response.status == 1 && response.code == 200) {
+                if(response.data.data) {
+                    response.data.data.forEach((item: any) => {
+                        rs.list.push(new PortModel(item));
+                    });
                 }
-                return rs;
+                rs.total = response.data.total;
+            }
+            return rs;
             })
         )   
     }

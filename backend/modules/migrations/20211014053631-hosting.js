@@ -17,6 +17,9 @@ module.exports = {
             hostname: {
                 type: Sequelize.STRING
             },
+            port: {
+                type: Sequelize.INTEGER
+            },
             priority: {
                 type: Sequelize.STRING(5)
             },
@@ -47,7 +50,7 @@ module.exports = {
             status: {
                 type: Sequelize.INTEGER
             },
-            vlanType: {
+            vlan: {
                 type: Sequelize.INTEGER
             },
             server: {

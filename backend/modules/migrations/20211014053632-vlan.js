@@ -8,10 +8,10 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            vlanName: {
+            name: {
                 type: Sequelize.STRING
             },
-            vlanInfor: {
+            description: {
                 type: Sequelize.STRING
             },
             server: {

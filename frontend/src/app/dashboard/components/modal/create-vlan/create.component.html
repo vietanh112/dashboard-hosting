@@ -6,7 +6,7 @@
           </div>
           <div nz-col nzSpan="17">
             <nz-input-group>
-              <input type="text" nz-input [(ngModel)]="formCreate.vlanName" />
+              <input type="text" nz-input [(ngModel)]="formCreate.name" />
             </nz-input-group>
           </div>
         </div>
@@ -28,7 +28,7 @@
           </div>
           <div nz-col nzSpan="17">
             <nz-input-group [nzSuffix]="textAreaClearTpl" class="ant-input-affix-wrapper-textarea-with-clear-btn">
-                <textarea rows="3" nz-input [(ngModel)]="formCreate.vlanInfor"></textarea>
+                <textarea rows="3" nz-input [(ngModel)]="formCreate.description"></textarea>
               </nz-input-group>
           </div>
           <ng-template #textAreaClearTpl>
@@ -42,7 +42,7 @@
           </div>
           <div nz-col nzSpan="17">
               <nz-select style="width: 100%;" [(ngModel)]="formCreate.server">
-                <nz-option [nzValue]="data.id" [nzLabel]="data.serverName" *ngFor="let data of listServer"></nz-option>
+                <nz-option [nzValue]="data.id" [nzLabel]="data.name" *ngFor="let data of listServer"></nz-option>
               </nz-select>
             </div>
         </div>

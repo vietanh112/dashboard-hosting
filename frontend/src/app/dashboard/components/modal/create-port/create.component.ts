@@ -17,7 +17,6 @@ export class DashboardModalCreatePort implements OnInit, AfterViewInit {
     formCreate: any = {
         port: '',
         status: '0',
-        ipAddress: '',
         description: '',
         server: null
     }

@@ -13,15 +13,15 @@ module.exports = {
     */
     return queryInterface.bulkInsert('server', [
         {
-            serverName: 'UAT',
-            serverInfor: '',
+            name: 'UAT',
+            description: 'test',
             status: 1,
             createdAt: new Date(),
             updatedAt: new Date(),
         },
           {
-            serverName: 'PRODUCT',
-            serverInfor: '',
+            name: 'PRODUCT',
+            description: '',
             status: 1,
             createdAt: new Date(),
             updatedAt: new Date(),

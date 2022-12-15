@@ -4,6 +4,7 @@ export class HostingModel {
     ipaddress: string = '';
     ipaddressf5: string = '';
     hostname: string = '';
+    port: string = '';
     priority: string = '';
     env: string = '';
     type: string = '';
@@ -13,9 +14,9 @@ export class HostingModel {
     os: string = '';
     note: string = '';
     na: string = '';
-    status: number = null;
-    vlanType: number = null;
-    server: number = null;
+    status: string = null;
+    vlan: string = null;
+    server: string = null;
     createdat: string = '';
     updatedat: string = '';
     
@@ -25,6 +26,7 @@ export class HostingModel {
         this.ipaddress = data.iPAddress || '';
         this.ipaddressf5 = data.iPAddressF5 || '';
         this.hostname = data.hostname || '';
+        this.port = String(data.port) ?? '';
         this.priority = data.priority || '';
         this.env = data.env || '';
         this.type = data.type || '';
@@ -34,9 +36,9 @@ export class HostingModel {
         this.os = data.os || '';
         this.note = data.note || '';
         this.na = data.na || '';
-        this.status = data.status ?? null;
-        this.vlanType = data.vlanType || null;
-        this.server = data.server || null;
+        this.status = String(data.status) ?? null;
+        this.vlan = String(data.vlan) ?? null;
+        this.server = String(data.server) ?? null;
         this.createdat = data.createdAt || '';
         this.updatedat = data.updatedAt || '';
     }

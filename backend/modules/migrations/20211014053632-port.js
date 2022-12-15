@@ -11,9 +11,6 @@ module.exports = {
             port: {
                 type: Sequelize.STRING
             },
-            ipAddress: {
-                type: Sequelize.STRING
-            },
             description: {
                 type: Sequelize.STRING
             },

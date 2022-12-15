@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         iPAddress: DataTypes.STRING,
         iPAddressF5: DataTypes.STRING,
         hostname: DataTypes.STRING,
+        port: DataTypes.INTEGER,
         priority: DataTypes.STRING(5),
         env:  DataTypes.STRING(5),
         type: DataTypes.STRING(5),
@@ -30,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         note: DataTypes.STRING,
         na: DataTypes.STRING,
         status: DataTypes.INTEGER,
-        vlanType: DataTypes.INTEGER,
+        vlan: DataTypes.INTEGER,
         server: DataTypes.INTEGER,
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE

@@ -1,4 +1,4 @@
-<nz-modal [(nzVisible)]="checkVisibleUpdatePort" nzTitle="Chỉnh sửa Vlan" (nzOnCancel)="handleCancel()" (nzAfterOpen)="loadingOk()" (nzOnOk)="handleOk()">
+<nz-modal [(nzVisible)]="checkVisibleUpdatePort" nzTitle="Chỉnh sửa Port" (nzOnCancel)="handleCancel()" (nzAfterOpen)="loadingOk()" (nzOnOk)="handleOk()">
     <ng-container *nzModalContent>
       <div class="form-group" nz-row>
         <div nz-col nzSpan="7">
@@ -22,16 +22,6 @@
       </div>
       <div class="form-group" nz-row>
         <div nz-col nzSpan="7">
-          <label for="" class="fw-bold">IP Address<span class="color-red">*</span></label>
-        </div>
-        <div nz-col nzSpan="17">
-          <nz-input-group>
-            <input type="text" nz-input [(ngModel)]="formUpdate.ipAddress" />
-          </nz-input-group>
-        </div>
-      </div>
-      <div class="form-group" nz-row>
-        <div nz-col nzSpan="7">
           <label for="" class="fw-bold">Thông tin</label>
         </div>
         <div nz-col nzSpan="17">
@@ -50,7 +40,7 @@
         </div>
         <div nz-col nzSpan="17">
             <nz-select style="width: 100%;" [(ngModel)]="formUpdate.server">
-              <nz-option [nzValue]="data.id" [nzLabel]="data.serverName" *ngFor="let data of listServer"></nz-option>
+              <nz-option [nzValue]="data.id" [nzLabel]="data.name" *ngFor="let data of listServer"></nz-option>
             </nz-select>
           </div>
       </div>

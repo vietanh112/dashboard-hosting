@@ -13,6 +13,8 @@ export class DashboardModalInfor implements OnInit, AfterViewInit {
     @Input() checkVisibleInfor: boolean = false;
     @Input() dataHosting: any = {};
     @Input() listVlan: any = [];
+    @Input() listPort: any = [];
+    @Input() listServer: any = [];
     @Output() checkVisibleInforChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     status: any = [
@@ -20,6 +22,16 @@ export class DashboardModalInfor implements OnInit, AfterViewInit {
         {id: '0', color: 'orange', name: 'Stop'},
         {id: '1', color: 'green', name: 'Active'},
     ]
+
+    infor: {
+        vlan: string,
+        port: string,
+        server: string
+    } = {
+        vlan: null,
+        port: null,
+        server: null
+    }
     ngOnInit(): void {
         
     }
@@ -38,9 +50,34 @@ export class DashboardModalInfor implements OnInit, AfterViewInit {
     }
 
     loadingOk():void {
+        this.takeServer();
+        this.takePort();
+        this.takeVlan();
+    }
+
+    takeVlan() {
         for(let item of this.listVlan) {
-            if(item.id == this.dataHosting.vlanType) {
-                this.dataHosting['vlanType'] = item.vlanName
+            if(item.id == Number(this.dataHosting.vlan)) {
+                this.infor.vlan = item.name;
+                return
+            }
+        }
+    }
+
+    takeServer() {
+        for(let item of this.listServer) {
+            if(item.id == Number(this.dataHosting.server)) {
+                this.infor.server = item.name;
+                return
+            }
+        }
+    }
+
+    takePort() {
+        for(let item of this.listPort) {
+            if(item.id == String(this.dataHosting.port)) {
+                this.infor.port = item.port;
+                return
             }
         }
     }

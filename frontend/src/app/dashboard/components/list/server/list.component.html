@@ -26,7 +26,7 @@
             <button *ngIf="currentUser?.roleId < 3" nz-button [nzType]="'primary'" [nzSize]="sizeButton" (click)="showModalCreateServer()"><span>Tạo mới Server</span></button>
           </div>
       </div>
-      <nz-table #nzTable [nzData]="listServer" nzTableLayout="fixed" nzShowSizeChanger [nzPageSizeOptions]="[10, 20, 50]" [nzPageIndex]="page">
+      <nz-table #nzTable [nzData]="listServer" nzTableLayout="fixed" nzShowSizeChanger [nzShowPagination]="false">
           <thead>
             <tr>
               <th class="text-center" style="width: 80px;">STT</th>
@@ -39,13 +39,13 @@
           <tbody>
             <tr *ngFor="let data of nzTable.data; let i = index">
               <td class="text-center">{{ i + 1}}</td>
-              <td class="text-center">{{ data.serverName }}</td>
+              <td class="text-center">{{ data.name }}</td>
               <td class="text-center">
                 <nz-tag [nzColor]="'red'" *ngIf="data.status == -1">Error</nz-tag>
                 <nz-tag [nzColor]="'orange'" *ngIf="data.status == 0">Stop</nz-tag>
                 <nz-tag [nzColor]="'green'" *ngIf="data.status == 1">Active</nz-tag>
               </td>
-              <td>{{ data.serverInfor }}</td>
+              <td>{{ data.description }}</td>
               <td class="text-center">
                 <button nz-button nz-dropdown [nzDropdownMenu]="menu4" style="border-radius: 50%;">
                   <i nz-icon nzType="ellipsis" nzTheme="outline"></i>
@@ -66,6 +66,10 @@
             </tr>
           </tbody>
         </nz-table>
+
+        <div style="margin-top: 1.5rem;display: flex;justify-content: flex-end;">
+          <nz-pagination [nzPageIndex]="page" [nzTotal]="totalServer" nzShowSizeChanger [nzPageSize]="10" [nzPageSizeOptions]="sizePage" (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
+        </div>
         
   </div>
   <app-dashboard-modal-update-server [(checkVisibleUpdateServer)]=checkVisibleUpdateServer (checkVisibleUpdateServerChange) = "updateServer($event)" [dataServer]=dataServer></app-dashboard-modal-update-server>

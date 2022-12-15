@@ -8,10 +8,10 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            serverName: {
+            name: {
                 type: Sequelize.STRING
             },
-            serverInfor: {
+            description: {
                 type: Sequelize.STRING
             },
             status: {

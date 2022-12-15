@@ -15,9 +15,9 @@ export class DashboardModalUpdateVlan implements OnInit, AfterViewInit {
     @Input() listServer: any = null;
     formUpdate: any = {
         id: '',
-        vlanName: '',
+        name: '',
         status: null,
-        vlanInfor: '',
+        description: '',
         server: null
     };
     @Output() checkVisibleUpdateVlanChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -49,9 +49,9 @@ export class DashboardModalUpdateVlan implements OnInit, AfterViewInit {
     showVlan() {
         if(this.vlanUpdate) {
             this.formUpdate.id = this.vlanUpdate.id;
-            this.formUpdate.vlanName = this.vlanUpdate.vlanName;
+            this.formUpdate.name = this.vlanUpdate.name;
             this.formUpdate.status = this.vlanUpdate.status;
-            this.formUpdate.vlanInfor = this.vlanUpdate.vlanInfor;
+            this.formUpdate.description = this.vlanUpdate.description;
             this.formUpdate.server = this.vlanUpdate.server;
         }
     }

@@ -77,8 +77,9 @@ module.exports = {
         let criteria = {};
         const page = req.query.page ? parseInt(req.query.page) : 0;
         const limit = req.query.limit ? parseInt(req.query.limit) : 10;
+        const type = req.query.type ? req.query.type : '';
         for (const [key, value] of Object.entries(req.query)) {
-            if(key != 'page' && key != 'limit') {
+            if(key != 'page' && key != 'limit' && key != 'type') {
                 if(key == 'id') {
                     criteria[key] = Number(value);
                 }
@@ -87,12 +88,12 @@ module.exports = {
                 }
             }
         }
-        const data = await productServices.getListVlan(criteria, page, limit);
+        const obj = await productServices.getListVlan(criteria, page, limit, type);
         const response = {
-            status: 1,
-            code: 200,
-            message: 'success',
-            data: data ?? []
+            status: obj.status,
+            code: obj.code,
+            message: obj.msg,
+            data: obj.data ?? []
         }
 
         return res.json(response)
@@ -149,8 +150,11 @@ module.exports = {
     //SERVER
     getListServer: async (req, res) => {
         let criteria = {};
+        const page = req.query.page ? parseInt(req.query.page) : 0;
+        const limit = req.query.limit ? parseInt(req.query.limit) : 10;
+        const type = req.query.type ? req.query.type : '';
         for (const [key, value] of Object.entries(req.query)) {
-            if(key != 'page' && key != 'limit') {
+            if(key != 'page' && key != 'limit' && key != 'type') {
                 if(key == 'id') {
                     criteria[key] = Number(value);
                 }
@@ -159,14 +163,13 @@ module.exports = {
                 }
             }
         }
-        const data = await productServices.getListServer(criteria);
+        const obj = await productServices.getListServer(criteria, page, limit, type);
         const response = {
-            status: 1,
-            code: 200,
-            message: 'success',
-            data: data ?? []
+            status: obj.status,
+            code: obj.code,
+            message: obj.msg,
+            data: obj.data ?? []
         }
-
         return res.json(response)
     },
     deleteServer: async (req, res) => {
@@ -221,8 +224,11 @@ module.exports = {
     //PORT
     getListPort: async (req, res) => {
         let criteria = {};
+        const page = req.query.page ? parseInt(req.query.page) : 0;
+        const limit = req.query.limit ? parseInt(req.query.limit) : 10;
+        const type = req.query.type ?? null;
         for (const [key, value] of Object.entries(req.query)) {
-            if(key != 'page' && key != 'limit') {
+            if(key != 'page' && key != 'limit' && key != 'type') {
                 if(key == 'id' || key == 'status') {
                     criteria[key] = Number(value);
                 }
@@ -231,12 +237,12 @@ module.exports = {
                 }
             }
         }
-        const data = await productServices.getListPort(criteria);
+        const obj = await productServices.getListPort(criteria, page, limit, type);
         const response = {
-            status: 1,
-            code: 200,
-            message: 'success',
-            data: data ?? []
+            status: obj.status,
+            code: obj.code,
+            message: obj.msg,
+            data: obj.data ?? []
         }
 
         return res.json(response)

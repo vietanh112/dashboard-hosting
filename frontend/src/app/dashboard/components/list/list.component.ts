@@ -24,14 +24,15 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
     visible = false;
     sizeButton: NzButtonSize = 'large';
     listHosting: any = [];
-    totalList: number = 0;
+    totalHosting: number = 0;
     hosting: any = undefined;
-    listVlan: any = undefined;
+    listVlan: any = [];
     search: any = {
         keyword: null,
-        vlanType: null,
+        vlan: null,
         server: null,
-        status: null
+        status: null,
+        port: null
     };
     loadingState:boolean = false;
     routeParams: any = {
@@ -39,7 +40,8 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
     }
     page: number = 1;
     limit: number = 10;
-    listServer: any = undefined;
+    listServer: any = [];
+    listPort: any = [];
     currentUser: any = undefined;
 
     status: any = [
@@ -48,6 +50,14 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
         {id: '0', name: 'Stop'},
         {id: '1', name: 'Active'}
     ]
+
+    typeList: any = {
+        vlan: 'list',
+        port: 'list',
+        server: 'list',
+    }
+
+    sizePage: any = [10, 20, 50]
     
   constructor(
     public productService: DashboardHostingProductService,
@@ -77,6 +87,31 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
         //         }
         //     }
         // });
+        this.activatedRoute.queryParams.subscribe(params => {
+            this.routeParams = params;
+            if (typeof (params['keyword']) !== 'undefined') {
+                this.search.keyword = decodeURIComponent(params['keyword']);
+            }
+            if (typeof (params['status']) !== 'undefined') {
+                this.search.status = params['status'];
+            }
+            if (typeof (params['server']) !== 'undefined') {
+                this.search.server = params['server'];
+            }
+            if (typeof (params['vlan']) !== 'undefined') {
+                this.search.vlan = params['vlan'];
+            }
+            if (typeof (params['port']) !== 'undefined') {
+                this.search.port = params['port'];
+            }
+            if (typeof (params['page']) !== 'undefined') {
+                this.page = params['page'];
+            }
+            if (typeof (params['limit']) !== 'undefined') {
+                this.limit = params['limit'];
+            }
+            
+        })
     }
 
     ngOnInit(): void {
@@ -84,24 +119,30 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        let queries = {}
         setTimeout(() => {
-            this.productService.listVlan(queries).subscribe(res => {
-                if(res) {
-                    this.listVlan = res;
-                }
-            })
-        }, 0)
-        setTimeout(() => {
-            this.productService.listServer(queries).subscribe(res => {
-                if(res) {
-                    this.listServer = res;
-                }
-            })
-        }, 0)
-        setTimeout(() => {
+            this.getListServer();
+            this.getListVlan();
+            this.getListPort();
             this.getList();
-        }, 0);
+        }, 0)
+    }
+
+    getListServer () {
+        this.productService.listServer({type: 'query'}).subscribe(res => {
+            this.listServer = res.list;
+        })
+    }
+
+    getListVlan () {
+        this.productService.listVlan({type: 'query'}).subscribe(res => {
+            this.listVlan = res.list;
+        })
+    }
+
+    getListPort () {
+        this.productService.listPort({type: 'query'}).subscribe(res => {
+            this.listPort = res.list;
+        })
     }
 
     getCurrentUser () {
@@ -115,6 +156,8 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
 
     showModalCreate() {
         this.checkVisibleCreate = true;
+        console.log(this.listPort);
+        
     }
 
     showModalCreateVlan() {
@@ -132,15 +175,22 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
 
     getList() {
         this.loadingState = true;
+        
         let queries: any = {
             page: this.page,
             limit: this.limit
         }
+        queries['page'] = Number(queries['page']) - 1;
+
+        if(Number(queries['page']) < 0) {
+            queries['page'] = 0;
+        }
+
         if(this.search.keyword) {
             queries['keyword'] = this.search.keyword;
         }
-        if(this.search.vlanType) {
-            queries['vlanType'] = Number(this.search.vlanType);
+        if(this.search.vlan) {
+            queries['vlan'] = Number(this.search.vlan);
         }
         if(this.search.server) {
             queries['server'] = Number(this.search.server);
@@ -148,10 +198,13 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
         if(this.search.status) {
             queries['status'] = Number(this.search.status);
         }
+        if(this.search.port) {
+            queries['port'] = Number(this.search.port);
+        }
         this.productService.list(queries).subscribe(res => {
             this.loadingState = false;
             this.listHosting = res.list;
-            this.totalList = res.total;
+            this.totalHosting = res.total;
         })
         const params = [];
         for (const i in queries) {
@@ -216,8 +269,13 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
         }, 2000);
     }
 
-    pageChange(event: any) {
-        this.limit = event;
+    pageIndexChange(event: any) {
+        this.page = Number(event);
         this.getList();
+    }
+
+    pageSizeChange(event: any) {
+        this.limit = event;
+        this.getList()
     }
 }

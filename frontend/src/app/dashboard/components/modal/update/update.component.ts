@@ -14,12 +14,14 @@ export class DashboardModalUpdate implements OnInit, AfterViewInit {
     @Input() hosting: any = {};
     @Input() listServer: any = [];
     @Input() listVlan: any = [];
+    @Input() listPort: any = [];
 
     formUpdate: any = {
         id: '',
         ipaddress: '',
         ipaddressf5: '',
         hostname: '',
+        port: '',
         priority: '',
         env: '',
         type: '',
@@ -30,7 +32,7 @@ export class DashboardModalUpdate implements OnInit, AfterViewInit {
         note: '',
         na: '',
         status: null,
-        vlanType: null,
+        vlan: null,
         server: null
     };
     @Output() checkVisibleUpdateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -65,6 +67,8 @@ export class DashboardModalUpdate implements OnInit, AfterViewInit {
         this.getHosting();
         console.log(this.hosting);
     }
+
+
     getHosting() {
         this.formUpdate.id = this.hosting.id;
         this.formUpdate.ipaddress = this.hosting.ipaddress;
@@ -80,8 +84,11 @@ export class DashboardModalUpdate implements OnInit, AfterViewInit {
         this.formUpdate.note = this.hosting.note;
         this.formUpdate.na = this.hosting.na;
         this.formUpdate.status = this.hosting.status;
-        this.formUpdate.vlanType = Number(this.hosting.vlanType);
-        this.formUpdate.server = this.hosting.server;
+        this.formUpdate.server = String(this.hosting.server);
+        this.formUpdate.vlan = String(this.hosting.vlan);
+        this.formUpdate.port = String(this.hosting.port);
+        console.log(this.formUpdate);
+        
     }
 
     updateHosting() {

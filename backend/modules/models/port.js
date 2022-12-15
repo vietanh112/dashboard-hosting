@@ -18,7 +18,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER
         },
         port: DataTypes.STRING,
-        ipAddress: DataTypes.STRING,
         description: DataTypes.STRING,
         status: DataTypes.INTEGER,
         server: DataTypes.INTEGER,

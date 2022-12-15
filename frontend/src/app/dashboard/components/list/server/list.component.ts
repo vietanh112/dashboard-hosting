@@ -39,8 +39,15 @@ export class DashboardListServer implements OnInit, AfterViewInit {
 
     routeParams: any = {
         keyword: null,
-        status: null
+        status: null,
+        page: 0,
+        limit: 10
     };
+
+    totalServer: number = 0;
+    sizePage: any = [10, 20, 50];
+
+    typeListServer: string = 'list';
 
     constructor(
         public productService: DashboardHostingProductService,
@@ -57,6 +64,15 @@ export class DashboardListServer implements OnInit, AfterViewInit {
             }
             if (typeof (params['status']) !== 'undefined') {
                 this.search.status = params['status'];
+            }
+            if (typeof (params['page']) !== 'undefined') {
+                this.page = params['page'];
+            }
+            if (typeof (params['limit']) !== 'undefined') {
+                this.limit = params['limit'];
+            }
+            if (typeof (params['limit']) !== 'undefined') {
+                this.limit = params['limit'];
             }
         })
     }
@@ -117,10 +133,19 @@ export class DashboardListServer implements OnInit, AfterViewInit {
 
     getList() {
         this.loadingState = true;
+
         let queries: any = {
+            type: this.typeListServer,
             page: this.page,
             limit: this.limit
         }
+
+        queries['page'] = Number(queries['page']) - 1;
+
+        if(Number(queries['page']) < 0) {
+            queries['page'] = 0;
+        }
+
         if(this.search.keyword) {
             queries['keyword'] = this.search.keyword;
         }
@@ -129,7 +154,8 @@ export class DashboardListServer implements OnInit, AfterViewInit {
         }
         this.productService.listServer(queries).subscribe(res => {
             this.loadingState = false;
-            this.listServer = res;
+            this.listServer = res.list;
+            this.totalServer = res.total;
         })
         const params = [];
         for (const i in queries) {
@@ -154,5 +180,15 @@ export class DashboardListServer implements OnInit, AfterViewInit {
     }
     getCurrentUser () {
         this.currentUser = this.authenticationService.currentUserValue;
+    }
+
+    pageIndexChange(event: any) {
+        this.page = Number(event);
+        this.getList();
+    }
+
+    pageSizeChange(event: any) {
+        this.limit = event;
+        this.getList()
     }
 }

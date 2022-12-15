@@ -25,8 +25,8 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
     loadingState:boolean = false;
     page: number = 1;
     limit: number = 10;
-    listVlan: any = undefined;
-    listServer: any = undefined;
+    listVlan: any = [];
+    listServer: any = [];
     dataVlan: any = undefined;
     sizeButton: NzButtonSize = 'large';
     currentUser: any = undefined;
@@ -43,6 +43,11 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
         status: null,
         server: null
     };
+
+    totalVlan: number = 0;
+    sizePage: any = [10, 20, 50];
+
+    typeListVlan:string = 'list';
 
     constructor(
         public productService: DashboardHostingProductService,
@@ -84,13 +89,19 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
             if (typeof (params['server']) !== 'undefined') {
                 this.search.server = params['server'];
             }
+            if (typeof (params['page']) !== 'undefined') {
+                this.page = params['page'];
+            }
+            if (typeof (params['limit']) !== 'undefined') {
+                this.limit = params['limit'];
+            }
         })
     }
     ngOnInit(): void {}
     
     ngAfterViewInit(): void {
         setTimeout(() => {
-            this.getServer();
+            this.getListServer();
             this.getList();
         }, 0)
     }
@@ -143,19 +154,24 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
           });
     }
 
-    getServer() {
-        this.productService.listServer({}).subscribe(res => {
-            if(res) {
-                this.listServer = res;
-            }
+    getListServer() {
+        this.productService.listServer({type: 'query'}).subscribe(res => {
+            this.listServer = res.list;
         })
     }
 
     getList() {
         this.loadingState = true;
         let queries: any = {
+            type: this.typeListVlan,
             page: this.page,
             limit: this.limit
+        }
+
+        queries['page'] = Number(queries['page']) - 1;
+
+        if(Number(queries['page']) < 0) {
+            queries['page'] = 0;
         }
         if(this.search.keyword) {
             queries['keyword'] = this.search.keyword;
@@ -168,7 +184,8 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
         }
         this.productService.listVlan(queries).subscribe(res => {
             this.loadingState = false;
-            this.listVlan = res;
+            this.listVlan = res.list;
+            this.totalVlan = res.total;
         })
         const params = [];
         for (const i in queries) {
@@ -193,5 +210,15 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
     }
     getCurrentUser () {
         this.currentUser = this.authenticationService.currentUserValue;
+    }
+
+    pageIndexChange(event: any) {
+        this.page = Number(event);
+        this.getList();
+    }
+
+    pageSizeChange(event: any) {
+        this.limit = event;
+        this.getList()
     }
 }

@@ -6,7 +6,7 @@
           </div>
           <div nz-col nzSpan="17">
             <nz-input-group>
-              <input type="text" nz-input [(ngModel)]="formCreate.serverName" />
+              <input type="text" nz-input [(ngModel)]="formCreate.name" />
             </nz-input-group>
           </div>
         </div>
@@ -26,7 +26,7 @@
           </div>
           <div nz-col nzSpan="17">
             <nz-input-group [nzSuffix]="textAreaClearTpl" class="ant-input-affix-wrapper-textarea-with-clear-btn">
-                <textarea rows="3" nz-input [(ngModel)]="formCreate.serverInfor"></textarea>
+                <textarea rows="3" nz-input [(ngModel)]="formCreate.description"></textarea>
               </nz-input-group>
           </div>
           <ng-template #textAreaClearTpl>

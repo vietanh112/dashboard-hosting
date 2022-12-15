@@ -16,7 +16,7 @@
             </div>
             <div style="margin-left: 10px;">
               <nz-select style="width: 120px;" [(ngModel)]="search.server" nzPlaceHolder="Server">
-                <nz-option [nzValue]="data?.id" [nzLabel]="data?.serverName" *ngFor="let data of listServer"></nz-option>
+                <nz-option [nzValue]="data?.id" [nzLabel]="data?.name" *ngFor="let data of listServer"></nz-option>
               </nz-select>
             </div>
             <div style="margin-left: 10px;">
@@ -30,13 +30,13 @@
             <button *ngIf="currentUser?.roleId < 3" nz-button [nzType]="'primary'" [nzSize]="sizeButton" (click)="showModalCreatePort()"><span>Tạo mới Port</span></button>
           </div>
       </div>
-      <nz-table #nzTable [nzData]="listPort" nzTableLayout="fixed" nzShowSizeChanger [nzPageSizeOptions]="[10, 20, 50]" [nzPageIndex]="page">
+      <nz-table #nzTable [nzData]="listPort" nzTableLayout="fixed" nzShowSizeChanger  [nzShowPagination]="false">
           <thead>
             <tr>
+              <th class="text-center" style="width: 60px;"></th>
               <th class="text-center" style="width: 80px;">STT</th>
               <th class="text-center">PORT</th>
-              <th class="text-center">Status</th>
-              <th class="text-center">IP Address</th>
+              <th class="text-center" style="width: 120px;">Status</th>
               <th class="text-center">Server</th>
               <th>Thông tin</th>
               <th class="text-center" style="width: 120px;">Options</th>
@@ -44,6 +44,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let data of nzTable.data; let i = index">
+              <td [nzExpand]="expandSet.has(data.id)" class="text-center" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
               <td class="text-center">{{ i + 1}}</td>
               <td class="text-center">{{ data.port }}</td>
               <td class="text-center">
@@ -51,10 +52,9 @@
                 <nz-tag [nzColor]="'orange'" *ngIf="data.status == 0">Stop</nz-tag>
                 <nz-tag [nzColor]="'green'" *ngIf="data.status == 1">Active</nz-tag>
               </td>
-              <td class="text-center">{{ data.ipAddress }}</td>
               <td class="text-center">
                 <span *ngFor="let ser of listServer">
-                    <span *ngIf="data.server == ser.id">{{ser.serverName}}</span>
+                    <span *ngIf="data.server == ser.id">{{ser.name}}</span>
                 </span>
               </td>
               <td>
@@ -81,6 +81,9 @@
           </tbody>
         </nz-table>
         
+        <div style="margin-top: 1.5rem;display: flex;justify-content: flex-end;">
+          <nz-pagination [nzPageIndex]="page" [nzTotal]="totalPort" nzShowSizeChanger [nzPageSize]="10" [nzPageSizeOptions]="sizePage" (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
+        </div>
   </div>
-  <app-dashboard-modal-update-port [(checkVisibleUpdatePort)]=checkVisibleUpdatePort (checkVisibleUpdatePortChange) = "updatePort($event)" [portUpdate]=dataPort [listServer]=listServer></app-dashboard-modal-update-port>
+  <app-dashboard-modal-update-port [(checkVisibleUpdatePort)]=checkVisibleUpdatePort (checkVisibleUpdatePortChange) = "updatePort($event)" [port]=port [listServer]=listServer></app-dashboard-modal-update-port>
   <app-dashboard-modal-create-port [(checkVisibleCreatePort)]=checkVisibleCreatePort (checkVisibleCreatePortChange) = "createPort($event)" [listServer]=listServer></app-dashboard-modal-create-port>

@@ -28,42 +28,62 @@ const productServices = {
                             newCriteria[key] = value
                         }
                     }
-                    data = await coreModels.hosting.findAll({
-                        where: {
-                            [Op.and]: [
-                                {
-                                    [Op.or]: {
-                                        iPAddress: {
-                                            [Op.like]: `%${criteria.keyword}%`
-                                        },
-                                        hostName: {
-                                            [Op.like]: `%${criteria.keyword}%`
+                    if('keyword' in criteria) {
+                        data = await coreModels.hosting.findAll({
+                            where: {
+                                [Op.and]: [
+                                    {
+                                        [Op.or]: {
+                                            iPAddress: {
+                                                [Op.like]: `%${criteria.keyword}%`
+                                            },
+                                            hostName: {
+                                                [Op.like]: `%${criteria.keyword}%`
+                                            }
                                         }
-                                    }
-                                },
-                                newCriteria
-                            ]   
-                        },
-                        limit: limit,
-                        offset: Number(limit) * Number(page)
-                    });
-                    total = await coreModels.hosting.count({
-                        where: {
-                            [Op.and]: [
-                                {
-                                    [Op.or]: {
-                                        iPAddress: {
-                                            [Op.like]: `%${criteria.keyword}%`
-                                        },
-                                        hostName: {
-                                            [Op.like]: `%${criteria.keyword}%`
+                                    },
+                                    newCriteria
+                                ]   
+                            },
+                            limit: limit,
+                            offset: Number(limit) * Number(page)
+                        });
+                        total = await coreModels.hosting.count({
+                            where: {
+                                [Op.and]: [
+                                    {
+                                        [Op.or]: {
+                                            iPAddress: {
+                                                [Op.like]: `%${criteria.keyword}%`
+                                            },
+                                            hostName: {
+                                                [Op.like]: `%${criteria.keyword}%`
+                                            }
                                         }
-                                    }
-                                },
-                                newCriteria
-                            ]   
-                        },
-                    })
+                                    },
+                                    newCriteria
+                                ]   
+                            },
+                        })
+                    }
+                    else {
+                        data = await coreModels.hosting.findAll({
+                            where: {
+                                [Op.and]: [
+                                    newCriteria
+                                ]
+                            },
+                            limit: limit,
+                            offset: Number(limit) * Number(page)
+                        });
+                        total = await coreModels.hosting.count({
+                            where: {
+                                [Op.and]: [
+                                    newCriteria
+                                ]
+                            },
+                        })
+                    }
                 }
                 else {
                     if(criteria.keyword) {
@@ -113,7 +133,7 @@ const productServices = {
                     limit: limit,
                     offset: Number(limit) * Number(page)
                 });
-                total = await coreModels.hosting.count()
+                total = await coreModels.hosting.count();
             }
             log.code = 200;
             log.status = 1;
@@ -236,246 +256,6 @@ const productServices = {
                 total: 0
             }
         }
-        // if(Object.keys(criteria).length == 1){
-        //     if(criteria.keyword) {
-        //         data = await coreModels.vlan.findAll({
-        //             where: {
-        //                 [Op.or]: {
-        //                     name: {
-        //                         [Op.like]: `%${criteria.keyword}%`
-        //                     },
-        //                     description: {
-        //                         [Op.like]: `%${criteria.keyword}%`
-        //                     }
-        //                 }
-        //             },
-        //             limit: limit,
-        //             offset: Number(limit) * Number(page)
-        //         });
-
-        //         total = await coreModels.vlan.count({
-        //             where: {
-        //                 [Op.or]: {
-        //                     name: {
-        //                         [Op.like]: `%${criteria.keyword}%`
-        //                     },
-        //                     description: {
-        //                         [Op.like]: `%${criteria.keyword}%`
-        //                     }
-        //                 }
-        //             },
-        //         });
-        //     }
-        //     else if (criteria.server || criteria.id || criteria.status) {
-        //         data = await coreModels.vlan.findAll({
-        //             where: criteria,
-        //             limit: limit,
-        //             offset: Number(limit) * Number(page)
-        //         });
-
-        //         total = await coreModels.vlan.count({
-        //             where: criteria
-        //         })
-        //     }
-        // }
-        // else if (Object.keys(criteria).length == 2) {
-        //     if(criteria.keyword && criteria.server) {
-        //         data = await coreModels.vlan.findAll({
-        //             where: {
-        //                 [Op.and]: [
-        //                     {
-        //                         [Op.or]: {
-        //                             name: {
-        //                                 [Op.like]: `%${criteria.keyword}%`
-        //                             },
-        //                             description: {
-        //                                 [Op.like]: `%${criteria.keyword}%`
-        //                             }
-        //                         }
-        //                     },
-        //                     {
-        //                         server: `${Number(criteria.server)}`
-        //                     }
-        //                 ]   
-        //             },
-        //             limit: limit,
-        //             offset: Number(limit) * Number(page)
-        //         })
-
-        //         total = await coreModels.vlan.count({
-        //             where: {
-        //                 [Op.and]: [
-        //                     {
-        //                         [Op.or]: {
-        //                             name: {
-        //                                 [Op.like]: `%${criteria.keyword}%`
-        //                             },
-        //                             description: {
-        //                                 [Op.like]: `%${criteria.keyword}%`
-        //                             }
-        //                         }
-        //                     },
-        //                     {
-        //                         server: `${Number(criteria.server)}`
-        //                     }
-        //                 ]   
-        //             }
-        //         })
-        //     }
-        //     else if (criteria.keyword && criteria.status) {
-        //         data = await coreModels.vlan.findAll({
-        //             where: {
-        //                 [Op.and]: [
-        //                     {
-        //                         [Op.or]: {
-        //                             name: {
-        //                                 [Op.like]: `%${criteria.keyword}%`
-        //                             },
-        //                             description: {
-        //                                 [Op.like]: `%${criteria.keyword}%`
-        //                             }
-        //                         }
-        //                     },
-        //                     {
-        //                         status: `${Number(criteria.status)}`
-        //                     }
-        //                 ]   
-        //             },
-        //             limit: limit,
-        //             offset: Number(limit) * Number(page)
-        //         })
-
-        //         total = await coreModels.vlan.count({
-        //             where: {
-        //                 [Op.and]: [
-        //                     {
-        //                         [Op.or]: {
-        //                             name: {
-        //                                 [Op.like]: `%${criteria.keyword}%`
-        //                             },
-        //                             description: {
-        //                                 [Op.like]: `%${criteria.keyword}%`
-        //                             }
-        //                         }
-        //                     },
-        //                     {
-        //                         status: `${Number(criteria.status)}`
-        //                     }
-        //                 ]   
-        //             }
-        //         })
-        //     }
-        //     else if (criteria.server && criteria.status) {
-        //         data = await coreModels.vlan.findAll({
-        //             where: {
-        //                 [Op.and]: [
-        //                     {
-        //                         server: `${Number(criteria.server)}`
-        //                     },
-        //                     {
-        //                         status: `${Number(criteria.status)}`
-        //                     }
-        //                 ]   
-        //             },
-        //             limit: limit,
-        //             offset: Number(limit) * Number(page)
-        //         })
-
-        //         total = await coreModels.vlan.count({
-        //             where: {
-        //                 [Op.and]: [
-        //                     {
-        //                         server: `${Number(criteria.server)}`
-        //                     },
-        //                     {
-        //                         status: `${Number(criteria.status)}`
-        //                     }
-        //                 ]   
-        //             }
-        //         })
-
-        //     }
-        // }
-        // else if (Object.keys(criteria).length == 3) {
-        //     data = await coreModels.vlan.findAll({
-        //         where: {
-        //             [Op.and]: [
-        //                 {
-        //                     [Op.or]: {
-        //                         name: {
-        //                             [Op.like]: `%${criteria.keyword}%`
-        //                         },
-        //                         description: {
-        //                             [Op.like]: `%${criteria.keyword}%`
-        //                         }
-        //                     }
-        //                 },
-        //                 {
-        //                     server: `${Number(criteria.server)}`
-        //                 },
-        //                 {
-        //                     status: `${Number(criteria.status)}`
-        //                 }
-        //             ]   
-        //         },
-        //         limit: limit,
-        //         offset: Number(limit) * Number(page)
-        //     })
-
-        //     total = await coreModels.vlan.count({
-        //         where: {
-        //             [Op.and]: [
-        //                 {
-        //                     [Op.or]: {
-        //                         name: {
-        //                             [Op.like]: `%${criteria.keyword}%`
-        //                         },
-        //                         description: {
-        //                             [Op.like]: `%${criteria.keyword}%`
-        //                         }
-        //                     }
-        //                 },
-        //                 {
-        //                     server: `${Number(criteria.server)}`
-        //                 },
-        //                 {
-        //                     status: `${Number(criteria.status)}`
-        //                 }
-        //             ]   
-        //         }
-        //     })
-        // }
-        // else {
-        //     if(type == 'query') {
-        //         const myPromise = new Promise((resolve, reject) => {
-        //             client.get(listVlanRedisKey, async (err, vlan) => {
-        //                 if(vlan != {} && vlan != null && vlan != undefined) {
-        //                     resolve(JSON.parse(vlan));
-        //                 }
-        //                 else if(vlan == null || vlan == undefined || vlan == {} || vlan == []){
-        //                     data = await coreModels.vlan.findAll({});
-        //                     client.setex(listVlanRedisKey, 3600, JSON.stringify(data));
-        //                     resolve(data);
-        //                 }
-        //                 else {
-        //                     reject(false)
-        //                 }
-        //             })
-        //         });
-
-        //         data = await myPromise
-        //     }
-        //     else {
-        //         data = await coreModels.vlan.findAll({
-        //             limit: limit,
-        //             offset: Number(limit) * Number(page)
-        //         });
-
-        //         total = await coreModels.vlan.count({});
-                
-        //     }
-        // }
-
         if(Object.keys(criteria).length == 0) {
             if(type == 'query') {
                 const myPromise = new Promise((resolve, reject) => {

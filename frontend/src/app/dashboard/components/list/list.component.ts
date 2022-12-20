@@ -121,8 +121,8 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         setTimeout(() => {
             this.getListServer();
-            this.getListVlan();
-            this.getListPort();
+            this.getListVlan(null);
+            this.getListPort(null);
             this.getList();
         }, 0)
     }
@@ -133,14 +133,28 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
         })
     }
 
-    getListVlan () {
-        this.productService.listVlan({type: 'query'}).subscribe(res => {
+    getListVlan (server: any) {
+        let queries: any = {}
+        if (!server) {
+            queries['type'] = 'query';
+        }
+        else {
+            queries['server'] = server;
+        }
+        this.productService.listVlan(queries).subscribe(res => {
             this.listVlan = res.list;
         })
     }
 
-    getListPort () {
-        this.productService.listPort({type: 'query'}).subscribe(res => {
+    getListPort (server: any) {
+        let queries: any = {}
+        if (!server) {
+            queries['type'] = 'query';
+        }
+        else {
+            queries['server'] = server;
+        }
+        this.productService.listPort(server).subscribe(res => {
             this.listPort = res.list;
         })
     }

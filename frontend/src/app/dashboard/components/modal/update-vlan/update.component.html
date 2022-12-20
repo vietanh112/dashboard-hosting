@@ -1,55 +1,58 @@
 <nz-modal [(nzVisible)]="checkVisibleUpdateVlan" nzTitle="Chỉnh sửa Vlan" (nzOnCancel)="handleCancel()" (nzAfterOpen)="loadingOk()" (nzOnOk)="handleOk()">
     <ng-container *nzModalContent>
-      <div class="form-group" nz-row>
-        <div nz-col nzSpan="7">
-          <label for="" class="fw-bold">Vlan Name<span class="color-red">*</span></label>
-        </div>
-        <div nz-col nzSpan="17">
-          <nz-input-group>
-            <input type="text" nz-input [(ngModel)]="formUpdate.name" />
-          </nz-input-group>
-        </div>
-      </div>
-      <div class="form-group" nz-row>
-        <div nz-col nzSpan="7">
-          <label for="" class="fw-bold">Trạng thái</label>
-        </div>
-        <div nz-col nzSpan="17">
-          <nz-select style="width: 100%;" [(ngModel)]="formUpdate.status">
-            <nz-option [nzValue]="'-1'" [nzLabel]="'Error'"></nz-option>
-            <nz-option [nzValue]="'0'" [nzLabel]="'Stop'"></nz-option>
-            <nz-option [nzValue]="'1'" [nzLabel]="'Active'"></nz-option>
-          </nz-select>
-        </div>
-      </div>
-      <div class="form-group" nz-row>
-        <div nz-col nzSpan="7">
-          <label for="" class="fw-bold">Thông tin Vlan</label>
-        </div>
-        <div nz-col nzSpan="17">
-          <nz-input-group [nzSuffix]="textAreaClearTpl" class="ant-input-affix-wrapper-textarea-with-clear-btn">
-              <textarea rows="3" nz-input [(ngModel)]="formUpdate.description"></textarea>
+      <form action="" [formGroup]="updateForm">
+        <div class="form-group" nz-row>
+          <div nz-col nzSpan="7">
+            <label for="" class="fw-bold">Vlan<span class="color-red">*</span></label>
+          </div>
+          <div nz-col nzSpan="17">
+            <nz-input-group>
+              <input type="text" nz-input formControlName="name" />
             </nz-input-group>
+          </div>
         </div>
-        <ng-template #textAreaClearTpl>
-          <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="textValue" (click)="textValue = null"
-          ></span>
-        </ng-template>
-      </div>
-      <div class="form-group" nz-row>
-        <div nz-col nzSpan="7">
-          <label for="" class="fw-bold">Loại server</label>
-        </div>
-        <div nz-col nzSpan="17">
-            <nz-select style="width: 100%;" [(ngModel)]="formUpdate.server">
-              <nz-option [nzValue]="data.id" [nzLabel]="data.name" *ngFor="let data of listServer"></nz-option>
+        <div class="form-group" nz-row>
+          <div nz-col nzSpan="7">
+            <label for="" class="fw-bold">Trạng thái<span class="color-red">*</span></label>
+          </div>
+          <div nz-col nzSpan="17">
+            <nz-select style="width: 100%;" formControlName="status">
+              <nz-option [nzValue]="'-1'" [nzLabel]="'Error'"></nz-option>
+              <nz-option [nzValue]="'0'" [nzLabel]="'Stop'"></nz-option>
+              <nz-option [nzValue]="'1'" [nzLabel]="'Active'"></nz-option>
             </nz-select>
           </div>
-      </div>
+        </div>
+        <div class="form-group" nz-row>
+          <div nz-col nzSpan="7">
+            <label for="" class="fw-bold">Thông tin Vlan</label>
+          </div>
+          <div nz-col nzSpan="17">
+            <nz-input-group [nzSuffix]="textAreaClearTpl" class="ant-input-affix-wrapper-textarea-with-clear-btn">
+                <textarea rows="3" nz-input formControlName="description"></textarea>
+              </nz-input-group>
+          </div>
+          <ng-template #textAreaClearTpl>
+            <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="textValue" (click)="textValue = null"
+            ></span>
+          </ng-template>
+        </div>
+        <div class="form-group" nz-row>
+          <div nz-col nzSpan="7">
+            <label for="" class="fw-bold">Server</label>
+          </div>
+          <div nz-col nzSpan="17">
+              <nz-select style="width: 100%;" formControlName="server">
+                <nz-option [nzValue]="data.id" [nzLabel]="data.name" *ngFor="let data of listServer"></nz-option>
+              </nz-select>
+            </div>
+        </div>
+      </form>
+      
         
     </ng-container>
     <ng-container *nzModalFooter>
       <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
-        <button nz-button nzType="primary" (click)="handleOk()">Update Hosting</button>
+        <button nz-button nzType="primary" (click)="handleOk()">Update Vlan</button>
     </ng-container>
 </nz-modal>

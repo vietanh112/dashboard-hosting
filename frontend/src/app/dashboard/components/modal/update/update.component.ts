@@ -65,7 +65,6 @@ export class DashboardModalUpdate implements OnInit, AfterViewInit {
 
     loadingOk():void {
         this.getHosting();
-        console.log(this.hosting);
     }
 
 

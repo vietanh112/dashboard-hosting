@@ -3,7 +3,7 @@ export class ServerModel {
     id: string = '';
     name: string = '';
     description: string = '';
-    status: number = null;
+    status: string = null;
     createdAt: string = '';
     updatedAt: string = '';
     
@@ -12,7 +12,7 @@ export class ServerModel {
         this.id = String(data.id) || '';
         this.name = data.name || '';
         this.description = data.description || '';
-        this.status = data.status ?? null;
+        this.status = String(data.status) ?? null;
         this.createdAt = data.createdAt || '';
         this.updatedAt = data.updatedAt || '';
     }

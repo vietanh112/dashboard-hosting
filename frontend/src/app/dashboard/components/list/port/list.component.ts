@@ -89,6 +89,7 @@ export class DashboardListPort implements OnInit, AfterViewInit {
     onExpandChange(id: number, checked: boolean): void {
         if (checked) {
             this.expandSet.add(id);
+            
         } else {
             this.expandSet.delete(id);
         }

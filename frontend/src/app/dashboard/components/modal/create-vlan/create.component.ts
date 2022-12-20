@@ -2,7 +2,7 @@ import {Component, OnInit, AfterViewInit, Input, Output, EventEmitter} from '@an
 import {ActivatedRoute, Router} from "@angular/router";
 import {Location} from "@angular/common";
 import {DashboardHostingProductService} from '../../../services/hosting-product.service';
-
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-dashboard-modal-create-vlan',
@@ -14,21 +14,22 @@ export class DashboardModalCreateVlan implements OnInit, AfterViewInit {
     @Input() checkVisibleCreateVlan: boolean = false;
     @Input() listServer: any = [];
     @Output() checkVisibleCreateVlanChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-    formCreate: any = {
-        name: '',
-        status: '0',
-        infor: '',
-        server: null
-    }
+
+    createForm: FormGroup;
     textValue: string | null = null;
     
     ngOnInit(): void {
-        
+        this.createForm = this.formBuilder.group({
+            name: ["", [Validators.required]],
+            status: ['0', [Validators.required]],
+            description: [''],
+            server: ['']
+        })
     }
     ngAfterViewInit(): void {
         
     }
-    constructor(public productService: DashboardHostingProductService) {
+    constructor(public productService: DashboardHostingProductService, private formBuilder: FormBuilder) {
         
     }
     
@@ -41,8 +42,19 @@ export class DashboardModalCreateVlan implements OnInit, AfterViewInit {
         this.checkVisibleCreateVlanChange.emit(false);
     }
 
+    get f() {
+        return this.createForm.controls;
+    }
+
     createVlan() {
-        this.productService.createVlan(this.formCreate).subscribe((response: any) => {
+        let body = {
+            name: this.f['name'].value,
+            status: Number(this.f['status'].value),
+            description: this.f['description'].value,
+            server: Number(this.f['server'].value)
+        }
+
+        this.productService.createVlan(body).subscribe((response: any) => {
             this.checkVisibleCreateVlanChange.emit(response);
             this.checkVisibleCreateVlan = false;
         })

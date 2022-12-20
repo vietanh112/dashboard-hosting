@@ -2,6 +2,7 @@ import {Component, OnInit, AfterViewInit, Input, Output, EventEmitter} from '@an
 import {ActivatedRoute, Router} from "@angular/router";
 import {Location} from "@angular/common";
 import {DashboardHostingProductService} from '../../../services/hosting-product.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 @Component({
@@ -13,11 +14,8 @@ import {DashboardHostingProductService} from '../../../services/hosting-product.
 export class DashboardModalCreateServer implements OnInit, AfterViewInit {
     @Input() checkVisibleCreateServer: boolean = false;
     @Output() checkVisibleCreateServerChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-    formCreate: any = {
-        name: '',
-        status: '0',
-        description: '',
-    }
+
+    createForm: FormGroup
     listServer: any = undefined;
     textValue: string | null = null;
 
@@ -27,16 +25,21 @@ export class DashboardModalCreateServer implements OnInit, AfterViewInit {
         {id: '1', name: 'Active'},
     ]
     
-    ngOnInit(): void {
+    constructor(public productService: DashboardHostingProductService, private formBuilder: FormBuilder,) {
         
+    }
+    
+    ngOnInit(): void {
+        this.createForm = this.formBuilder.group({
+            name: ["", [Validators.required]],
+            status: ['0', [Validators.required]],
+            description: [''],
+        })
     }
     ngAfterViewInit(): void {
         
     }
-    constructor(public productService: DashboardHostingProductService) {
-        
-    }
-    
+
     handleOk():void {
         this.createServer();
     }
@@ -46,8 +49,17 @@ export class DashboardModalCreateServer implements OnInit, AfterViewInit {
         this.checkVisibleCreateServerChange.emit(false);
     }
 
+    get f() {
+        return this.createForm.controls;
+    }
+
     createServer() {
-        this.productService.createServer(this.formCreate).subscribe((response: any) => {
+        let body = {
+            name: this.f['name'].value,
+            status: Number(this.f['status'].value),
+            description: this.f['description'].value
+        }
+        this.productService.createServer(body).subscribe((response: any) => {
             this.checkVisibleCreateServerChange.emit(response);
             this.checkVisibleCreateServer = false;
         })

@@ -2,6 +2,7 @@ import {Component, OnInit, AfterViewInit, Input, Output, EventEmitter} from '@an
 import {ActivatedRoute, Router} from "@angular/router";
 import {Location} from "@angular/common";
 import {DashboardHostingProductService} from '../../../services/hosting-product.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 @Component({
@@ -14,21 +15,29 @@ export class DashboardModalCreatePort implements OnInit, AfterViewInit {
     @Input() checkVisibleCreatePort: boolean = false;
     @Input() listServer: any = [];
     @Output() checkVisibleCreatePortChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-    formCreate: any = {
-        port: '',
-        status: '0',
-        description: '',
-        server: null
-    }
+    
+    createForm: FormGroup;
+
     textValue: string | null = null;
     
-    ngOnInit(): void {
+    
+    constructor(public productService: DashboardHostingProductService, private formBuilder: FormBuilder,) {
         
+    }
+
+    ngOnInit(): void {
+        this.createForm = this.formBuilder.group({
+            port: ["", [Validators.required]],
+            status: ['0', [Validators.required]],
+            description: [''],
+            server: [''],
+        })
     }
     ngAfterViewInit(): void {
         
     }
-    constructor(public productService: DashboardHostingProductService) {
+
+    loadingOk() {
         
     }
     
@@ -41,14 +50,21 @@ export class DashboardModalCreatePort implements OnInit, AfterViewInit {
         this.checkVisibleCreatePortChange.emit(false);
     }
 
+    get f() {
+        return this.createForm.controls;
+    }
+
     createPort() {
-        this.productService.createPort(this.formCreate).subscribe((response: any) => {
+        let body = {
+            port: this.f['port'].value,
+            status: Number(this.f['status'].value),
+            description: this.f['description'].value,
+            server: Number(this.f['server'].value),
+        }
+        this.productService.createPort(body).subscribe((response: any) => {
             this.checkVisibleCreatePortChange.emit(response);
             this.checkVisibleCreatePort = false;
         })
     }
 
-    loadingOk() {
-        
-    }
 }

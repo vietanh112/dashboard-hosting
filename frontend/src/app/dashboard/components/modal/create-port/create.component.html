@@ -1,47 +1,49 @@
 <nz-modal [(nzVisible)]="checkVisibleCreatePort" nzTitle="Tạo mới Port" (nzAfterOpen)="loadingOk()" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
     <ng-container *nzModalContent>
-        <div class="form-group" nz-row>
-          <div nz-col nzSpan="7">
-            <label for="" class="fw-bold">Port<span class="color-red">*</span></label>
-          </div>
-          <div nz-col nzSpan="17">
-            <nz-input-group>
-              <input type="text" nz-input [(ngModel)]="formCreate.port" />
-            </nz-input-group>
-          </div>
-        </div>
-        <div class="form-group" nz-row>
-          <div nz-col nzSpan="7">
-            <label for="" class="fw-bold">Trạng thái</label>
-          </div>
-          <div nz-col nzSpan="17">
-            <nz-select style="width: 100%;" [(ngModel)]="formCreate.status">
-              <nz-option [nzValue]="'-1'" [nzLabel]="'Error'"></nz-option>
-              <nz-option [nzValue]="'0'" [nzLabel]="'Stop'"></nz-option>
-              <nz-option [nzValue]="'1'" [nzLabel]="'Active'"></nz-option>
-            </nz-select>
-          </div>
-        </div>
-        <div class="form-group" nz-row>
-          <div nz-col nzSpan="7">
-            <label for="" class="fw-bold">Thông tin</label>
-          </div>
-          <div nz-col nzSpan="17">
-            <nz-input-group class="ant-input-affix-wrapper-textarea-with-clear-btn">
-              <textarea rows="3" nz-input [(ngModel)]="formCreate.description"></textarea>
+        <form action="" [formGroup]="createForm">
+          <div class="form-group" nz-row>
+            <div nz-col nzSpan="7">
+              <label for="" class="fw-bold">Port<span class="color-red">*</span></label>
+            </div>
+            <div nz-col nzSpan="17">
+              <nz-input-group>
+                <input type="text" nz-input formControlName="port" />
               </nz-input-group>
             </div>
-        </div>
-        <div class="form-group" nz-row>
-          <div nz-col nzSpan="7">
-            <label for="" class="fw-bold">Loại server</label>
           </div>
-          <div nz-col nzSpan="17">
-              <nz-select style="width: 100%;" [(ngModel)]="formCreate.server">
-                <nz-option [nzValue]="data.id" [nzLabel]="data.name" *ngFor="let data of listServer"></nz-option>
+          <div class="form-group" nz-row>
+            <div nz-col nzSpan="7">
+              <label for="" class="fw-bold">Trạng thái<span class="color-red">*</span></label>
+            </div>
+            <div nz-col nzSpan="17">
+              <nz-select style="width: 100%;" formControlName="status">
+                <nz-option [nzValue]="'-1'" [nzLabel]="'Error'"></nz-option>
+                <nz-option [nzValue]="'0'" [nzLabel]="'Stop'"></nz-option>
+                <nz-option [nzValue]="'1'" [nzLabel]="'Active'"></nz-option>
               </nz-select>
             </div>
-        </div>
+          </div>
+          <div class="form-group" nz-row>
+            <div nz-col nzSpan="7">
+              <label for="" class="fw-bold">Thông tin</label>
+            </div>
+            <div nz-col nzSpan="17">
+              <nz-input-group class="ant-input-affix-wrapper-textarea-with-clear-btn">
+                <textarea rows="3" nz-input formControlName="description"></textarea>
+                </nz-input-group>
+              </div>
+          </div>
+          <div class="form-group" nz-row>
+            <div nz-col nzSpan="7">
+              <label for="" class="fw-bold">Loại server</label>
+            </div>
+            <div nz-col nzSpan="17">
+                <nz-select style="width: 100%;" formControlName="server">
+                  <nz-option [nzValue]="data.id" [nzLabel]="data.name" *ngFor="let data of listServer"></nz-option>
+                </nz-select>
+              </div>
+          </div>
+        </form>
         
     </ng-container>
     <ng-container *nzModalFooter>

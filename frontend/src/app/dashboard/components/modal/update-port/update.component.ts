@@ -1,6 +1,7 @@
 import {Component, OnInit, AfterViewInit, Input, Output, EventEmitter} from '@angular/core';
 import {DashboardHostingProductService} from '../../../services/hosting-product.service';
 import {PortModel} from '../../../models/port.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-dashboard-modal-update-port',
@@ -12,13 +13,9 @@ export class DashboardModalUpdatePort implements OnInit, AfterViewInit {
     @Input() checkVisibleUpdatePort: boolean = false;
     @Input() port: PortModel = undefined;
     @Input() listServer: any = [];
-    formUpdate: any = {
-        id: null,
-        port: '',
-        status: null,
-        description: '',
-        server: null,
-    };
+    updateForm: FormGroup;
+
+    
     @Output() checkVisibleUpdatePortChange: EventEmitter<boolean> = new EventEmitter<boolean>();
     textValue: string | null = null;
 
@@ -29,17 +26,24 @@ export class DashboardModalUpdatePort implements OnInit, AfterViewInit {
     ]
     
     ngOnInit(): void {
-        
+        this.updateForm = this.formBuilder.group({
+            id: ["", [Validators.required]],
+            port: ["", [Validators.required]],
+            status: ['0', [Validators.required]],
+            description: [''],
+            server: [''],
+        })
     }
     ngAfterViewInit(): void {
     }
 
-    constructor(public productService: DashboardHostingProductService) {
+    constructor(public productService: DashboardHostingProductService,
+                private formBuilder: FormBuilder,) {
         
     }
 
     handleOk(): void {
-        this.updateVlan();
+        this.updatePort();
     }
     
     handleCancel(): void {
@@ -49,19 +53,29 @@ export class DashboardModalUpdatePort implements OnInit, AfterViewInit {
 
     loadingOk():void {
         this.getPort();
-        
+    }
+
+    get f() {
+        return this.updateForm.controls;
     }
 
     getPort() {
-        this.formUpdate.id = this.port.id;
-        this.formUpdate.port = this.port.port;
-        this.formUpdate.status = this.port.status;
-        this.formUpdate.description = this.port.description;
-        this.formUpdate.server = this.port.server;
+        this.f['id'].setValue(this.port.id);
+        this.f['port'].setValue(this.port.port);
+        this.f['status'].setValue(this.port.status);
+        this.f['description'].setValue(this.port.description);
+        this.f['server'].setValue(this.port.server);
     }
 
-    updateVlan() {
-        this.productService.updatePort(this.formUpdate, this.formUpdate.id).subscribe((response: any) => {
+    updatePort() {
+        let body = {
+            id: Number(this.f['id'].value),
+            port: this.f['port'].value,
+            status: Number(this.f['status'].value),
+            description: this.f['description'].value,
+            server: Number(this.f['server'].value),
+        }
+        this.productService.updatePort(body, Number(this.f['id'].value)).subscribe((response: any) => {
             this.checkVisibleUpdatePortChange.emit(response);
             this.checkVisibleUpdatePort = false;
         })

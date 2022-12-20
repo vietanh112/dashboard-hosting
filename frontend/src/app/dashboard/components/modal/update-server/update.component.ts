@@ -1,7 +1,7 @@
 import {Component, OnInit, AfterViewInit, Input, Output, EventEmitter} from '@angular/core';
 import {DashboardHostingProductService} from '../../../services/hosting-product.service';
-import {HostingModel} from "../../../models/host.model";
-
+import {ServerModel} from "../../../models/server.model";
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-dashboard-modal-update-server',
@@ -11,14 +11,10 @@ import {HostingModel} from "../../../models/host.model";
 
 export class DashboardModalUpdateServer implements OnInit, AfterViewInit {
     @Input() checkVisibleUpdateServer: boolean = false;
-    @Input() dataServer: any = {};
-    formUpdate: any = {
-        id: '',
-        name: '',
-        status: null,
-        description: '',
-    };
+    @Input() dataServer: ServerModel = undefined;
     @Output() checkVisibleUpdateServerChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    updateForm: FormGroup;
     textValue: string | null = null;
 
     status: any = [
@@ -26,15 +22,20 @@ export class DashboardModalUpdateServer implements OnInit, AfterViewInit {
         {id: '0', name: 'Stop'},
         {id: '1', name: 'Active'},
     ]
-    
-    ngOnInit(): void {
+
+    constructor(public productService: DashboardHostingProductService, private formBuilder: FormBuilder) {
         
-    }
-    ngAfterViewInit(): void {
     }
 
-    constructor(public productService: DashboardHostingProductService) {
-        
+    ngOnInit(): void {
+        this.updateForm = this.formBuilder.group({
+            id: ["", [Validators.required]],
+            name: ["", [Validators.required]],
+            status: ['0', [Validators.required]],
+            description: [''],
+        })
+    }
+    ngAfterViewInit(): void {
     }
 
     handleOk(): void {
@@ -50,15 +51,24 @@ export class DashboardModalUpdateServer implements OnInit, AfterViewInit {
         this.showServer();
     };
 
+    get f() {
+        return this.updateForm.controls;
+    }
+
     showServer() {
-        this.formUpdate.id = this.dataServer.id;
-        this.formUpdate.name = this.dataServer.name;
-        this.formUpdate.status = String(this.dataServer.status);
-        this.formUpdate.description = this.dataServer.description;
+        this.f['id'].setValue(this.dataServer.id);
+        this.f['name'].setValue(this.dataServer.name);
+        this.f['status'].setValue(this.dataServer.status);
+        this.f['description'].setValue(this.dataServer.description);
     }
 
     updateServer() {
-        this.productService.updateServer(this.formUpdate, this.formUpdate.id).subscribe((response: any) => {
+        let body = {
+            name: this.f['name'].value,
+            status: Number(this.f['status'].value),
+            description: this.f['description'].value
+        }
+        this.productService.updateServer(body, Number(this.f['id'].value)).subscribe((response: any) => {
             this.checkVisibleUpdateServerChange.emit(response);
             this.checkVisibleUpdateServer = false;
         })

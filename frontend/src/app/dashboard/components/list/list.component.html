@@ -10,7 +10,7 @@
             <input nz-input placeholder="Từ khóa" [(ngModel)]="search.keyword" nzSize="default" />
           </div>
           <div style="margin-left: 10px;">
-            <nz-select style="width: 120px;" [(ngModel)]="search.server" nzPlaceHolder="Server">
+            <nz-select style="width: 120px;" [(ngModel)]="search.server" (ngModelChange)="ngModelChange($event)" nzPlaceHolder="Server">
               <nz-option [nzValue]="data?.id" [nzLabel]="data?.name" *ngFor="let data of listServer"></nz-option>
             </nz-select>
           </div>

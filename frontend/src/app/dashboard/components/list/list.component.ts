@@ -139,7 +139,7 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
             queries['type'] = 'query';
         }
         else {
-            queries['server'] = server;
+            queries['server'] = Number(server);
         }
         this.productService.listVlan(queries).subscribe(res => {
             this.listVlan = res.list;
@@ -152,9 +152,9 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
             queries['type'] = 'query';
         }
         else {
-            queries['server'] = server;
+            queries['server'] = Number(server);
         }
-        this.productService.listPort(server).subscribe(res => {
+        this.productService.listPort(queries).subscribe(res => {
             this.listPort = res.list;
         })
     }
@@ -291,5 +291,12 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
     pageSizeChange(event: any) {
         this.limit = event;
         this.getList()
+    }
+
+    ngModelChange(event: any) {
+        if(event) {
+            this.getListPort(event);
+            this.getListVlan(event);
+        }
     }
 }

@@ -10,15 +10,16 @@
               <input nz-input placeholder="Từ khóa" [(ngModel)]="search.keyword" nzSize="default" />
             </div>
             <div style="margin-left: 10px;">
-              <nz-select style="width: 120px;" [(ngModel)]="search.status" nzPlaceHolder="Status">
-                <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of status"></nz-option>
-              </nz-select>
-            </div>
-            <div style="margin-left: 10px;">
               <nz-select style="width: 120px;" [(ngModel)]="search.server" nzPlaceHolder="Server">
                 <nz-option [nzValue]="data?.id" [nzLabel]="data?.name" *ngFor="let data of listServer"></nz-option>
               </nz-select>
             </div>
+            <div style="margin-left: 10px;">
+              <nz-select style="width: 120px;" [(ngModel)]="search.status" nzPlaceHolder="Status">
+                <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of status"></nz-option>
+              </nz-select>
+            </div>
+            
             <div style="margin-left: 10px;">
               <button nz-button nzType="primary" (click)="getList()">
                 <span nz-icon nzType="search"></span>

@@ -18,13 +18,13 @@ export class AuthComponentInfor implements OnInit, AfterViewInit {
         role: ''
     };
     validate: boolean = true;
-    @Input() idUpdate: string = null;
+    @Input() user: any = {};
     @Output() checkVisibleInforChange: EventEmitter<boolean> = new EventEmitter<boolean>();
     ngOnInit(): void {
     }
     ngAfterViewInit(): void {
         setTimeout(() => {
-            this.authenticationService.infor(this.idUpdate).subscribe((res: any) => {
+            this.authenticationService.infor(this.user.id).subscribe((res: any) => {
                 if(res?.status == 0 && res?.code == 200) {
                     this.router.navigate(['auth/logout']);
                 }
@@ -50,8 +50,4 @@ export class AuthComponentInfor implements OnInit, AfterViewInit {
         
     }
     
-
-    changePassword() {
-        this.form['id'] = this.idUpdate;
-    }
 }

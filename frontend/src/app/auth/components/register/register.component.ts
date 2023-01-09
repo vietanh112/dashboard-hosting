@@ -26,9 +26,11 @@ export class AuthComponentRegister implements OnInit, AfterViewInit {
     ) {}
     ngOnInit(): void {
         this.registerForm = this.formBuilder.group({
+            employeeId: [""],
             username: ["", [Validators.required, Validators.minLength(4), Validators.maxLength(30)]],
-            password: ["", [Validators.required, Validators.pattern('[A-Za-z0-9!@#$%^&*()-_+=]{4,20}')]],
-            confirmPassword: ["", [Validators.required, Validators.pattern('[A-Za-z0-9!@#$%^&*()_-+=]{4,20}')]],
+            email: [""],
+            password: ["", [Validators.required, Validators.pattern('^[A-Za-z0-9!@#$%^&*()-_+=]{4,20}$')]],
+            confirmPassword: ["", [Validators.required]],
         })
     }
     ngAfterViewInit(): void {
@@ -48,6 +50,7 @@ export class AuthComponentRegister implements OnInit, AfterViewInit {
             time: 1500
         }
         let body = {
+            employeeId: this.f['employeeId'].value,
             email: this.f['email'].value,
             username: this.f['username'].value,
             password: this.f['password'].value,

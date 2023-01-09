@@ -47,6 +47,7 @@ module.exports = {
                 data: {
                     user: {
                         id: rs.data.id,
+                        employeeId: rs.data.employeeId,
                         username: rs.data.username,
                         email: rs.data.email,
                         roleId: rs.data.roleId,

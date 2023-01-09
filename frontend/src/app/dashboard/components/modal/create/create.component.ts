@@ -15,12 +15,13 @@ export class DashboardModalCreate implements OnInit, AfterViewInit {
     @Input() checkVisibleCreate: boolean = false;
     @Input() listServer: any = [];
     @Input() listVlanAll: any = [];
-    @Input() listPort: any = [];
+    @Input() listPortAll: any = [];
     @Output() checkVisibleCreateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
     createForm: FormGroup;
 
 
     listVlan: any = [];
+    listPort: any = [];
     
     
     constructor(public productService: DashboardHostingProductService,
@@ -93,10 +94,15 @@ export class DashboardModalCreate implements OnInit, AfterViewInit {
     loadingOk() {
         
     }
-    listVlanChange(event: any) {
+    listChange(event: any) {
         for(let item of this.listVlanAll) {
             if(item.server == event) {
                 this.listVlan.push(item)
+            }
+        }
+        for(let item of this.listPortAll) {
+            if(item.server == event) {
+                this.listPort.push(item)
             }
         }
     }

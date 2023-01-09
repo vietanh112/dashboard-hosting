@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             type: DataTypes.INTEGER
         },
+        employeeId: DataTypes.STRING,
         username: DataTypes.STRING,
         password: DataTypes.STRING,
         email: DataTypes.STRING,

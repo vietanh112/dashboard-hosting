@@ -53,7 +53,8 @@ module.exports = {
                         roleId: rs.data.roleId,
                         status: rs.data.status,
                         accessToken: rs.data.token,
-                        createdTime: (new Date).getTime(),
+                        refreshToken: rs.data.refreshToken,
+                        createdTime: Math.round((new Date).getTime()/1000),
                         expiresIn: parseInt(configs.jwt.ttl),
                     }
                 }
@@ -115,5 +116,13 @@ module.exports = {
                 data: rs.data
             }).end()
         }
+    },
+
+    refreshToken: async (req, res) => {
+        const body = req.body;
+
+        return console.log(body);
+
+        const rs = await authServices.refreshToken(body);
     }
 }

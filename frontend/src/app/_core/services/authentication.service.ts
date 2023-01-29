@@ -75,7 +75,22 @@ export class AuthenticationService {
         return this.apiService.get(path, options, map((response: any) => {
                 return response;
             })
-        )   
+        )
+    }
+
+    refreshToken(body: any) {
+      let options: any = {
+        params: {},
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+      };
+      let path = this.apiServerPaths.auth.refreshToken;
+
+      return this.apiService.post(path, body, map((response: any) => {
+              return response;
+          })
+      )
     }
 
     // checkUsername(username: any) {

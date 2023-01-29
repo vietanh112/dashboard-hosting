@@ -17,6 +17,7 @@ const authMiddlewares = {
 
             try {
                 const decoded = jwt.verify(token, configs.jwt.secret);
+                console.log(decoded);
                 req.user = decoded;
                 req.token = token;
                 next();
@@ -35,7 +36,7 @@ const authMiddlewares = {
                 message: 'Error Authorization'
             }));
         }
-    }
+    },
 }
 
 

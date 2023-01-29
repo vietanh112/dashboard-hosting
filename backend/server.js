@@ -14,8 +14,7 @@ const app = express();
 const path = require('path')
 const fs = require('fs')
 
-const ip = process.env.IP || 'localhost'
-const port = process.env.PORT || 3000
+
 const prefixPath = process.env.PREFIX_PATH || '/';
 
 //
@@ -69,6 +68,9 @@ app.route(`/auth/change-password`).post([], async(req, res) => {
 })
 app.route(`/auth/:userId/infor`).get([], async(req, res) => {
     return authController.infor(req, res);
+})
+app.route(`/auth/refresh-token`).post([], async(req, res) => {
+    return authController.refreshToken(req, res);
 })
 
 

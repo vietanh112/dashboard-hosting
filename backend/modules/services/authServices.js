@@ -25,6 +25,9 @@ const authServices = {
             return log
         }
         let encryptedPassword = await bcrypt.hash(body.password, 10);
+
+        
+        
         try {
             data = await coreModels.users.create({
                 employeeId: body.employeeId,
@@ -34,19 +37,18 @@ const authServices = {
                 roleId: 3,
                 allow: 1,
                 status: 1,
-                token: ''
             })
         } catch (error) {
             console.log(error);
             return log;
         }
-        let email = body.email;
+        let username = body.username;
         try {
             const token = jwt.sign(
-                { user_id: data.dataValues.id, email },
+                { user_id: data.dataValues.id, username },
                 configs.jwt.secret,
                 {
-                  expiresIn: configs.jwt.ttl,
+                  expiresIn: Number(configs.jwt.ttl),
                 }
             );
             dataUpdate = await coreModels.users.update({
@@ -88,16 +90,21 @@ const authServices = {
         if(user.length > 0){
             if (user && (await bcrypt.compare(body.password, user[0].dataValues.password))) {
                 try {
-                    let email = body.email;
+                    let username = body.username;
+
+                    let numberRandom = Math.floor(Math.random() * 20);
+                    let tokenRefresh = await bcrypt.hash(`${configs.jwt.secret_refresh}${body.username}${numberRandom}`, 10);
+                    
                     token = jwt.sign(
-                        { user_id: user[0].dataValues.id, email },
+                        { user_id: user[0].dataValues.id, username },
                         configs.jwt.secret,
                         {
-                          expiresIn: configs.jwt.ttl,
+                          expiresIn: Number(configs.jwt.ttl),
                         }
                     );
                     tokenUpdate = await coreModels.users.update({
                         token: token,
+                        tokenRefresh: tokenRefresh,
                         updatedAt: new Date()
                     },{
                         where: {id: user[0].dataValues.id}

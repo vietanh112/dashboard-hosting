@@ -15,7 +15,8 @@ export const environment = {
           register: 'auth/register',
           forgotPassword: '',
           changePassword: 'auth/change-password',
-          infor: 'auth/{USER_ID}/infor'
+          infor: 'auth/{USER_ID}/infor',
+          refreshToken: 'auth/refresh-token'
         },
         product: {
           list: 'dashboard/product/list',

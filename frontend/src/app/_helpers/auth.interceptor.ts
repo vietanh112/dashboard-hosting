@@ -16,16 +16,23 @@ export class AuthGuard implements CanActivate {
         const currentUser: any = this.authenticationService.currentUserValue;
         const date = new Date();
 
-        if (currentUser && (currentUser.createdTime + currentUser.expiresIn) > date.getTime() && currentUser['status'] == 1) {
+        if (currentUser && (currentUser.createdTime + currentUser.expiresIn) > Math.round(date.getTime()/1000) && currentUser['status'] == 1) {
             // authorised so return true
             return true;
         } else if (currentUser) {
+          let body = {};
+          console.log(currentUser);
+          console.log(date.getTime());
+          console.log(Math.round(date.getTime()/1000));
+
+
+          this.authenticationService.refreshToken(body);
+          return
             /**
              * Clear localStorage if token has been expired
              */
             localStorage.clear();
         }
-
         // not logged in so redirect to login page with the return url
         this.router.navigate(['auth', 'login'], {queryParams: {returnUrl: state.url}});
         return false;

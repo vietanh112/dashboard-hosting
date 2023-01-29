@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         allow: DataTypes.INTEGER,
         status: DataTypes.INTEGER,
         token: DataTypes.STRING,
+        tokenRefresh: DataTypes.STRING,
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE
     }, {

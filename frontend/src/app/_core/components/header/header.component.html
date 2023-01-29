@@ -62,6 +62,6 @@
     </div>
 </nz-header>
 
-<app-auth-change-password [(checkVisibleChangePassword)]=checkVisibleChangePassword (checkVisibleChangePasswordChange) = "changePassword($event)" [idUpdate]=data></app-auth-change-password>
+<app-auth-change-password [(checkVisibleChangePassword)]=checkVisibleChangePassword (checkVisibleChangePasswordChange) = "changePassword($event)" [user]=currentUser></app-auth-change-password>
 
-<app-auth-infor [(checkVisibleInfor)]=checkVisibleInfor (checkVisibleInforChange) = "changeInfor($event)" [idUpdate]=data></app-auth-infor>
+<!-- <app-auth-infor [(checkVisibleInfor)]=checkVisibleInfor (checkVisibleInforChange) = "changeInfor($event)" [user]=currentUser></app-auth-infor> -->

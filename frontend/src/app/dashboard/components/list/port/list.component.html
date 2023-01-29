@@ -34,51 +34,79 @@
       <nz-table #nzTable [nzData]="listPort" nzTableLayout="fixed" nzShowSizeChanger  [nzShowPagination]="false">
           <thead>
             <tr>
-              <th class="text-center" style="width: 60px;"></th>
-              <th class="text-center" style="width: 80px;">STT</th>
+              <th class="text-center" nzWidth="60px"></th>
+              <th class="text-center" nzWidth="80px">STT</th>
               <th class="text-center">PORT</th>
-              <th class="text-center" style="width: 120px;">Status</th>
               <th class="text-center">Server</th>
               <th>Thông tin</th>
+              <th class="text-center" nzWidth="120px">Status</th>
               <th class="text-center" style="width: 120px;">Options</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let data of nzTable.data; let i = index">
-              <td [nzExpand]="expandSet.has(data.id)" class="text-center" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
-              <td class="text-center">{{ i + 1}}</td>
-              <td class="text-center">{{ data.port }}</td>
-              <td class="text-center">
-                <nz-tag [nzColor]="'red'" *ngIf="data.status == -1">Error</nz-tag>
-                <nz-tag [nzColor]="'orange'" *ngIf="data.status == 0">Stop</nz-tag>
-                <nz-tag [nzColor]="'green'" *ngIf="data.status == 1">Active</nz-tag>
-              </td>
-              <td class="text-center">
-                <span *ngFor="let ser of listServer">
-                    <span *ngIf="data.server == ser.id">{{ser.name}}</span>
-                </span>
-              </td>
-              <td>
-                {{data.description}}
-              </td>
-              <td class="text-center">
-                <button nz-button nz-dropdown [nzDropdownMenu]="menu4" style="border-radius: 50%;">
-                  <i nz-icon nzType="ellipsis" nzTheme="outline"></i>
-                </button>
-                <nz-dropdown-menu #menu4="nzDropdownMenu">
-                  <ul nz-menu>
-                    <li *ngIf="currentUser?.roleId < 3" nz-menu-item (click)="showModalUpdatePort(data)">
-                      <span style="margin-right: 12px;"><i nz-icon nzType="edit" nzTheme="outline"></i></span>
-                      Chỉnh sửa Port
-                    </li>
-                    <li *ngIf="currentUser?.roleId < 3" nz-menu-item (click)="showConfirmDelete(data.id)">
-                      <span style="margin-right: 12px;"><i nz-icon nzType="rest" nzTheme="outline"></i></span>
-                      Xóa Port
-                    </li>
-                  </ul>
-                </nz-dropdown-menu>
-              </td>
-            </tr>
+            <ng-container *ngFor="let data of nzTable.data; let i = index">
+              <tr>
+                <td [nzExpand]="expandSet.has(data.id)" class="text-center" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
+                <td class="text-center">{{ i + 1}}</td>
+                <td class="text-center">{{ data.port }}</td>
+                
+                <td class="text-center">
+                  <span *ngFor="let ser of listServer">
+                      <span *ngIf="data.server == ser.id">{{ser.name}}</span>
+                  </span>
+                </td>
+                <td>
+                  {{data.description}}
+                </td>
+                <td class="text-center">
+                  <ng-container *ngFor="let i of tag">
+                    <nz-tag [nzColor]="i.name" *ngIf="data.status == i.status">{{i.msg}}</nz-tag>
+                  </ng-container>
+                </td>
+                <td class="text-center">
+                  <button nz-button nz-dropdown [nzDropdownMenu]="menu4" style="border-radius: 50%;">
+                    <i nz-icon nzType="ellipsis" nzTheme="outline"></i>
+                  </button>
+                  <nz-dropdown-menu #menu4="nzDropdownMenu">
+                    <ul nz-menu>
+                      <li *ngIf="currentUser?.roleId < 3" nz-menu-item (click)="showModalUpdatePort(data)">
+                        <span style="margin-right: 12px;"><i nz-icon nzType="edit" nzTheme="outline"></i></span>
+                        Chỉnh sửa Port
+                      </li>
+                      <li *ngIf="currentUser?.roleId < 3" nz-menu-item (click)="showConfirmDelete(data.id)">
+                        <span style="margin-right: 12px;"><i nz-icon nzType="rest" nzTheme="outline"></i></span>
+                        Xóa Port
+                      </li>
+                    </ul>
+                  </nz-dropdown-menu>
+                </td>
+              </tr>
+              <ng-container *ngIf="data?.showListHosting && data?.listHosting.length">
+                <tr>
+                  <td class="fw-bold" colspan="7">List Hosting</td>
+                </tr>
+                <tr>
+                  <td class="text-center fw-bold" colspan="2">STT</td>
+                  <td class="text-center fw-bold">Hosting</td>
+                  <td class="text-center fw-bold">IP Address</td>
+                  <td class="fw-bold" colspan="2">Thông tin</td>
+                  <td class="text-center fw-bold">Status</td>
+                </tr>
+                <tr class="ant-table-expanded-row" *ngFor="let host of data?.listHosting; let i = index">
+                  <td class="text-center" colspan="2">{{i + 1}}</td>
+                  <td class="text-center">{{host.hostname}}</td>
+                  <td class="text-center">{{host.ipaddress}}</td>
+                  <td colspan="2">{{host.information}}</td>
+                  <td class="text-center">
+                    <ng-container *ngFor="let i of tag">
+                      <nz-tag [nzColor]="i.name" *ngIf="data.status == i.status">{{i.msg}}</nz-tag>
+                    </ng-container>
+                  </td>
+                  
+                </tr>
+              </ng-container>
+            </ng-container>
+            
           </tbody>
         </nz-table>
         

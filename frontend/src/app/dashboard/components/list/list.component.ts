@@ -51,6 +51,12 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
         {id: '1', name: 'Active'}
     ]
 
+    tag: any = [
+        {name:'red', status:'-1', msg:'Error'},
+        {name:'orange', status:'0', msg:'Stop'},
+        {name:'green', status:'1', msg:'Active'}
+    ]
+
     typeList: any = {
         vlan: 'list',
         port: 'list',

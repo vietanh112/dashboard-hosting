@@ -5,6 +5,7 @@ import { NzButtonSize } from 'ng-zorro-antd/button';
 import { DashboardHostingProductService } from '../../../services/hosting-product.service';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import {AuthenticationService} from '../../../../_core/services/authentication.service';
+import {HostingModel} from '../../../models/host.model';
 
 
 @Component({
@@ -14,6 +15,8 @@ import {AuthenticationService} from '../../../../_core/services/authentication.s
 })
 
 export class DashboardListPort implements OnInit, AfterViewInit {
+    @Input() checkVisibleInfor: boolean = false;
+    @Input() checkVisibleUpdate: boolean = false;
     @Input() checkVisibleCreatePort: boolean = false;
     @Input() checkVisibleUpdatePort: boolean = false;
     confirmModalDelete?: NzModalRef;
@@ -25,8 +28,10 @@ export class DashboardListPort implements OnInit, AfterViewInit {
     loadingState:boolean = false;
     page: number = 1;
     limit: number = 10;
-    listPort: any = undefined;
-    listServer: any = undefined;
+    listPort: any = [];
+    listServer: any = [];
+    listVlan: any = [];
+    hosting: HostingModel = undefined;
     port: any = undefined;
     sizeButton: NzButtonSize = 'large';
     currentUser: any = undefined;
@@ -36,6 +41,12 @@ export class DashboardListPort implements OnInit, AfterViewInit {
         {id: '-1', name: 'Error'},
         {id: '0', name: 'Stop'},
         {id: '1', name: 'Active'}
+    ]
+
+    tag: any = [
+        {name:'red', status:'-1', msg:'Error'},
+        {name:'orange', status:'0', msg:'Stop'},
+        {name:'green', status:'1', msg:'Active'}
     ]
 
     totalPort: number = 0;
@@ -88,10 +99,26 @@ export class DashboardListPort implements OnInit, AfterViewInit {
 
     onExpandChange(id: number, checked: boolean): void {
         if (checked) {
-            this.expandSet.add(id);
-            
+            for(let i of this.listPort) {
+                if(i.id == id) {
+                    i['showListHosting'] = true;
+                    if(i['callListHosting']) {
+                        this.loadingState = true;
+                        this.productService.list({port: Number(id)}).subscribe(res => {
+                            this.loadingState = false;
+                            i['listHosting'] = res.list;
+                            i['callListHosting'] = false;
+                        })
+                    }
+                }
+            }
         } else {
             this.expandSet.delete(id);
+            for(let i of this.listPort) {
+                if(i.id == id) {
+                    i['showListHosting'] = false;
+                }
+            }
         }
     }
 
@@ -174,6 +201,11 @@ export class DashboardListPort implements OnInit, AfterViewInit {
         this.productService.listPort(queries).subscribe(res => {
             this.loadingState = false;
             this.listPort = res.list;
+            for(let i of this.listPort) {
+                i['listHosting'] = [];
+                i['showListHosting'] = false;
+                i['callListHosting'] = true;
+            }
             this.totalPort = res.total;
         })
         const params = [];
@@ -211,4 +243,5 @@ export class DashboardListPort implements OnInit, AfterViewInit {
         this.limit = event;
         this.getList()
     }
+
 }

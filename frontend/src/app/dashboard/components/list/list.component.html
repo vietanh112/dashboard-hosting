@@ -63,9 +63,9 @@
               </ng-container>
             </td>
             <td class="text-center">
-              <nz-tag [nzColor]="'red'" *ngIf="data.status == -1">Error</nz-tag>
-              <nz-tag [nzColor]="'orange'" *ngIf="data.status == 0">Stop</nz-tag>
-              <nz-tag [nzColor]="'green'" *ngIf="data.status == 1">Active</nz-tag>
+              <ng-container *ngFor="let i of tag">
+                <nz-tag [nzColor]="i.name" *ngIf="data.status == i.status">{{i.msg}}</nz-tag>
+              </ng-container>
             </td>
             <td class="text-center">
               <span *ngFor="let ser of listServer">
@@ -103,7 +103,7 @@
       </div>
 </div>
 <app-dashboard-modal-infor [(checkVisibleInfor)]=checkVisibleInfor [listVlan]=listVlan [listPort]=listPort [listServer]=listServer  [dataHosting]=hosting></app-dashboard-modal-infor>
-<app-dashboard-modal-create [(checkVisibleCreate)]=checkVisibleCreate (checkVisibleCreateChange) = "createHosting($event)" [listServer]=listServer [listVlanAll]=listVlan [listPort]=listPort></app-dashboard-modal-create>
+<app-dashboard-modal-create [(checkVisibleCreate)]=checkVisibleCreate (checkVisibleCreateChange) = "createHosting($event)" [listServer]=listServer [listVlanAll]=listVlan [listPortAll]=listPort></app-dashboard-modal-create>
 <app-dashboard-modal-update [(checkVisibleUpdate)]=checkVisibleUpdate (checkVisibleUpdateChange) = "updateHosting($event)" [hosting]=hosting [listServer]=listServer [listVlan]=listVlan [listPort]=listPort></app-dashboard-modal-update>
 <!-- <app-dashboard-modal-create-vlan [(checkVisibleCreateVlan)]=checkVisibleCreateVlan (checkVisibleCreateVlanChange) = "createVlan($event)"></app-dashboard-modal-create-vlan> -->
 <!-- <app-dashboard-modal-create-server [(checkVisibleCreateServer)]=checkVisibleCreateServer (checkVisibleCreateServerChange) = "createServer($event)"></app-dashboard-modal-create-server> -->

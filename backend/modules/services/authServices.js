@@ -27,6 +27,7 @@ const authServices = {
         let encryptedPassword = await bcrypt.hash(body.password, 10);
         try {
             data = await coreModels.users.create({
+                employeeId: body.employeeId,
                 username: body.username,
                 password: encryptedPassword,
                 email: body.email,
@@ -121,6 +122,7 @@ const authServices = {
         return log;
     },
     changePassword: async (body) => {
+        console.log(body);
         let checkReturn = {
             code: 400,
             status: 0
@@ -173,6 +175,7 @@ const authServices = {
             checkReturn.status = 1;
             if(user[0]?.dataValues) {
                 checkReturn.data['id'] = user[0].dataValues['id'];
+                checkReturn.data['employeeId'] = user[0].dataValues['employeeId'];
                 checkReturn.data['email'] = user[0].dataValues['email'];
                 checkReturn.data['username'] = user[0].dataValues['username'];
                 checkReturn.data['roleId'] = user[0].dataValues['roleId'];

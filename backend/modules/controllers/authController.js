@@ -119,11 +119,50 @@ module.exports = {
     },
 
     refreshToken: async (req, res) => {
-        console.log(req);
         const body = req.body;
 
-        return console.log(body);
-
         const rs = await authServices.refreshToken(body);
+        if(rs.code != 200) {
+            res.status(Number(rs.code)).json({
+                status: 0,
+                code: rs.code,
+                message: rs.msg,
+                data: null
+            })
+            return
+        }
+        else {
+            if(rs.status != 1) {
+                res.status(200).json({
+                    status: 0,
+                    code: 200,
+                    message: rs.msg,
+                    data: null
+                })
+                return
+            }
+            else {
+                res.status(200).json({
+                    status: rs.status,
+                    code: rs.code,
+                    message: rs.msg,
+                    data: {
+                        user: {
+                            id: rs.data.id,
+                            employeeId: rs.data.employeeId,
+                            username: rs.data.username,
+                            email: rs.data.email,
+                            roleId: rs.data.roleId,
+                            status: rs.data.status,
+                            accessToken: rs.data.token,
+                            refreshToken: rs.data.tokenRefresh,
+                            createdTime: Math.round((new Date).getTime()/1000),
+                            expiresIn: parseInt(configs.jwt.ttl),
+                        }
+                    }
+                })
+                return
+            }
+        }
     }
 }

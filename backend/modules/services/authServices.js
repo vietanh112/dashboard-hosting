@@ -77,7 +77,7 @@ const authServices = {
             data: null,
             msg: 'Login error'
         }
-        const user = await coreModels.users.findAll({
+        let user = await coreModels.users.findAll({
             where: {
                 username: body.username
             }
@@ -109,12 +109,18 @@ const authServices = {
                     },{
                         where: {id: user[0].dataValues.id}
                     })
+
+                    user = await coreModels.users.findAll({
+                        where: {
+                            username: username
+                        }
+                    })
+
                     user[0].dataValues.token = token;
                     log.data = user[0].dataValues;
                     log.status = 1;
                     log.code = 200;
                     log.msg = 'Login success';
-                    console.log(user);
                 }
                 catch(error) {
                     console.log(error);
@@ -194,6 +200,69 @@ const authServices = {
             return checkReturn;
         }
         return checkReturn
+    },
+
+    refreshToken: async (body) => {
+        let log = {
+            code: 204,
+            status: 0,
+            msg: 'error',
+            data: null
+        };
+
+        try {
+            let user = await coreModels.users.findAll({
+                where: {
+                    id: body.id
+                }
+            })
+
+            if(user && user[0]?.dataValues.username == body.username) {
+                if(user[0].dataValues.tokenRefresh == body.refreshToken) {
+                    let username = body.username;
+                    let token = jwt.sign(
+                        { user_id: user[0].dataValues.id, username },
+                        configs.jwt.secret,
+                        {
+                          expiresIn: Number(configs.jwt.ttl),
+                        }
+                    );
+
+                    tokenUpdate = await coreModels.users.update({
+                        token: token,
+                        updatedAt: new Date()
+                    },{
+                        where: {id: user[0].dataValues.id}
+                    })
+
+                    user = await coreModels.users.findAll({
+                        where: {
+                            id: body.id
+                        }
+                    })
+
+                    log.code = '200';
+                    log.status = 1;
+                    log.msg = 'Token refresh success';
+                    log.data = user[0].dataValues;
+                }
+                else {
+                    log.code = '200';
+                    log.msg = 'Token refresh not found';
+                    return log
+                }
+            }
+            else {
+                log.code = '200';
+                log.msg = 'User not found';
+                
+            }
+            return log
+            
+        } catch (err) {
+            console.log(err);
+            return log;
+        }
     }
 }
 

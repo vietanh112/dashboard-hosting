@@ -39,7 +39,7 @@ export const environment = {
       }
   },
   jwt: {
-    timeRefresh: 1800
+    timeRefresh: 1200
   }
 };
 

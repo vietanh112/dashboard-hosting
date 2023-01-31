@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {ApiService} from './api.service';
+import {Router} from '@angular/router';
 
 import { environment } from '../../../environments/environment';
 import {User} from '../../_core/model/user.model';
@@ -18,7 +19,8 @@ export class AuthenticationService {
     public currentUser: Observable<User>;
 
     constructor(private http: HttpClient,
-                private apiService: ApiService) {
+                private apiService: ApiService,
+                private router: Router,) {
         this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem(this.key)));
         this.currentUser = this.currentUserSubject.asObservable();
     }
@@ -79,18 +81,14 @@ export class AuthenticationService {
     }
 
     refreshToken(body: any) {
-        let options: any = {
-            body,
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-            }
-        };
-        
         let path = this.apiServerPaths.auth.refreshToken;
-        return this.apiService.patch(path, options, map((response: any) => {
-            console.log(response);
-            
-            return response;
+        return this.apiService.patch(path, body, map((response: any) => {
+          if(response.code == 200 && response.status == 1 && response.data) {
+            localStorage.setItem('currentUser', JSON.stringify(response.data.user));
+            this.currentUserSubject.next(response.data.user);
+            return true;
+          }
+          return false;
         })
     )}
 
@@ -128,8 +126,11 @@ export class AuthenticationService {
     // }
 
     logout() {
-        localStorage.removeItem(this.key);
-        this.currentUserSubject.next(null);
+      console.log("vava");
+
+      localStorage.clear();
+      this.currentUserSubject.next(null);
+      this.router.navigate(['auth', 'login']);
     }
 
     // switchUser(userId: number) {

@@ -53,7 +53,7 @@ module.exports = {
                         roleId: rs.data.roleId,
                         status: rs.data.status,
                         accessToken: rs.data.token,
-                        refreshToken: rs.data.refreshToken,
+                        refreshToken: rs.data.tokenRefresh,
                         createdTime: Math.round((new Date).getTime()/1000),
                         expiresIn: parseInt(configs.jwt.ttl),
                     }
@@ -119,6 +119,7 @@ module.exports = {
     },
 
     refreshToken: async (req, res) => {
+        console.log(req);
         const body = req.body;
 
         return console.log(body);

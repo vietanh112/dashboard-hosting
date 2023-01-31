@@ -4,6 +4,7 @@ export class User {
     username: string;
     fullName: string;
     accessToken: string;
+    refreshTOken: string;
     createdTime: number;
     expiresIn: number;
     roleId: number;

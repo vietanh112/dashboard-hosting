@@ -37,6 +37,9 @@ export const environment = {
           deletePort: 'dashboard/product/{PORT_ID}/delete-port',
         }
       }
+  },
+  jwt: {
+    timeRefresh: 3500
   }
 };
 

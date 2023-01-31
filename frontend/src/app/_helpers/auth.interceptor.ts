@@ -17,17 +17,25 @@ export class AuthGuard implements CanActivate {
         const date = new Date();
 
         if (currentUser && (currentUser.createdTime + currentUser.expiresIn) > Math.round(date.getTime()/1000) && currentUser['status'] == 1) {
+            let expiresOut = currentUser.createdTime + currentUser.expiresIn;
+            
+            if((expiresOut - environment.jwt.timeRefresh) < Math.round(date.getTime()/1000)) {
+                let body = {
+                    id: currentUser.id,
+                    accessToken: currentUser.accessToken,
+                    refreshToken: currentUser.refreshToken,
+                    username: currentUser.username
+                }
+                
+                this.authenticationService.refreshToken(body).subscribe(res => {
+                    console.log(res);
+                    
+                });
+            }
+
             // authorised so return true
             return true;
         } else if (currentUser) {
-          let body = {};
-          console.log(currentUser);
-          console.log(date.getTime());
-          console.log(Math.round(date.getTime()/1000));
-
-
-          this.authenticationService.refreshToken(body);
-          return
             /**
              * Clear localStorage if token has been expired
              */

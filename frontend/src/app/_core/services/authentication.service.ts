@@ -79,19 +79,20 @@ export class AuthenticationService {
     }
 
     refreshToken(body: any) {
-      let options: any = {
-        params: {},
-        headers: {
-            'Content-Type': 'application/json; charset=utf-8'
-        }
-      };
-      let path = this.apiServerPaths.auth.refreshToken;
-
-      return this.apiService.post(path, body, map((response: any) => {
-              return response;
-          })
-      )
-    }
+        let options: any = {
+            body,
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        };
+        
+        let path = this.apiServerPaths.auth.refreshToken;
+        return this.apiService.patch(path, options, map((response: any) => {
+            console.log(response);
+            
+            return response;
+        })
+    )}
 
     // checkUsername(username: any) {
     //     return this.apiService.post(this.apiServerPaths.auth.username, {username}, map(response => {

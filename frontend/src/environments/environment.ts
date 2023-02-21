@@ -35,11 +35,14 @@ export const environment = {
           createPort: 'dashboard/product/create-port',
           updatePort: 'dashboard/product/{PORT_ID}/update-port',
           deletePort: 'dashboard/product/{PORT_ID}/delete-port',
+        },
+        search: {
+          getList: 'dashboard/product/select-search'
         }
       }
   },
   jwt: {
-    timeRefresh: 900
+    timeRefresh: 3600
   }
 };
 

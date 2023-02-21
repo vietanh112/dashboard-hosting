@@ -7,6 +7,7 @@ export class VlanModel {
     status: string = null;
     createdAt: string = '';
     updatedAt: string = '';
+    nameServer: string = '';
     
 
     constructor(data: any) {
@@ -17,5 +18,6 @@ export class VlanModel {
         this.status = String(data.status) ?? null;
         this.createdAt = data.createdAt || '';
         this.updatedAt = data.updatedAt || '';
+        this.nameServer = data.nameServer || '';
     }
 }

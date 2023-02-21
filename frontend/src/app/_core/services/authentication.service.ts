@@ -126,8 +126,6 @@ export class AuthenticationService {
     // }
 
     logout() {
-      console.log("vava");
-
       localStorage.clear();
       this.currentUserSubject.next(null);
       this.router.navigate(['auth', 'login']);

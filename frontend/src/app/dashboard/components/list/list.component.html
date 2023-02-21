@@ -10,17 +10,20 @@
             <input nz-input placeholder="Từ khóa" [(ngModel)]="search.keyword" nzSize="default" />
           </div>
           <div style="margin-left: 10px;">
-            <nz-select style="width: 120px;" [(ngModel)]="search.server" (ngModelChange)="ngModelChange($event)" nzPlaceHolder="Server">
+            <nz-select style="width: 120px;" [(ngModel)]="search.server" nzPlaceHolder="Server">
+              <nz-option [nzValue]="null" [nzLabel]="'All'">All</nz-option>
               <nz-option [nzValue]="data?.id" [nzLabel]="data?.name" *ngFor="let data of listServer"></nz-option>
             </nz-select>
           </div>
           <div style="margin-left: 10px;">
             <nz-select style="width: 120px;" [(ngModel)]="search.vlan" nzPlaceHolder="Vlan">
+              <nz-option [nzValue]="null" [nzLabel]="'All'">All</nz-option>
               <nz-option [nzValue]="data.id" [nzLabel]="data.name" *ngFor="let data of listVlan"></nz-option>
             </nz-select>
           </div>
           <div style="margin-left: 10px;">
             <nz-select style="width: 120px;" [(ngModel)]="search.port" nzPlaceHolder="Port">
+              <nz-option [nzValue]="null" [nzLabel]="'All'">All</nz-option>
               <nz-option [nzValue]="item.id" [nzLabel]="item.port" *ngFor="let item of listPort"></nz-option>
             </nz-select>
           </div>

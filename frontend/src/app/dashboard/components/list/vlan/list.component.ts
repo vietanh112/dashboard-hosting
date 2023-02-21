@@ -3,6 +3,7 @@ import {ActivatedRoute, Router, Event, NavigationStart, NavigationEnd, Navigatio
 import {Location} from "@angular/common";
 import { NzButtonSize } from 'ng-zorro-antd/button';
 import { DashboardHostingProductService } from '../../../services/hosting-product.service';
+import { SearchService } from '../../../services/search.service';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import {AuthenticationService} from '../../../../_core/services/authentication.service';
 
@@ -47,10 +48,9 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
     totalVlan: number = 0;
     sizePage: any = [10, 20, 50];
 
-    typeListVlan:string = 'list';
-
     constructor(
         public productService: DashboardHostingProductService,
+        public searchService: SearchService,
         private modal: NzModalService,
         private location: Location,
         private router: Router,
@@ -101,7 +101,7 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
     
     ngAfterViewInit(): void {
         setTimeout(() => {
-            this.getListServer();
+            this.getSearch();
             this.getList();
         }, 0)
     }
@@ -154,8 +154,8 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
           });
     }
 
-    getListServer() {
-        this.productService.listServer({type: 'query'}).subscribe(res => {
+    getSearch() {
+        this.searchService.selectSearch({type: 'vlan'}).subscribe(res => {
             this.listServer = res.list;
         })
     }
@@ -163,7 +163,6 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
     getList() {
         this.loadingState = true;
         let queries: any = {
-            type: this.typeListVlan,
             page: this.page,
             limit: this.limit
         }

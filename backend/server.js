@@ -20,6 +20,7 @@ const prefixPath = process.env.PREFIX_PATH || '/';
 //
 const productController = require('./modules/controllers/productController');
 const authController = require('./modules/controllers/authController');
+const searchController = require('./modules/controllers/searchController');
 
 app.use(cors());
 // parse requests of content-type - application/json
@@ -128,4 +129,9 @@ app.route(`/dashboard/product/:portId/update-port`).patch([], async(req, res) =>
 })
 app.route(`/dashboard/product/:portId/delete-port`).delete([], async(req, res) => {
     return productController.deletePort(req, res);
+})
+
+//Search
+app.route(`/dashboard/product/select-search`).get([], async(req, res) => {
+    return searchController.getList(req, res);
 })

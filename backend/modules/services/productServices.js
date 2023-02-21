@@ -7,7 +7,7 @@ const client = redis.createClient(6379);
 const listVlanRedisKey = 'list:vlan';
 const listServerRedisKey = 'list:server';
 const listPortRedisKey = 'list:port';
-
+const { QueryTypes } = require('sequelize');
 
 const productServices = {
     getList: async (criteria, page, limit) => {
@@ -244,7 +244,9 @@ const productServices = {
             return log
         }
     },
-    getListVlan: async (criteria, page, limit, type) => {
+
+    //Vlan
+    getListVlan: async (criteria, page, limit) => {
         let data;
         let total = 0;
         let res = {
@@ -257,41 +259,16 @@ const productServices = {
             }
         }
         if(Object.keys(criteria).length == 0) {
-            if(type == 'query') {
-                const myPromise = new Promise((resolve, reject) => {
-                    client.get(listVlanRedisKey, async (err, vlan) => {
-                        if(vlan != {} && vlan != null && vlan != undefined) {
-                            resolve(JSON.parse(vlan));
-                        }
-                        else if(vlan == null || vlan == undefined || vlan == {} || vlan == []){
-                            data = await coreModels.vlan.findAll({
-                                limit: 10,
-                                offset: 0,
-                                order: [
-                                    ['createdAt', 'DESC'],
-                                ],
-                            });
-                            client.setex(listVlanRedisKey, 3600, JSON.stringify(data));
-                            resolve(data);
-                        }
-                        else {
-                            reject(false)
-                        }
-                    })
-                });
-
-                data = await myPromise
-            }
-            else {
-                data = await coreModels.vlan.findAll({
-                    limit: limit,
-                    offset: Number(limit) * Number(page),
-                    order: [
-                        ['createdAt', 'DESC'],
-                    ],
-                });
-                total =  await coreModels.vlan.count({});   
-            }
+            // data = await coreModels.vlan.findAll({
+            //     limit: limit,
+            //     offset: Number(limit) * Number(page),
+            //     order: [
+            //         ['createdAt', 'DESC'],
+            //     ],
+            // });
+            data = await db.sequelize.query('select a.*, b.name as nameServer from vlan a, server b where a.server = b.id', { type: QueryTypes.SELECT })
+            console.log(data);
+            total =  await coreModels.vlan.count({});   
         }
         else if(Object.keys(criteria).length == 1) {
             if('keyword' in criteria) {
@@ -473,7 +450,9 @@ const productServices = {
         }
         return log
     },
-    getListServer: async (criteria, page, limit, type) => {
+
+    //Server
+    getListServer: async (criteria, page, limit) => {
         let data;
         let total = 0;
         let res = {
@@ -486,40 +465,14 @@ const productServices = {
             }
         }
         if(Object.keys(criteria).length == 0) {
-            if(type == 'query') {
-                const myPromise = new Promise((resolve, reject) => {
-                    client.get(listServerRedisKey, async (err, server) => {
-                        if(server != {} && server != null && server != undefined) {
-                            resolve(JSON.parse(server));
-                        }
-                        else if (server == null || server == undefined || server == {} || server == []) {
-                            data = await coreModels.server.findAll({
-                                limit: 10,
-                                offset: 0,
-                                order: [
-                                    ['createdAt', 'DESC'],
-                                ],
-                            });
-                            client.setex(listServerRedisKey, 3600, JSON.stringify(data));
-                            resolve(data);
-                        }
-                        else {
-                            reject(false)
-                        }
-                    })
-                });
-                data = await myPromise; 
-            }
-            else {
-                data = await coreModels.server.findAll({
-                    limit: limit,
-                    offset: Number(limit) * Number(page),
-                    order: [
-                        ['createdAt', 'DESC'],
-                    ],
-                });
-                total =  await coreModels.server.count({});   
-            }
+            data = await coreModels.server.findAll({
+                limit: limit,
+                offset: Number(limit) * Number(page),
+                order: [
+                    ['createdAt', 'DESC'],
+                ],
+            });
+            total =  await coreModels.server.count({});   
         }
         else if(Object.keys(criteria).length == 1) {
             if('keyword' in criteria) {
@@ -720,6 +673,7 @@ const productServices = {
             return log
         }
     },
+
     //port
     getListPort: async (criteria, page, limit, type) => {
         let data;
@@ -735,40 +689,14 @@ const productServices = {
         }
         try {
             if (Object.keys(criteria).length == 0) {
-                if(type == 'query') {
-                    const myPromise = new Promise((resolve, reject) => {
-                        client.get(listPortRedisKey, async (err, port) => {
-                            if(port != {} && port != null && port != undefined) {
-                                resolve(JSON.parse(port));
-                            }
-                            else if (port == null || port == undefined || port == {} || port == []) {
-                                data = await coreModels.port.findAll({
-                                    limit: 10,
-                                    offset: 0,
-                                    order: [
-                                        ['createdAt', 'DESC'],
-                                    ],
-                                });
-                                client.setex(listPortRedisKey, 3600, JSON.stringify(data));
-                                resolve(data);
-                            }
-                            else {
-                                reject(false)
-                            }
-                        })
-                    });
-                    data = await myPromise;
-                }
-               else{
-                    data = await coreModels.port.findAll({
-                        limit: limit,
-                        offset: Number(limit) * Number(page),
-                        order: [
-                            ['createdAt', 'DESC'],
-                        ],
-                    });
-                    total = await coreModels.port.count();
-               }
+                data = await coreModels.port.findAll({
+                    limit: limit,
+                    offset: Number(limit) * Number(page),
+                    order: [
+                        ['createdAt', 'DESC'],
+                    ],
+                });
+                total = await coreModels.port.count();
             }
             else if(Object.keys(criteria).length == 1) {
                 if('keyword' in criteria) {

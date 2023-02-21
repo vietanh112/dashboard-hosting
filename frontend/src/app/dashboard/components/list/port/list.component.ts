@@ -3,6 +3,7 @@ import {ActivatedRoute, Router, Event, NavigationStart, NavigationEnd, Navigatio
 import {Location} from "@angular/common";
 import { NzButtonSize } from 'ng-zorro-antd/button';
 import { DashboardHostingProductService } from '../../../services/hosting-product.service';
+import { SearchService } from '../../../services/search.service';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import {AuthenticationService} from '../../../../_core/services/authentication.service';
 import {HostingModel} from '../../../models/host.model';
@@ -64,6 +65,7 @@ export class DashboardListPort implements OnInit, AfterViewInit {
 
     constructor(
         public productService: DashboardHostingProductService,
+        public searchService: SearchService,
         private modal: NzModalService,
         private location: Location,
         private router: Router,
@@ -123,7 +125,7 @@ export class DashboardListPort implements OnInit, AfterViewInit {
     }
 
     getListServer() {
-        this.productService.listServer({type: 'query'}).subscribe(res => {
+        this.searchService.selectSearch({type: 'port'}).subscribe(res => {
             this.listServer = res.list;
         })
     }

@@ -79,7 +79,7 @@ module.exports = {
         const limit = req.query.limit ? parseInt(req.query.limit) : 10;
         const type = req.query.type ? req.query.type : '';
         for (const [key, value] of Object.entries(req.query)) {
-            if(key != 'page' && key != 'limit' && key != 'type') {
+            if(key != 'page' && key != 'limit') {
                 if(key == 'id') {
                     criteria[key] = Number(value);
                 }
@@ -88,7 +88,7 @@ module.exports = {
                 }
             }
         }
-        const obj = await productServices.getListVlan(criteria, page, limit, type);
+        const obj = await productServices.getListVlan(criteria, page, limit);
         const response = {
             status: obj.status,
             code: obj.code,
@@ -154,7 +154,7 @@ module.exports = {
         const limit = req.query.limit ? parseInt(req.query.limit) : 10;
         const type = req.query.type ? req.query.type : '';
         for (const [key, value] of Object.entries(req.query)) {
-            if(key != 'page' && key != 'limit' && key != 'type') {
+            if(key != 'page' && key != 'limit') {
                 if(key == 'id') {
                     criteria[key] = Number(value);
                 }
@@ -228,7 +228,7 @@ module.exports = {
         const limit = req.query.limit ? parseInt(req.query.limit) : 10;
         const type = req.query.type ?? null;
         for (const [key, value] of Object.entries(req.query)) {
-            if(key != 'page' && key != 'limit' && key != 'type') {
+            if(key != 'page' && key != 'limit') {
                 if(key == 'id' || key == 'status') {
                     criteria[key] = Number(value);
                 }

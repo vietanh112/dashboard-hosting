@@ -52,9 +52,7 @@
               </td>
               <td>{{ data.description }}</td>
               <td class="text-center">
-                <span *ngFor="let ser of listServer">
-                    <span *ngIf="data.server == ser.id">{{ser.name}}</span>
-                </span>
+                {{data.nameServer}}
               </td>
               <td class="text-center">
                 <button nz-button nz-dropdown [nzDropdownMenu]="menu4" style="border-radius: 50%;">

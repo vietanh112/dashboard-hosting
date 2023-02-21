@@ -3,6 +3,7 @@ import {ActivatedRoute, Router, Event, NavigationStart, NavigationEnd, Navigatio
 import {Location} from "@angular/common";
 import { NzButtonSize } from 'ng-zorro-antd/button';
 import { DashboardHostingProductService } from '../../services/hosting-product.service';
+import { SearchService } from '../../services/search.service';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import {AuthenticationService} from '../../../_core/services/authentication.service';
 
@@ -67,6 +68,7 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
     
   constructor(
     public productService: DashboardHostingProductService,
+    public searchService: SearchService,
     private modal: NzModalService,
     private location: Location,
     private router: Router,
@@ -126,42 +128,16 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         setTimeout(() => {
-            this.getListServer();
-            this.getListVlan(null);
-            this.getListPort(null);
+            this.getListSearch();
             this.getList();
         }, 0)
     }
 
-    getListServer () {
-        this.productService.listServer({type: 'query'}).subscribe(res => {
-            this.listServer = res.list;
-        })
-    }
-
-    getListVlan (server: any) {
-        let queries: any = {}
-        if (!server) {
-            queries['type'] = 'query';
-        }
-        else {
-            queries['server'] = Number(server);
-        }
-        this.productService.listVlan(queries).subscribe(res => {
-            this.listVlan = res.list;
-        })
-    }
-
-    getListPort (server: any) {
-        let queries: any = {}
-        if (!server) {
-            queries['type'] = 'query';
-        }
-        else {
-            queries['server'] = Number(server);
-        }
-        this.productService.listPort(queries).subscribe(res => {
-            this.listPort = res.list;
+    getListSearch () {
+        this.searchService.selectSearch({type: 'hosting'}).subscribe(res => {
+            this.listServer = res.server;
+            this.listPort = res.port;
+            this.listVlan = res.vlan;
         })
     }
 
@@ -299,10 +275,4 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
         this.getList()
     }
 
-    ngModelChange(event: any) {
-        if(event) {
-            this.getListPort(event);
-            this.getListVlan(event);
-        }
-    }
 }

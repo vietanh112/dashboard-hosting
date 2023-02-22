@@ -132,6 +132,9 @@ app.route(`/dashboard/product/:portId/delete-port`).delete([], async(req, res) =
 })
 
 //Search
-app.route(`/dashboard/product/select-search`).get([], async(req, res) => {
+app.route(`/dashboard/search/select-search`).get([], async(req, res) => {
     return searchController.getList(req, res);
+})
+app.route(`/dashboard/search/list-server`).get([], async(req, res) => {
+    return searchController.listServer(req, res);
 })

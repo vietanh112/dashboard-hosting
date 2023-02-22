@@ -29,7 +29,7 @@ export class DashboardModalUpdateVlan implements OnInit, AfterViewInit {
         })
     }
     ngAfterViewInit(): void {
-
+        
     }
 
     constructor(public productService: DashboardHostingProductService, private formBuilder: FormBuilder) {
@@ -60,6 +60,17 @@ export class DashboardModalUpdateVlan implements OnInit, AfterViewInit {
             this.f['status'].setValue(this.vlanUpdate.status);
             this.f['description'].setValue(this.vlanUpdate.description);
             this.f['server'].setValue(this.vlanUpdate.server);
+            for(let i of this.listServer) {
+                if(this.vlanUpdate.server == i.id) {
+                    return
+                }
+                else {
+                    this.listServer.push({
+                        id: this.vlanUpdate.server,
+                        name: this.vlanUpdate.nameServer
+                    })
+                }
+            }
         }
     }
 

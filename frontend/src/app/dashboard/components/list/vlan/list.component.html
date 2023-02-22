@@ -15,7 +15,7 @@
               </nz-select>
             </div>
             <div style="margin-left: 10px;">
-              <nz-select style="width: 120px;" [(ngModel)]="search.server" nzPlaceHolder="Server">
+              <nz-select nzShowSearch (nzOnSearch)="searchServer($event)" style="width: 120px;" [(ngModel)]="search.server" nzPlaceHolder="Server" [nzLoading]="searchLoading">
                 <nz-option [nzValue]="data?.id" [nzLabel]="data?.name" *ngFor="let data of listServer"></nz-option>
               </nz-select>
             </div>
@@ -80,5 +80,5 @@
         </div>
         
   </div>
-  <app-dashboard-modal-update-vlan [(checkVisibleUpdateVlan)]=checkVisibleUpdateVlan (checkVisibleUpdateVlanChange) = "updateVlan($event)" [vlanUpdate]=dataVlan [listServer]=listServer></app-dashboard-modal-update-vlan>
-  <app-dashboard-modal-create-vlan [(checkVisibleCreateVlan)]=checkVisibleCreateVlan (checkVisibleCreateVlanChange) = "createVlan($event)" [listServer]=listServer></app-dashboard-modal-create-vlan>
+  <app-dashboard-modal-update-vlan [(checkVisibleUpdateVlan)]=checkVisibleUpdateVlan (checkVisibleUpdateVlanChange) = "updateVlan($event)" [vlanUpdate]=dataVlan [listServer]=listServerModal></app-dashboard-modal-update-vlan>
+  <app-dashboard-modal-create-vlan [(checkVisibleCreateVlan)]=checkVisibleCreateVlan (checkVisibleCreateVlanChange) = "createVlan($event)" [listServer]=listServerModal></app-dashboard-modal-create-vlan>

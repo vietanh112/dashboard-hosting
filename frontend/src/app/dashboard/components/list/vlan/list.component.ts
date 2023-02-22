@@ -48,6 +48,10 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
     totalVlan: number = 0;
     sizePage: any = [10, 20, 50];
 
+    listServerModal: any = [];
+
+    searchLoading:boolean = false;
+
     constructor(
         public productService: DashboardHostingProductService,
         public searchService: SearchService,
@@ -103,6 +107,7 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
         setTimeout(() => {
             this.getSearch();
             this.getList();
+            this.getInfoModal();
         }, 0)
     }
 
@@ -123,6 +128,12 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
 
     showNotification(res: any) {
         this.notification(res);
+    }
+
+    getInfoModal() {
+        this.searchService.listServer({}).subscribe(res => {
+            this.listServerModal = res.list;
+        })
     }
 
     notification(event: any) {
@@ -157,6 +168,9 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
     getSearch() {
         this.searchService.selectSearch({type: 'vlan'}).subscribe(res => {
             this.listServer = res.list;
+            if(res.list) {
+                this.listServer.unshift({id: null, name: 'All'});
+            }
         })
     }
 
@@ -219,5 +233,16 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
     pageSizeChange(event: any) {
         this.limit = event;
         this.getList()
+    }
+
+    searchServer(value: any) {
+        this.searchLoading = true;
+        this.searchService.listServer({keyword: value}).subscribe(res => {
+            this.listServer = res.list;
+            if(res.list) {
+                this.listServer.unshift({id: null, name: 'All'});
+            }
+            this.searchLoading = false;
+        })    
     }
 }

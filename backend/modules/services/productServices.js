@@ -2,8 +2,6 @@ const { Sequelize, Model, DataTypes } = require("sequelize");
 const coreModels = require('../models/index');
 const { Op } = require("sequelize");
 const db =  require('../models');
-const redis = require('redis');
-const client = redis.createClient(6379);
 const listVlanRedisKey = 'list:vlan';
 const listServerRedisKey = 'list:server';
 const listPortRedisKey = 'list:port';
@@ -266,24 +264,17 @@ const productServices = {
             //         ['createdAt', 'DESC'],
             //     ],
             // });
-            data = await db.sequelize.query('select a.*, b.name as nameServer from vlan a, server b where a.server = b.id', { type: QueryTypes.SELECT })
-            console.log(data);
+            data = await db.sequelize.query('select a.*, b.name as nameServer from vlan a, server b where a.server = b.id order by createdAt DESC', { type: QueryTypes.SELECT })
             total =  await coreModels.vlan.count({});   
         }
         else if(Object.keys(criteria).length == 1) {
             if('keyword' in criteria) {
-                data = await coreModels.vlan.findAll({
-                    where: {
-                        name: {
-                            [Op.like]: `%${criteria.keyword}%`
-                        },
-                    },
-                    limit: limit,
-                    offset: Number(limit) * Number(page),
-                    order: [
-                        ['createdAt', 'DESC'],
-                    ]
-                })
+                data = await db.sequelize.query(`select a.*, b.name as nameServer 
+                                                from vlan a, server b 
+                                                where a.server = b.id and a.name like ${criteria.keyword}
+                                                order by createdAt DESC
+                                                offset ${limit} rows
+                                                fetch next ${Number(limit) * Number(page)} rows only`, { type: QueryTypes.SELECT })
                 total = await coreModels.vlan.count({
                     where: {
                         name: {

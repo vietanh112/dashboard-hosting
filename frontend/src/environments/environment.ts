@@ -37,7 +37,8 @@ export const environment = {
           deletePort: 'dashboard/product/{PORT_ID}/delete-port',
         },
         search: {
-          getList: 'dashboard/product/select-search'
+          getList: 'dashboard/search/select-search',
+          listServer: 'dashboard/search/list-server'
         }
       }
   },

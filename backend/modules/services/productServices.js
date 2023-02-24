@@ -256,103 +256,115 @@ const productServices = {
                 total: 0
             }
         }
-        if(Object.keys(criteria).length == 0) {
-            // data = await coreModels.vlan.findAll({
-            //     limit: limit,
-            //     offset: Number(limit) * Number(page),
-            //     order: [
-            //         ['createdAt', 'DESC'],
-            //     ],
-            // });
-            data = await db.sequelize.query('select a.*, b.name as nameServer from vlan a, server b where a.server = b.id order by createdAt DESC', { type: QueryTypes.SELECT })
-            total =  await coreModels.vlan.count({});   
-        }
-        else if(Object.keys(criteria).length == 1) {
-            if('keyword' in criteria) {
-                data = await db.sequelize.query(`select a.*, b.name as nameServer 
-                                                from vlan a, server b 
-                                                where a.server = b.id and a.name like ${criteria.keyword}
-                                                order by createdAt DESC
-                                                offset ${limit} rows
-                                                fetch next ${Number(limit) * Number(page)} rows only`, { type: QueryTypes.SELECT })
-                total = await coreModels.vlan.count({
-                    where: {
-                        name: {
-                            [Op.like]: `%${criteria.keyword}%`
-                        },
-                    },
-                })
-            }
-            else {
-                data = await coreModels.vlan.findAll({
-                    where: criteria,
-                    limit: limit,
-                    offset: Number(limit) * Number(page),
-                    order: [
-                        ['createdAt', 'DESC'],
-                    ]
-                })
-                total = await coreModels.vlan.count({
-                    where: criteria,
-                })
-            }
-        }
-        else if (Object.keys(criteria).length >= 2) {
-            if('keyword' in criteria) {
-                let allObj = {};
-                for (const obj in criteria) {
-                    if(obj != 'keyword'){
-                        allObj[obj] = criteria[obj];   
-                    } 
+        let arrayKeys = Object.keys(criteria);
+        let arrayValues = Object.values(criteria);
+        let strQuery = '';
+        if (arrayKeys.length == arrayValues.length && arrayKeys.length > 0) {
+            strQuery = 'where ';
+            for(let i = 0; i < arrayKeys.length; i++) {
+                if(arrayKeys[i] == 'keyword'){
+                    strQuery = strQuery + `a.name like '%${arrayValues[i]}%'`;
                 }
-                data = await coreModels.vlan.findAll({
-                    where: {
-                        [Op.and]: [
-                            {
-                                name: {
-                                    [Op.like]: `%${criteria.keyword}%`
-                                },
-                            },
-                            allObj
-                        ]
-                    },
-                    limit: limit,
-                    offset: Number(limit) * Number(page),
-                    order: [
-                        ['createdAt', 'DESC'],
-                    ]
-                })
-                total = await coreModels.vlan.count({
-                    where: {
-                        [Op.and]: [
-                            {
-                                name: {
-                                    [Op.like]: `%${criteria.keyword}%`
-                                },
-                            },
-                            allObj
-                        ]
-                    },
-                })
-            }
-            else {
-                data = await coreModels.vlan.findAll({
-                    where: criteria,
-                    limit: limit,
-                    offset: Number(limit) * Number(page),
-                    order: [
-                        ['createdAt', 'DESC'],
-                    ]
-                })
-                total = await coreModels.vlan.count({
-                    where: criteria
-                })
+                else {
+                    strQuery = strQuery + `a.${arrayKeys[i]} = ${arrayValues[i]}`;
+                };
+                if(i < (arrayKeys.length - 1)) {
+                    strQuery = strQuery + ' and ';
+                }
             }
         }
-        else {
-            res.code = 200;
-            return res;
-        }
+        data = await db.sequelize.query(`select a.*, b.name as nameServer 
+                                        from vlan a 
+                                        left join (select name, id from server) b on a.server = b.id 
+                                        ${strQuery} order by createdAt DESC
+                                        offset ${Number(limit) * Number(page)} rows
+                                        fetch next ${limit} rows only`, { type: QueryTypes.SELECT });
+        total =  data.length;
+
+        // if(Object.keys(criteria).length == 0) {
+        //     data = await db.sequelize.query('select a.*, b.name as nameServer from vlan a, server b where a.server = b.id order by createdAt DESC', { type: QueryTypes.SELECT })
+        //     total =  await coreModels.vlan.count({});   
+        // }
+        // else if(Object.keys(criteria).length == 1) {
+        //     if('keyword' in criteria) {
+                
+        //         data = await db.sequelize.query(`select a.*, b.name as nameServer 
+        //                                         from vlan a, server b 
+        //                                         where a.server = b.id and a.name like ${criteria.keyword}
+        //                                         order by createdAt DESC
+        //                                         offset ${limit} rows
+        //                                         fetch next ${Number(limit) * Number(page)} rows only`, { type: QueryTypes.SELECT })
+        //         total = await data.length;
+        //     }
+        //     else {
+                
+        //         data = await coreModels.vlan.findAll({
+        //             where: criteria,
+        //             limit: limit,
+        //             offset: Number(limit) * Number(page),
+        //             order: [
+        //                 ['createdAt', 'DESC'],
+        //             ]
+        //         })
+        //         total = await data.length;
+        //     }
+        // }
+        // else if (Object.keys(criteria).length >= 2) {
+        //     if('keyword' in criteria) {
+        //         let allObj = {};
+        //         for (const obj in criteria) {
+        //             if(obj != 'keyword'){
+        //                 allObj[obj] = criteria[obj];   
+        //             } 
+        //         }
+        //         data = await coreModels.vlan.findAll({
+        //             where: {
+        //                 [Op.and]: [
+        //                     {
+        //                         name: {
+        //                             [Op.like]: `%${criteria.keyword}%`
+        //                         },
+        //                     },
+        //                     allObj
+        //                 ]
+        //             },
+        //             limit: limit,
+        //             offset: Number(limit) * Number(page),
+        //             order: [
+        //                 ['createdAt', 'DESC'],
+        //             ]
+        //         })
+        //         total = await coreModels.vlan.count({
+        //             where: {
+        //                 [Op.and]: [
+        //                     {
+        //                         name: {
+        //                             [Op.like]: `%${criteria.keyword}%`
+        //                         },
+        //                     },
+        //                     allObj
+        //                 ]
+        //             },
+        //         })
+        //     }
+        //     else {
+        //         data = await coreModels.vlan.findAll({
+        //             where: criteria,
+        //             limit: limit,
+        //             offset: Number(limit) * Number(page),
+        //             order: [
+        //                 ['createdAt', 'DESC'],
+        //             ]
+        //         })
+        //         total = await coreModels.vlan.count({
+        //             where: criteria
+        //         })
+        //     }
+        // }
+        // else {
+        //     res.code = 200;
+        //     return res;
+        // }
 
         res.status = 1;
         res.code = 200;

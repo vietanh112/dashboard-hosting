@@ -35,20 +35,18 @@ export class SearchService {
             options['params'][i] = queries[i];
         }
         return this.apiService.get(this.apiServerPaths.search.getList, options, map((response: any) => {
-            let rs: any = {
-                list: []
-            }
-            
+            let rs: any[] = []
+
             if(response.status == 1 && response.code == 200) {
                 if(response.data) {
                     if(queries.type == 'vlan') {
                         response.data.forEach((item: any) => {
-                            rs.list.push(new ServerModel(item));
+                            rs.push(new ServerModel(item));
                         });
                     }
                     else if(queries.type == 'port') {
                         response.data.forEach((item: any) => {
-                            rs.list.push(new ServerModel(item));
+                            rs.push(new ServerModel(item));
                         });
                     }
                     else if(queries.type == 'hosting') {
@@ -68,7 +66,6 @@ export class SearchService {
                             });
                         }
                         if(response.data.vlan) {
-                            rs.list = [];
                             response.data.vlan.forEach((item: any) => {
                                 obj.vlan.push(new VlanModel(item));
                             });
@@ -79,7 +76,7 @@ export class SearchService {
             }
             return rs;
             })
-        ) 
+        )
     }
 
     listServer(queries: any) {
@@ -94,20 +91,64 @@ export class SearchService {
             options['params'][i] = queries[i];
         }
         return this.apiService.get(this.apiServerPaths.search.listServer, options, map((response: any) => {
-            let rs: any = {
-                total: 0,
-                list: []
-            }
+          let rs: any[] = [];
             if(response.status == 1 && response.code == 200) {
                 if(response.data) {
                     response.data.forEach((item: any) => {
-                        rs.list.push(new ServerModel(item));
+                        rs.push(new ServerModel(item));
                     });
                 }
-                rs.total = response.data.total;
             }
             return rs;
             })
-        )   
+        )
     }
+    listVlan(queries: any) {
+      let options: any = {
+          params: {},
+          headers: {
+              'Content-Type': 'application/json; charset=utf-8'
+          }
+      };
+      // tslint:disable-next-line:forin
+      for (const i in queries) {
+          options['params'][i] = queries[i];
+      }
+      return this.apiService.get(this.apiServerPaths.search.listVlan, options, map((response: any) => {
+          let rs: any[] = [];
+          if(response.status == 1 && response.code == 200) {
+              if(response.data) {
+                  response.data.forEach((item: any) => {
+                      rs.push(new VlanModel(item));
+                  });
+              }
+          }
+          return rs;
+          })
+      )
+  }
+  listPort(queries: any) {
+    let options: any = {
+        params: {},
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+    // tslint:disable-next-line:forin
+    for (const i in queries) {
+        options['params'][i] = queries[i];
+    }
+    return this.apiService.get(this.apiServerPaths.search.listPort, options, map((response: any) => {
+      let rs: any[] = [];
+        if(response.status == 1 && response.code == 200) {
+            if(response.data) {
+                response.data.forEach((item: any) => {
+                    rs.push(new PortModel(item));
+                });
+            }
+        }
+        return rs;
+        })
+    )
+}
 }

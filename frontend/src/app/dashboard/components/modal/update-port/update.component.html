@@ -39,13 +39,13 @@
             <label for="" class="fw-bold">Server</label>
           </div>
           <div nz-col nzSpan="17">
-              <nz-select style="width: 100%;" formControlName="server">
+              <nz-select nzShowSearch (nzOnSearch)="searchServer($event)" [nzServerSearch]="true" style="width: 100%;" formControlName="server" [nzLoading]="searchLoading">
                 <nz-option [nzValue]="data.id" [nzLabel]="data.name" *ngFor="let data of listServer"></nz-option>
               </nz-select>
             </div>
         </div>
       </form>
-        
+
     </ng-container>
     <ng-container *nzModalFooter>
       <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>

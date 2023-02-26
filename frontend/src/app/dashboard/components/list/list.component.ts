@@ -64,8 +64,17 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
         server: 'list',
     }
 
-    sizePage: any = [10, 20, 50]
-    
+    sizePage: any = [10, 20, 50];
+    searchLoading: {
+      server: boolean,
+      vlan: boolean,
+      port: boolean,
+    } = {
+      server: false,
+      vlan: false,
+      port: false,
+    }
+
   constructor(
     public productService: DashboardHostingProductService,
     public searchService: SearchService,
@@ -118,12 +127,12 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
             if (typeof (params['limit']) !== 'undefined') {
                 this.limit = params['limit'];
             }
-            
+
         })
     }
 
     ngOnInit(): void {
-        
+
     }
 
     ngAfterViewInit(): void {
@@ -135,9 +144,23 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
 
     getListSearch () {
         this.searchService.selectSearch({type: 'hosting'}).subscribe(res => {
-            this.listServer = res.server;
-            this.listPort = res.port;
-            this.listVlan = res.vlan;
+          this.listServer = res.server;
+          this.listPort = res.port;
+          this.listVlan = res.vlan;
+          console.log(res);
+
+          if(this.listServer) {
+            this.listServer.unshift({id: null, name: 'All'});
+          }
+          if(this.listPort) {
+            this.listPort.unshift({id: null, port: 'All'});
+          }
+          if(this.listVlan) {
+            this.listVlan.unshift({id: null, name: 'All'});
+          }
+          console.log(this.listServer);
+          console.log(this.listPort);
+          console.log(this.listVlan);
         })
     }
 
@@ -153,7 +176,7 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
     showModalCreate() {
         this.checkVisibleCreate = true;
         console.log(this.listPort);
-        
+
     }
 
     showModalCreateVlan() {
@@ -171,7 +194,7 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
 
     getList() {
         this.loadingState = true;
-        
+
         let queries: any = {
             page: this.page,
             limit: this.limit
@@ -234,7 +257,7 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
             this.showNotification(res);
         }
     }
-    
+
     createServer(res: any){
         this.checkVisibleCreateServer = false;
         if(res) {
@@ -273,6 +296,60 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
     pageSizeChange(event: any) {
         this.limit = event;
         this.getList()
+    }
+
+    searchServer(value: any) {
+      this.searchStr(value, 'server');
+    }
+
+    searchPort(value: any) {
+      this.searchStr(value, 'port');
+    }
+
+    searchVlan(value: any) {
+      this.searchStr(value, 'vlan');
+    }
+
+    searchStr(value: any, type: string) {
+      let obj: any = {};
+      if(value != null && value != undefined) {
+        obj['keyword'] = value;
+      }
+        switch (type) {
+          case "server":
+            this.searchLoading.server = true;
+            this.searchService.listServer(obj).subscribe(res => {
+                this.listServer = res;
+                if(res) {
+                    this.listServer.unshift({id: null, name: 'All'});
+                }
+                this.searchLoading.server = false;
+            })
+            break;
+          case "vlan":
+            this.searchLoading.vlan = true;
+            this.searchService.listVlan(obj).subscribe(res => {
+                this.listVlan = res;
+                if(res) {
+                    this.listVlan.unshift({id: null, name: 'All'});
+                }
+                this.searchLoading.vlan = false;
+            })
+            break;
+          case "port":
+            this.searchLoading.port = true;
+            this.searchService.listPort(obj).subscribe(res => {
+                this.listPort = res;
+                if(res) {
+                    this.listPort.unshift({id: null, port: 'All'});
+                }
+                this.searchLoading.port = false;
+            })
+            break;
+          default:
+            break;
+        }
+
     }
 
 }

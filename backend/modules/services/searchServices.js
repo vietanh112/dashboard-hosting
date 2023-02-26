@@ -59,6 +59,8 @@ const searchServices = {
                             [Op.like]: `%${keyword}%`
                         },
                     },
+                    limit: 10,
+                    offset: 0,
                     order: [
                         ['createdAt', 'DESC'],
                     ]
@@ -101,6 +103,8 @@ const searchServices = {
                             [Op.like]: `%${keyword}%`
                         },
                     },
+                    limit: 10,
+                    offset: 0,
                     order: [
                         ['createdAt', 'DESC'],
                     ]
@@ -143,6 +147,8 @@ const searchServices = {
                             [Op.like]: `%${keyword}%`
                         },
                     },
+                    limit: 10,
+                    offset: 0,
                     order: [
                         ['createdAt', 'DESC'],
                     ]

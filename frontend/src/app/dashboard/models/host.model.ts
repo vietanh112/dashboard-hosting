@@ -19,7 +19,10 @@ export class HostingModel {
     server: string = null;
     createdat: string = '';
     updatedat: string = '';
-    
+    vlanName: string = '';
+    serverName: string = '';
+    portName: string = '';
+
 
     constructor(data: any) {
         this.id = String(data.id) || '';
@@ -41,5 +44,8 @@ export class HostingModel {
         this.server = String(data.server) ?? null;
         this.createdat = data.createdAt || '';
         this.updatedat = data.updatedAt || '';
+        this.vlanName = data.nameVlan || '';
+        this.serverName = data.nameServer || '';
+        this.portName = data.namePort || '';
     }
 }

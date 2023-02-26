@@ -47,8 +47,6 @@ export class DashboardListServer implements OnInit, AfterViewInit {
     totalServer: number = 0;
     sizePage: any = [10, 20, 50];
 
-    typeListServer: string = 'list';
-
     constructor(
         public productService: DashboardHostingProductService,
         private modal: NzModalService,
@@ -67,9 +65,6 @@ export class DashboardListServer implements OnInit, AfterViewInit {
             }
             if (typeof (params['page']) !== 'undefined') {
                 this.page = params['page'];
-            }
-            if (typeof (params['limit']) !== 'undefined') {
-                this.limit = params['limit'];
             }
             if (typeof (params['limit']) !== 'undefined') {
                 this.limit = params['limit'];
@@ -135,7 +130,6 @@ export class DashboardListServer implements OnInit, AfterViewInit {
         this.loadingState = true;
 
         let queries: any = {
-            type: this.typeListServer,
             page: this.page,
             limit: this.limit
         }

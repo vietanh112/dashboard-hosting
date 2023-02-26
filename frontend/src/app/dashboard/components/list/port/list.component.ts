@@ -61,6 +61,8 @@ export class DashboardListPort implements OnInit, AfterViewInit {
         limit: 10
     };
 
+    searchLoading: boolean = false;
+
     expandSet = new Set<number>();
 
     constructor(
@@ -125,9 +127,14 @@ export class DashboardListPort implements OnInit, AfterViewInit {
     }
 
     getListServer() {
-        this.searchService.selectSearch({type: 'port'}).subscribe(res => {
-            this.listServer = res.list;
-        })
+      this.searchService.selectSearch({type: 'port'}).subscribe(res => {
+          this.listServer = res;
+          if(res) {
+            this.listServer.unshift({id: null, name: 'All'});
+        }
+      })
+
+
     }
 
     showModalCreatePort() {
@@ -180,7 +187,7 @@ export class DashboardListPort implements OnInit, AfterViewInit {
 
     getList() {
         this.loadingState = true;
-        
+
         let queries: any = {
             page: this.page,
             limit: this.limit
@@ -246,4 +253,14 @@ export class DashboardListPort implements OnInit, AfterViewInit {
         this.getList()
     }
 
+    searchServer(value: any) {
+      this.searchLoading = true;
+      this.searchService.listServer({keyword: value}).subscribe(res => {
+          this.listServer = res;
+          if(res) {
+              this.listServer.unshift({id: null, name: 'All'});
+          }
+          this.searchLoading = false;
+      })
+  }
 }

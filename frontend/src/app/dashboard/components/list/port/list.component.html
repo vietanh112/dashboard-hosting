@@ -1,7 +1,7 @@
 <div class="style-loading" *ngIf="loadingState">
     <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
   </div>
-  
+
   <div class="inner-content">
       <div style="margin: 20px 0;display: flex;justify-content: space-between;">
           <div style="display: flex;align-items: center;">
@@ -10,7 +10,7 @@
               <input nz-input placeholder="Từ khóa" [(ngModel)]="search.keyword" nzSize="default" />
             </div>
             <div style="margin-left: 10px;">
-              <nz-select style="width: 120px;" [(ngModel)]="search.server" nzPlaceHolder="Server">
+              <nz-select nzShowSearch (nzOnSearch)="searchServer($event)" style="width: 120px;" [(ngModel)]="search.server" nzPlaceHolder="Server" [nzLoading]="searchLoading">
                 <nz-option [nzValue]="data?.id" [nzLabel]="data?.name" *ngFor="let data of listServer"></nz-option>
               </nz-select>
             </div>
@@ -19,7 +19,7 @@
                 <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of status"></nz-option>
               </nz-select>
             </div>
-            
+
             <div style="margin-left: 10px;">
               <button nz-button nzType="primary" (click)="getList()">
                 <span nz-icon nzType="search"></span>
@@ -49,7 +49,7 @@
                 <td [nzExpand]="expandSet.has(data.id)" class="text-center" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
                 <td class="text-center">{{ i + 1}}</td>
                 <td class="text-center">{{ data.port }}</td>
-                
+
                 <td class="text-center">
                   <span *ngFor="let ser of listServer">
                       <span *ngIf="data.server == ser.id">{{ser.name}}</span>
@@ -102,14 +102,14 @@
                       <nz-tag [nzColor]="i.name" *ngIf="data.status == i.status">{{i.msg}}</nz-tag>
                     </ng-container>
                   </td>
-                  
+
                 </tr>
               </ng-container>
             </ng-container>
-            
+
           </tbody>
         </nz-table>
-        
+
         <div style="margin-top: 1.5rem;display: flex;justify-content: flex-end;">
           <nz-pagination [nzPageIndex]="page" [nzTotal]="totalPort" nzShowSizeChanger [nzPageSize]="10" [nzPageSizeOptions]="sizePage" (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
         </div>

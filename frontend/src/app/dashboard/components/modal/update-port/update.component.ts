@@ -2,6 +2,7 @@ import {Component, OnInit, AfterViewInit, Input, Output, EventEmitter} from '@an
 import {DashboardHostingProductService} from '../../../services/hosting-product.service';
 import {PortModel} from '../../../models/port.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SearchService } from '../../../services/search.service';
 
 @Component({
     selector: 'app-dashboard-modal-update-port',
@@ -15,7 +16,7 @@ export class DashboardModalUpdatePort implements OnInit, AfterViewInit {
     @Input() listServer: any = [];
     updateForm: FormGroup;
 
-    
+
     @Output() checkVisibleUpdatePortChange: EventEmitter<boolean> = new EventEmitter<boolean>();
     textValue: string | null = null;
 
@@ -24,7 +25,8 @@ export class DashboardModalUpdatePort implements OnInit, AfterViewInit {
         {id: '0', name: 'Stop'},
         {id: '1', name: 'Active'},
     ]
-    
+
+    searchLoading: boolean = false;
     ngOnInit(): void {
         this.updateForm = this.formBuilder.group({
             id: ["", [Validators.required]],
@@ -38,20 +40,24 @@ export class DashboardModalUpdatePort implements OnInit, AfterViewInit {
     }
 
     constructor(public productService: DashboardHostingProductService,
-                private formBuilder: FormBuilder,) {
-        
+                private formBuilder: FormBuilder,
+                public searchService: SearchService,) {
+
     }
 
     handleOk(): void {
         this.updatePort();
     }
-    
+
     handleCancel(): void {
         this.checkVisibleUpdatePort = false;
         this.checkVisibleUpdatePortChange.emit(this.checkVisibleUpdatePort);
     }
 
     loadingOk():void {
+      if(this.listServer[0]?.id == null || this.listServer[0]?.name == 'All') {
+        this.listServer.slice(1);
+      }
         this.getPort();
     }
 
@@ -80,4 +86,12 @@ export class DashboardModalUpdatePort implements OnInit, AfterViewInit {
             this.checkVisibleUpdatePort = false;
         })
     }
+
+    searchServer(value: any) {
+      this.searchLoading = true;
+      this.searchService.listServer({keyword: value}).subscribe(res => {
+          this.listServer = res;
+          this.searchLoading = false;
+      })
+  }
 }

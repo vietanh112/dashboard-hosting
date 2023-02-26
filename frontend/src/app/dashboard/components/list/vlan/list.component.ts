@@ -102,7 +102,7 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
         })
     }
     ngOnInit(): void {}
-    
+
     ngAfterViewInit(): void {
         setTimeout(() => {
             this.getSearch();
@@ -167,8 +167,8 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
 
     getSearch() {
         this.searchService.selectSearch({type: 'vlan'}).subscribe(res => {
-            this.listServer = res.list;
-            if(res.list) {
+            this.listServer = res;
+            if(res) {
                 this.listServer.unshift({id: null, name: 'All'});
             }
         })
@@ -238,11 +238,11 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
     searchServer(value: any) {
         this.searchLoading = true;
         this.searchService.listServer({keyword: value}).subscribe(res => {
-            this.listServer = res.list;
-            if(res.list) {
+            this.listServer = res;
+            if(res) {
                 this.listServer.unshift({id: null, name: 'All'});
             }
             this.searchLoading = false;
-        })    
+        })
     }
 }

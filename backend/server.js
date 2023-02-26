@@ -138,3 +138,9 @@ app.route(`/dashboard/search/select-search`).get([], async(req, res) => {
 app.route(`/dashboard/search/list-server`).get([], async(req, res) => {
     return searchController.listServer(req, res);
 })
+app.route(`/dashboard/search/list-port`).get([], async(req, res) => {
+    return searchController.listPort(req, res);
+})
+app.route(`/dashboard/search/list-vlan`).get([], async(req, res) => {
+    return searchController.listVlan(req, res);
+})

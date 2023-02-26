@@ -29,7 +29,7 @@ export class DashboardHostingProductService {
         }
         return true;
     }
-    
+
     list(queries: any) {
         let options: any = {
             params: {},
@@ -43,6 +43,8 @@ export class DashboardHostingProductService {
         }
         return this.apiService.get(this.apiServerPaths.product.list, options, map((response: any) => {
                 this.invalidToken(response);
+                console.log(response);
+
                 let rs: any = {
                     total: 0,
                     list: []
@@ -57,7 +59,7 @@ export class DashboardHostingProductService {
                 }
                 return rs;
             })
-        )   
+        )
     }
     create(body: any) {
         let options: any = {
@@ -121,7 +123,7 @@ export class DashboardHostingProductService {
             }
             return rs
             })
-        )   
+        )
     }
     updateVlan(body: any, vlanId: any) {
         let options: any = {
@@ -251,7 +253,7 @@ export class DashboardHostingProductService {
             }
             return rs;
             })
-        )   
+        )
     }
     deletePort(portId: any) {
         let options: any = {

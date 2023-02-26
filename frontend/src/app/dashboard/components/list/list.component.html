@@ -10,20 +10,17 @@
             <input nz-input placeholder="Từ khóa" [(ngModel)]="search.keyword" nzSize="default" />
           </div>
           <div style="margin-left: 10px;">
-            <nz-select style="width: 120px;" [(ngModel)]="search.server" nzPlaceHolder="Server">
-              <nz-option [nzValue]="null" [nzLabel]="'All'">All</nz-option>
-              <nz-option [nzValue]="data?.id" [nzLabel]="data?.name" *ngFor="let data of listServer"></nz-option>
+            <nz-select nzShowSearch (nzOnSearch)="searchServer($event)" style="width: 120px;" [(ngModel)]="search.server" nzPlaceHolder="Server" [nzServerSearch]="true" [nzLoading]="searchLoading.server">
+              <nz-option [nzValue]="item?.id" [nzLabel]="item?.name" *ngFor="let item of listServer"></nz-option>
             </nz-select>
           </div>
           <div style="margin-left: 10px;">
-            <nz-select style="width: 120px;" [(ngModel)]="search.vlan" nzPlaceHolder="Vlan">
-              <nz-option [nzValue]="null" [nzLabel]="'All'">All</nz-option>
-              <nz-option [nzValue]="data.id" [nzLabel]="data.name" *ngFor="let data of listVlan"></nz-option>
+            <nz-select nzShowSearch (nzOnSearch)="searchVlan($event)" style="width: 120px;" [(ngModel)]="search.vlan" nzPlaceHolder="Vlan" [nzServerSearch]="true" [nzLoading]="searchLoading.vlan">
+              <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of listVlan"></nz-option>
             </nz-select>
           </div>
           <div style="margin-left: 10px;">
-            <nz-select style="width: 120px;" [(ngModel)]="search.port" nzPlaceHolder="Port">
-              <nz-option [nzValue]="null" [nzLabel]="'All'">All</nz-option>
+            <nz-select nzShowSearch (nzOnSearch)="searchPort($event)" style="width: 120px;" [(ngModel)]="search.port" nzPlaceHolder="Port" [nzServerSearch]="true" [nzLoading]="searchLoading.port">
               <nz-option [nzValue]="item.id" [nzLabel]="item.port" *ngFor="let item of listPort"></nz-option>
             </nz-select>
           </div>
@@ -61,9 +58,7 @@
             <td class="text-center"  (click)="showModalInfor(data)"><a>{{ data.ipaddress }}</a></td>
             <td>{{ data.hostname }}</td>
             <td class="text-center">
-              <ng-container *ngFor="let port of listPort" >
-                <span *ngIf="port.id == data.port">{{ port.port }}</span>
-              </ng-container>
+              {{data.portName}}
             </td>
             <td class="text-center">
               <ng-container *ngFor="let i of tag">
@@ -71,13 +66,11 @@
               </ng-container>
             </td>
             <td class="text-center">
-              <span *ngFor="let ser of listServer">
-                  <span *ngIf="data.server == ser.id">{{ser.name}}</span>
-              </span>
+              {{data.serverName}}
             </td>
             <td class="text-center">
               <button nz-button nz-dropdown [nzDropdownMenu]="menu4" style="border-radius: 50%;">
-                
+
                 <i nz-icon nzType="ellipsis" nzTheme="outline"></i>
               </button>
               <nz-dropdown-menu #menu4="nzDropdownMenu">
@@ -105,7 +98,7 @@
         <nz-pagination [nzPageIndex]="page" [nzTotal]="totalHosting" nzShowSizeChanger [nzPageSize]="10" [nzPageSizeOptions]="sizePage" (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
       </div>
 </div>
-<app-dashboard-modal-infor [(checkVisibleInfor)]=checkVisibleInfor [listVlan]=listVlan [listPort]=listPort [listServer]=listServer  [dataHosting]=hosting></app-dashboard-modal-infor>
+<app-dashboard-modal-infor [(checkVisibleInfor)]=checkVisibleInfor  [dataHosting]=hosting></app-dashboard-modal-infor>
 <app-dashboard-modal-create [(checkVisibleCreate)]=checkVisibleCreate (checkVisibleCreateChange) = "createHosting($event)" [listServer]=listServer [listVlanAll]=listVlan [listPortAll]=listPort></app-dashboard-modal-create>
 <app-dashboard-modal-update [(checkVisibleUpdate)]=checkVisibleUpdate (checkVisibleUpdateChange) = "updateHosting($event)" [hosting]=hosting [listServer]=listServer [listVlan]=listVlan [listPort]=listPort></app-dashboard-modal-update>
 <!-- <app-dashboard-modal-create-vlan [(checkVisibleCreateVlan)]=checkVisibleCreateVlan (checkVisibleCreateVlanChange) = "createVlan($event)"></app-dashboard-modal-create-vlan> -->

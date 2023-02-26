@@ -17,10 +17,10 @@ module.exports = {
         }
         const data = await productServices.getList(criteria, page, limit);
         const response = {
-            status: 1,
-            code: 200,
-            message: 'success',
-            data: data ?? []
+            status: data.status,
+            code: data.code,
+            message: data.msg,
+            data: data.data ?? []
         }
 
         return res.json(response)
@@ -73,11 +73,12 @@ module.exports = {
         }
         return res.json(response)
     },
+
+    //VLAN
     getListVlan: async (req, res) => {
         let criteria = {};
         const page = req.query.page ? parseInt(req.query.page) : 0;
         const limit = req.query.limit ? parseInt(req.query.limit) : 10;
-        const type = req.query.type ? req.query.type : '';
         for (const [key, value] of Object.entries(req.query)) {
             if(key != 'page' && key != 'limit') {
                 if(key == 'id') {
@@ -95,7 +96,6 @@ module.exports = {
             message: obj.msg,
             data: obj.data ?? []
         }
-
         return res.json(response)
     },
     updateVlan: async (req, res) => {
@@ -103,47 +103,41 @@ module.exports = {
         const body = await req.body.body;
         const data = await productServices.updateVlan(body, vlanId);
         let response = {
-            status: 1,
-            code: 200,
+            status: 0,
+            code: 204,
             message: '',
-            data: 'update'
+            data: 'Update'
         }
         response.code = data.code;
         response.message = data.msg;
-        if (data.code == 400) {
-            response.data = null;
-        }
+        response.status = data.status;
         return res.json(response)
     },
     deleteVlan: async (req, res) => {
         const vlanId = req.params.vlanId;
         const data = await productServices.deleteVlan(vlanId);
         let response = {
-            status: 1,
-            code: 200,
+            status: 0,
+            code: 204,
             message: '',
             data: 'Delete'
         }
         response.code = data.code;
         response.message = data.msg;
-        if (data.code == 400) {
-            response.data = null;
-        }
+        response.status = data.status;
         return res.json(response)
     },
     createVlan: async (req, res) => {
         const data = await productServices.createVlan(req.body.body);
         let response = {
-            status: 1,
-            code: 200,
+            status: 0,
+            code: 204,
             message: '',
             data: 'Create'
         }
         response.code = data.code;
         response.message = data.msg;
-        if (data.code == 400) {
-            response.data = null;
-        }
+        response.status = data.status;
         return res.json(response)
     },
 
@@ -152,7 +146,6 @@ module.exports = {
         let criteria = {};
         const page = req.query.page ? parseInt(req.query.page) : 0;
         const limit = req.query.limit ? parseInt(req.query.limit) : 10;
-        const type = req.query.type ? req.query.type : '';
         for (const [key, value] of Object.entries(req.query)) {
             if(key != 'page' && key != 'limit') {
                 if(key == 'id') {
@@ -163,7 +156,7 @@ module.exports = {
                 }
             }
         }
-        const obj = await productServices.getListServer(criteria, page, limit, type);
+        const obj = await productServices.getListServer(criteria, page, limit);
         const response = {
             status: obj.status,
             code: obj.code,
@@ -176,31 +169,27 @@ module.exports = {
         const serverId = req.params.serverId;
         const data = await productServices.deleteServer(serverId);
         let response = {
-            status: 1,
+            status: 0,
             code: 200,
             message: '',
             data: 'Delete'
         }
         response.code = data.code;
         response.message = data.msg;
-        if (data.code == 400) {
-            response.data = null;
-        }
+        response.status = data.status;
         return res.json(response)
     },
     createServer: async (req, res) => {
         const data = await productServices.createServer(req.body.body);
         let response = {
-            status: 1,
+            status: 0,
             code: 200,
             message: '',
             data: 'Create'
         }
         response.code = data.code;
         response.message = data.msg;
-        if (data.code == 400) {
-            response.data = null;
-        }
+        response.status = data.status;
         return res.json(response)
     },
     updateServer: async (req, res) => {
@@ -208,16 +197,14 @@ module.exports = {
         const body = await req.body.body;
         const data = await productServices.updateServer(body, serverId);
         let response = {
-            status: 1,
+            status: 0,
             code: 200,
             message: '',
-            data: 'update'
+            data: 'Update'
         }
         response.code = data.code;
         response.message = data.msg;
-        if (data.code == 400) {
-            response.data = null;
-        }
+        response.status = data.status;
         return res.json(response)
     },
 
@@ -226,7 +213,6 @@ module.exports = {
         let criteria = {};
         const page = req.query.page ? parseInt(req.query.page) : 0;
         const limit = req.query.limit ? parseInt(req.query.limit) : 10;
-        const type = req.query.type ?? null;
         for (const [key, value] of Object.entries(req.query)) {
             if(key != 'page' && key != 'limit') {
                 if(key == 'id' || key == 'status') {
@@ -237,7 +223,7 @@ module.exports = {
                 }
             }
         }
-        const obj = await productServices.getListPort(criteria, page, limit, type);
+        const obj = await productServices.getListPort(criteria, page, limit);
         const response = {
             status: obj.status,
             code: obj.code,
@@ -251,31 +237,27 @@ module.exports = {
         const portId = req.params.portId;
         const data = await productServices.deletePort(portId);
         let response = {
-            status: 1,
+            status: 0,
             code: 200,
             message: '',
             data: 'Delete'
         }
         response.code = data.code;
         response.message = data.msg;
-        if (data.code == 400) {
-            response.data = null;
-        }
+        response.status = data.status;
         return res.json(response)
     },
     createPort: async (req, res) => {
         const data = await productServices.createPort(req.body.body);
         let response = {
-            status: 1,
+            status: 0,
             code: 200,
             message: '',
             data: 'Create'
         }
         response.code = data.code;
         response.message = data.msg;
-        if (data.code == 400) {
-            response.data = null;
-        }
+        response.status = data.status;
         return res.json(response)
     },
     updatePort: async (req, res) => {
@@ -283,16 +265,14 @@ module.exports = {
         const body = await req.body.body;
         const data = await productServices.updatePort(body, portId);
         let response = {
-            status: 1,
+            status: 0,
             code: 200,
             message: '',
-            data: 'update'
+            data: 'Update'
         }
         response.code = data.code;
         response.message = data.msg;
-        if (data.code == 400) {
-            response.data = null;
-        }
+        response.status = data.status;
         return res.json(response)
     },
 }

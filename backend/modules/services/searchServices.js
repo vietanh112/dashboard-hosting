@@ -1,12 +1,14 @@
 const { Sequelize, Model, DataTypes } = require("sequelize");
 const coreModels = require('../models/index');
 const { Op } = require("sequelize");
-const configs = require('../../configs/configs')
+const configs = require('../../configs/configs');
+const db =  require('../models');
+const { QueryTypes } = require('sequelize');
 
 const searchServices = {
     getList: async (type) => {
         if(type == 'vlan' || type == 'port') {
-            let data = await searchServices.getServer(null);
+            let data = await searchServices.getServer({});
             if(data) {
                 return {
                     status: 1,
@@ -17,9 +19,9 @@ const searchServices = {
             }
         }
         else if(type == 'hosting') {
-            let dataServer = await searchServices.getServer(null);
-            let dataPort = await searchServices.getPort(null);
-            let dataVlan = await searchServices.getVlan(null);
+            let dataServer = await searchServices.getServer({});
+            let dataPort = await searchServices.getPort({});
+            let dataVlan = await searchServices.getVlan({});
             if(dataServer || dataPort || dataVlan) {
                 return {
                     status: 1,
@@ -43,7 +45,7 @@ const searchServices = {
         }
     },
 
-    getPort: async (keyword) => {
+    getPort: async (criteria) => {
         let data;
         let res = {
             status: 0,
@@ -51,30 +53,67 @@ const searchServices = {
             msg: 'success',
             data: []
         }
+
+        let arrayKeys = Object.keys(criteria);
+        let arrayValues = Object.values(criteria);
+        let strQuery = '';
+        if (arrayKeys.length == arrayValues.length && arrayKeys.length > 0) {
+            strQuery = 'where ';
+            for(let i = 0; i < arrayKeys.length; i++) {
+                if(arrayKeys[i] == 'keyword'){
+                    strQuery = strQuery + `a.port like '%${arrayValues[i]}%'`;
+                }
+                else {
+                    strQuery = strQuery + `a.${arrayKeys[i]} = '${arrayValues[i]}'`;
+                };
+                if(i < (arrayKeys.length - 1)) {
+                    strQuery = strQuery + ' and ';
+                }
+            }
+        }
+
         try {
-            if(keyword != null) {
-                data = await coreModels.port.findAll({
-                    where: {
-                        port: {
-                            [Op.like]: `%${keyword}%`
-                        },
-                    },
-                    limit: 10,
-                    offset: 0,
-                    order: [
-                        ['createdAt', 'DESC'],
-                    ]
-                })
+            data = await db.sequelize.query(`select a.* from port a ${strQuery} order by createdAt DESC offset 0 rows fetch next 10 rows only`, { type: QueryTypes.SELECT });
+            res.code = 200;
+            res.status = 1;
+            res.data = data;
+            return res;
+
+        } catch (error) {
+            console.log(error);
+            return res
+        }
+    },
+
+    getServer: async (criteria) => {
+        let data;
+        let res = {
+            status: 0,
+            code: 204,
+            msg: 'success',
+            data: []
+        }
+
+        let arrayKeys = Object.keys(criteria);
+        let arrayValues = Object.values(criteria);
+        let strQuery = '';
+        if (arrayKeys.length == arrayValues.length && arrayKeys.length > 0) {
+            strQuery = 'where ';
+            for(let i = 0; i < arrayKeys.length; i++) {
+                if(arrayKeys[i] == 'keyword'){
+                    strQuery = strQuery + `a.name like '%${arrayValues[i]}%'`;
+                }
+                else {
+                    strQuery = strQuery + `a.${arrayKeys[i]} = '${arrayValues[i]}'`;
+                };
+                if(i < (arrayKeys.length - 1)) {
+                    strQuery = strQuery + ' and ';
+                }
             }
-            else {
-                data = await coreModels.port.findAll({
-                    limit: 10,
-                    offset: 0,
-                    order: [
-                        ['createdAt', 'DESC'],
-                    ]
-                })
-            }
+        }
+
+        try {
+            data = await db.sequelize.query(`select a.* from server a ${strQuery} order by createdAt DESC offset 0 rows fetch next 10 rows only`, { type: QueryTypes.SELECT });
 
             res.code = 200;
             res.status = 1;
@@ -87,7 +126,7 @@ const searchServices = {
         }
     },
 
-    getServer: async (keyword) => {
+    getVlan: async (criteria) => {
         let data;
         let res = {
             status: 0,
@@ -95,74 +134,27 @@ const searchServices = {
             msg: 'success',
             data: []
         }
-        try {
-            if(keyword != null) {
-                data = await coreModels.server.findAll({
-                    where: {
-                        name: {
-                            [Op.like]: `%${keyword}%`
-                        },
-                    },
-                    limit: 10,
-                    offset: 0,
-                    order: [
-                        ['createdAt', 'DESC'],
-                    ]
-                })
-            }
-            else {
-                data = await coreModels.server.findAll({
-                    limit: 10,
-                    offset: 0,
-                    order: [
-                        ['createdAt', 'DESC'],
-                    ]
-                })
-            }
 
-            res.code = 200;
-            res.status = 1;
-            res.data = data;
-            return res;
-
-        } catch (error) {
-            console.log(error);
-            return res
+        let arrayKeys = Object.keys(criteria);
+        let arrayValues = Object.values(criteria);
+        let strQuery = '';
+        if (arrayKeys.length == arrayValues.length && arrayKeys.length > 0) {
+            strQuery = 'where ';
+            for(let i = 0; i < arrayKeys.length; i++) {
+                if(arrayKeys[i] == 'keyword'){
+                    strQuery = strQuery + `a.name like '%${arrayValues[i]}%'`;
+                }
+                else {
+                    strQuery = strQuery + `a.${arrayKeys[i]} = '${arrayValues[i]}'`;
+                };
+                if(i < (arrayKeys.length - 1)) {
+                    strQuery = strQuery + ' and ';
+                }
+            }
         }
-    },
 
-    getVlan: async (keyword) => {
-        let data;
-        let res = {
-            status: 0,
-            code: 204,
-            msg: 'success',
-            data: []
-        }
         try {
-            if(keyword != null) {
-                data = await coreModels.vlan.findAll({
-                    where: {
-                        name: {
-                            [Op.like]: `%${keyword}%`
-                        },
-                    },
-                    limit: 10,
-                    offset: 0,
-                    order: [
-                        ['createdAt', 'DESC'],
-                    ]
-                })
-            }
-            else {
-                data = await coreModels.vlan.findAll({
-                    limit: 10,
-                    offset: 0,
-                    order: [
-                        ['createdAt', 'DESC'],
-                    ]
-                })
-            }
+            data = await db.sequelize.query(`select a.* from vlan a ${strQuery} order by createdAt DESC offset 0 rows fetch next 10 rows only`, { type: QueryTypes.SELECT });
 
             res.code = 200;
             res.status = 1;

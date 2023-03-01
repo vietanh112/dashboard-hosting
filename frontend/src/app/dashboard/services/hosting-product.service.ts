@@ -43,8 +43,6 @@ export class DashboardHostingProductService {
         }
         return this.apiService.get(this.apiServerPaths.product.list, options, map((response: any) => {
                 this.invalidToken(response);
-                console.log(response);
-
                 let rs: any = {
                     total: 0,
                     list: []

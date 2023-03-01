@@ -99,7 +99,7 @@
       </div>
 </div>
 <app-dashboard-modal-infor [(checkVisibleInfor)]=checkVisibleInfor  [dataHosting]=hosting></app-dashboard-modal-infor>
-<app-dashboard-modal-create [(checkVisibleCreate)]=checkVisibleCreate (checkVisibleCreateChange) = "createHosting($event)" [listServer]=listServer [listVlanAll]=listVlan [listPortAll]=listPort></app-dashboard-modal-create>
-<app-dashboard-modal-update [(checkVisibleUpdate)]=checkVisibleUpdate (checkVisibleUpdateChange) = "updateHosting($event)" [hosting]=hosting [listServer]=listServer [listVlan]=listVlan [listPort]=listPort></app-dashboard-modal-update>
+<app-dashboard-modal-create [(checkVisibleCreate)]=checkVisibleCreate (checkVisibleCreateChange) = "createHosting($event)" [listServer]=listServer></app-dashboard-modal-create>
+<app-dashboard-modal-update [(checkVisibleUpdate)]=checkVisibleUpdate (checkVisibleUpdateChange) = "updateHosting($event)" [hosting]=hosting [listServer]=listServer></app-dashboard-modal-update>
 <!-- <app-dashboard-modal-create-vlan [(checkVisibleCreateVlan)]=checkVisibleCreateVlan (checkVisibleCreateVlanChange) = "createVlan($event)"></app-dashboard-modal-create-vlan> -->
 <!-- <app-dashboard-modal-create-server [(checkVisibleCreateServer)]=checkVisibleCreateServer (checkVisibleCreateServerChange) = "createServer($event)"></app-dashboard-modal-create-server> -->

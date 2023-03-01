@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Location} from "@angular/common";
 import {DashboardHostingProductService} from '../../../services/hosting-product.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { SearchService } from '../../../services/search.service';
 
 @Component({
     selector: 'app-dashboard-modal-create',
@@ -14,18 +14,32 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class DashboardModalCreate implements OnInit, AfterViewInit {
     @Input() checkVisibleCreate: boolean = false;
     @Input() listServer: any = [];
-    @Input() listVlanAll: any = [];
-    @Input() listPortAll: any = [];
     @Output() checkVisibleCreateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
     createForm: FormGroup;
 
+    searchLoading: {
+        server: boolean,
+        vlan: boolean,
+        port: boolean,
+      } = {
+        server: false,
+        vlan: false,
+        port: false,
+      }
 
     listVlan: any = [];
     listPort: any = [];
+
+    status: any = [
+        {id: '-1', name: 'Error'},
+        {id: '0', name: 'Stop'},
+        {id: '1', name: 'Active'},
+    ]
     
     
     constructor(public productService: DashboardHostingProductService,
-                private formBuilder: FormBuilder,) {
+                private formBuilder: FormBuilder,
+                public searchService: SearchService,) {
         
     }
 
@@ -88,6 +102,7 @@ export class DashboardModalCreate implements OnInit, AfterViewInit {
         this.productService.create(body).subscribe((response: any) => {
             this.checkVisibleCreateChange.emit(response);
             this.checkVisibleCreate = false;
+            this.createForm.reset();
         })
     }
 
@@ -95,15 +110,58 @@ export class DashboardModalCreate implements OnInit, AfterViewInit {
         
     }
     listChange(event: any) {
-        for(let item of this.listVlanAll) {
-            if(item.server == event) {
-                this.listVlan.push(item)
-            }
+        if(event) {
+            this.f['port'].setValue(null);
+            this.f['vlan'].setValue(null);
         }
-        for(let item of this.listPortAll) {
-            if(item.server == event) {
-                this.listPort.push(item)
-            }
-        }
+        this.searchPort('');
+        this.searchVlan('');
     }
+
+    searchServer(value: any) {
+        this.searchStr(value, 'server');
+      }
+  
+      searchPort(value: any) {
+        this.searchStr(value, 'port');
+      }
+  
+      searchVlan(value: any) {
+        this.searchStr(value, 'vlan');
+      }
+  
+      searchStr(value: any, type: string) {
+        let obj: any = {};
+        if(value != null && value != undefined) {
+          obj['keyword'] = value;
+        }
+          switch (type) {
+            case "server":
+              this.searchLoading.server = true;
+              this.searchService.listServer(obj).subscribe(res => {
+                  this.listServer = res;
+                  this.searchLoading.server = false;
+              })
+              break;
+            case "vlan":
+                obj['server'] = Number(this.f['server'].value);
+              this.searchLoading.vlan = true;
+              this.searchService.listVlan(obj).subscribe(res => {
+                  this.listVlan = res;
+                  this.searchLoading.vlan = false;
+              })
+              break;
+            case "port":
+                obj['server'] = Number(this.f['server'].value);
+              this.searchLoading.port = true;
+              this.searchService.listPort(obj).subscribe(res => {
+                  this.listPort = res;
+                  this.searchLoading.port = false;
+              })
+              break;
+            default:
+              break;
+          }
+      }
+
 }

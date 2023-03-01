@@ -57,6 +57,7 @@ export class DashboardModalCreateVlan implements OnInit, AfterViewInit {
         this.productService.createVlan(body).subscribe((response: any) => {
             this.checkVisibleCreateVlanChange.emit(response);
             this.checkVisibleCreateVlan = false;
+            this.createForm.reset();
         })
     }
 

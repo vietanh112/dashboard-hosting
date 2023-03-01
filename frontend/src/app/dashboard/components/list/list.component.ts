@@ -147,7 +147,6 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
           this.listServer = res.server;
           this.listPort = res.port;
           this.listVlan = res.vlan;
-          console.log(res);
 
           if(this.listServer) {
             this.listServer.unshift({id: null, name: 'All'});
@@ -158,9 +157,6 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
           if(this.listVlan) {
             this.listVlan.unshift({id: null, name: 'All'});
           }
-          console.log(this.listServer);
-          console.log(this.listPort);
-          console.log(this.listVlan);
         })
     }
 
@@ -349,7 +345,5 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
           default:
             break;
         }
-
     }
-
 }

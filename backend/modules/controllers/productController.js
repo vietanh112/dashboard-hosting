@@ -28,13 +28,14 @@ module.exports = {
     createHosting: async (req, res) => {
         const data = await productServices.createHosting(req.body.body);
         let response = {
-            status: 1,
-            code: 200,
+            status: 0,
+            code: 204,
             message: '',
             data: 'Create'
         }
         response.code = data.code;
         response.message = data.msg;
+        response.status = data.status;
         if (data.code == 400) {
             response.data = null;
         }

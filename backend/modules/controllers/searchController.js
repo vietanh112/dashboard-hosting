@@ -22,9 +22,13 @@ module.exports = {
         }
     },
     listServer: async (req, res) => {
-        const keyword = req.query.keyword ?? null;
+        let criteria = {};
+        for (const [key, value] of Object.entries(req.query)) {
+            criteria[key] = value;
+        }
+        console.log(criteria);
         try {
-            const obj = await searchServices.getServer(keyword);
+            const obj = await searchServices.getServer(criteria);
             const response = {
                 status: obj.status,
                 code: obj.code,
@@ -42,9 +46,12 @@ module.exports = {
         }
     },
     listPort: async (req, res) => {
-        const keyword = req.query.keyword ?? null;
+        let criteria = {};
+        for (const [key, value] of Object.entries(req.query)) {
+            criteria[key] = value;
+        }
         try {
-            const obj = await searchServices.getPort(keyword);
+            const obj = await searchServices.getPort(criteria);
             const response = {
                 status: obj.status,
                 code: obj.code,
@@ -62,9 +69,12 @@ module.exports = {
         }
     },
     listVlan: async (req, res) => {
-        const keyword = req.query.keyword ?? null;
+        let criteria = {};
+        for (const [key, value] of Object.entries(req.query)) {
+            criteria[key] = value;
+        }
         try {
-            const obj = await searchServices.getVlan(keyword);
+            const obj = await searchServices.getVlan(criteria);
             const response = {
                 status: obj.status,
                 code: obj.code,

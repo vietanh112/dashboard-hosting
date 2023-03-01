@@ -62,6 +62,7 @@ export class DashboardModalCreateServer implements OnInit, AfterViewInit {
         this.productService.createServer(body).subscribe((response: any) => {
             this.checkVisibleCreateServerChange.emit(response);
             this.checkVisibleCreateServer = false;
+            this.createForm.reset();
         })
     }
 

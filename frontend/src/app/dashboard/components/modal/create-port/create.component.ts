@@ -64,6 +64,7 @@ export class DashboardModalCreatePort implements OnInit, AfterViewInit {
         this.productService.createPort(body).subscribe((response: any) => {
             this.checkVisibleCreatePortChange.emit(response);
             this.checkVisibleCreatePort = false;
+            this.createForm.reset();
         })
     }
 

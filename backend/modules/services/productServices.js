@@ -2,9 +2,6 @@ const { Sequelize, Model, DataTypes } = require("sequelize");
 const coreModels = require('../models/index');
 const { Op } = require("sequelize");
 const db =  require('../models');
-const listVlanRedisKey = 'list:vlan';
-const listServerRedisKey = 'list:server';
-const listPortRedisKey = 'list:port';
 const { QueryTypes } = require('sequelize');
 
 const productServices = {
@@ -177,7 +174,8 @@ const productServices = {
     createHosting: async (body) => {
         let log = {
             code: 204,
-            msg: 'error'
+            msg: 'error',
+            status: 0
         };
         try {
             const data = await coreModels.hosting.create({
@@ -201,10 +199,13 @@ const productServices = {
             if(data) {
                 log.code = 200;
                 log.msg = 'success';
+                log.status = 1;
             }
             return log
         } catch (error) {
             console.log(error);
+            log.code = 200;
+            log.msg = 'query failed';
             return log
         }
     },

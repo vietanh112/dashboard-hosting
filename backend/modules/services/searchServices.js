@@ -64,7 +64,12 @@ const searchServices = {
                     strQuery = strQuery + `a.port like '%${arrayValues[i]}%'`;
                 }
                 else {
-                    strQuery = strQuery + `a.${arrayKeys[i]} = '${arrayValues[i]}'`;
+                    if(arrayValues[i] == '') {
+                        strQuery = strQuery + `a.${arrayKeys[i]} like '%${arrayValues[i]}%'`;
+                    }
+                    else {
+                        strQuery = strQuery + `a.${arrayKeys[i]} = '${arrayValues[i]}'`;
+                    }
                 };
                 if(i < (arrayKeys.length - 1)) {
                     strQuery = strQuery + ' and ';
@@ -104,7 +109,12 @@ const searchServices = {
                     strQuery = strQuery + `a.name like '%${arrayValues[i]}%'`;
                 }
                 else {
-                    strQuery = strQuery + `a.${arrayKeys[i]} = '${arrayValues[i]}'`;
+                    if(arrayValues[i] == '') {
+                        strQuery = strQuery + `a.${arrayKeys[i]} like '%${arrayValues[i]}%'`;
+                    }
+                    else {
+                        strQuery = strQuery + `a.${arrayKeys[i]} = '${arrayValues[i]}'`;
+                    }
                 };
                 if(i < (arrayKeys.length - 1)) {
                     strQuery = strQuery + ' and ';
@@ -145,7 +155,12 @@ const searchServices = {
                     strQuery = strQuery + `a.name like '%${arrayValues[i]}%'`;
                 }
                 else {
-                    strQuery = strQuery + `a.${arrayKeys[i]} = '${arrayValues[i]}'`;
+                    if(arrayValues[i] == '') {
+                        strQuery = strQuery + `a.${arrayKeys[i]} like '%${arrayValues[i]}%'`;
+                    }
+                    else {
+                        strQuery = strQuery + `a.${arrayKeys[i]} = '${arrayValues[i]}'`;
+                    }
                 };
                 if(i < (arrayKeys.length - 1)) {
                     strQuery = strQuery + ' and ';

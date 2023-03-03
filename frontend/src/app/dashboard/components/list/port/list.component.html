@@ -51,9 +51,7 @@
                 <td class="text-center">{{ data.port }}</td>
 
                 <td class="text-center">
-                  <span *ngFor="let ser of listServer">
-                      <span *ngIf="data.server == ser.id">{{ser.name}}</span>
-                  </span>
+                  {{data.serverName}}
                 </td>
                 <td>
                   {{data.description}}

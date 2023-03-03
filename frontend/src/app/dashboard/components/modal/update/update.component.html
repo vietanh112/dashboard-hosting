@@ -137,7 +137,7 @@
                 <label for="" class="fw-bold">Server</label>
               </div>
               <div nz-col nzSpan="17">
-                  <nz-select nzShowSearch (nzOnSearch)="searchServer($event)"  formControlName="server" style="width: 100%;" [nzServerSearch]="true" [nzLoading]="searchLoading.server">
+                  <nz-select nzShowSearch (nzOnSearch)="searchServer($event)"  formControlName="server" style="width: 100%;" [nzServerSearch]="true" (ngModelChange)="serverChange($event)" [nzLoading]="searchLoading.server">
                     <nz-option [nzValue]="data.id" [nzLabel]="data.name" *ngFor="let data of listServer"></nz-option>
                   </nz-select>
                 </div>

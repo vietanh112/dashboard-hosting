@@ -35,11 +35,17 @@ export const environment = {
           createPort: 'dashboard/product/create-port',
           updatePort: 'dashboard/product/{PORT_ID}/update-port',
           deletePort: 'dashboard/product/{PORT_ID}/delete-port',
+        },
+        search: {
+          getList: 'dashboard/search/select-search',
+          listServer: 'dashboard/search/list-server',
+          listPort: 'dashboard/search/list-port',
+          listVlan: 'dashboard/search/list-vlan'
         }
       }
   },
   jwt: {
-    timeRefresh: 1200
+    timeRefresh: 900
   }
 };
 

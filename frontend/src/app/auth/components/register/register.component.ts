@@ -26,7 +26,7 @@ export class AuthComponentRegister implements OnInit, AfterViewInit {
     ) {}
     ngOnInit(): void {
         this.registerForm = this.formBuilder.group({
-            employeeId: [""],
+            employeeId: ["",[Validators.required]],
             username: ["", [Validators.required, Validators.minLength(4), Validators.maxLength(30)]],
             email: [""],
             password: ["", [Validators.required, Validators.pattern('^[A-Za-z0-9!@#$%^&*()-_+=]{4,20}$')]],

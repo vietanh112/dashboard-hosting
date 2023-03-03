@@ -5,6 +5,7 @@ export class PortModel {
     description: string = '';
     status: string = null;
     server: string = null;
+    serverName: string = null;
     createdat: string = '';
     updatedat: string = '';
     
@@ -15,6 +16,7 @@ export class PortModel {
         this.description = data.description || '';
         this.status = String(data.status) ?? null;
         this.server = String(data.server) ?? null;
+        this.serverName = String(data.nameServer) ?? '';
         this.createdat = data.createdAt || '';
         this.updatedat = data.updatedAt || '';
     }

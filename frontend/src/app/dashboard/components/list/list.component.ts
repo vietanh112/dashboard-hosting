@@ -306,8 +306,14 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
       this.searchStr(value, 'vlan');
     }
 
+    serverChange(value: any) {
+        this.searchPort('');
+        this.searchVlan('');
+    }
+
     searchStr(value: any, type: string) {
       let obj: any = {};
+      
       if(value != null && value != undefined) {
         obj['keyword'] = value;
       }
@@ -323,20 +329,34 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
             })
             break;
           case "vlan":
+            if(this.search.server) {
+                obj['server'] = this.search.server;
+            }
+            else {
+                obj['server'] = '';
+            }
+            console.log(obj);
+            
             this.searchLoading.vlan = true;
             this.searchService.listVlan(obj).subscribe(res => {
                 this.listVlan = res;
-                if(res) {
+                if(res.length > 0 && !this.search.server && value) {
                     this.listVlan.unshift({id: null, name: 'All'});
                 }
                 this.searchLoading.vlan = false;
             })
             break;
           case "port":
+            if(this.search.server) {
+                obj['server'] = this.search.server;
+            }
+            else {
+                obj['server'] = '';
+            }
             this.searchLoading.port = true;
             this.searchService.listPort(obj).subscribe(res => {
                 this.listPort = res;
-                if(res) {
+                if(res.length > 0 && !this.search.server  && value) {
                     this.listPort.unshift({id: null, port: 'All'});
                 }
                 this.searchLoading.port = false;

@@ -145,6 +145,13 @@ export class DashboardModalUpdate implements OnInit, AfterViewInit {
       this.searchStr(value, 'vlan');
     }
 
+    serverChange(value: any) {
+      this.f['port'].setValue('');
+      this.searchPort('');
+      this.f['vlan'].setValue('');
+      this.searchVlan('');      
+    }
+
     searchStr(value: any, type: string) {
       let obj: any = {};
       if(value != null && value != undefined) {

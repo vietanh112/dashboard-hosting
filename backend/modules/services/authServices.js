@@ -3,7 +3,10 @@ const coreModels = require('../models/index');
 const { Op } = require("sequelize");
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
-const configs = require('../../configs/configs')
+const configs = require('../../configs/configs');
+const { QueryTypes } = require('sequelize');
+const db =  require('../models');
+const UserModel = require('../entities/pf_user');
 
 const authServices = {
     register: async (body) => {
@@ -14,9 +17,9 @@ const authServices = {
         };
         let data;
         let dataUpdate;
-        const user = await coreModels.users.findAll({
+        const user = await coreModels.pf_users.findAll({
             where: {
-                username: body.username
+                USERNAME: body.username
             }
         })
         if(user.length > 0) {
@@ -26,17 +29,16 @@ const authServices = {
         }
         let encryptedPassword = await bcrypt.hash(body.password, 10);
 
-        
-        
         try {
-            data = await coreModels.users.create({
-                employeeId: body.employeeId,
-                username: body.username,
-                password: encryptedPassword,
-                email: body.email,
-                roleId: 3,
-                allow: 1,
-                status: 1,
+            data = await coreModels.pf_users.create({
+                EMPLOYEE_ID: body.employeeId,
+                USERNAME: body.username,
+                PASSWORD: encryptedPassword,
+                EMAIL: body.email,
+                ROLE_ID: 3,
+                POSITION_ID: 3,
+                ALLOW: 1,
+                STATUS: 1,
             })
         } catch (error) {
             console.log(error);
@@ -45,17 +47,17 @@ const authServices = {
         let username = body.username;
         try {
             const token = jwt.sign(
-                { user_id: data.dataValues.id, username },
+                { user_id: data.dataValues.ID, username },
                 configs.jwt.secret,
                 {
                   expiresIn: Number(configs.jwt.ttl),
                 }
             );
-            dataUpdate = await coreModels.users.update({
-                token: token,
-                updatedAt: new Date()
+            dataUpdate = await coreModels.pf_users.update({
+                TOKEN: token,
+                UPDATE_AT: new Date()
             },{
-                where: {id: data.dataValues.id}
+                where: {ID: data.dataValues.ID}
             })
         } catch (error) {
             console.log(error);
@@ -77,50 +79,38 @@ const authServices = {
             data: null,
             msg: 'Login error'
         }
-        let user = await coreModels.users.findAll({
-            where: {
-                username: body.username
-            }
-        })
+        let user = await db.sequelize.query(`select * from pf_users a where a.USERNAME = '${body.username}'`, { type: QueryTypes.SELECT });
+        
         if(!user) {
             log.code = 201;
             log.msg = 'User not exits';
             return log;
         }
         if(user.length > 0){
-            if (user && (await bcrypt.compare(body.password, user[0].dataValues.password))) {
+            if (user && (await bcrypt.compare(body.password, user[0].PASSWORD))) {
                 try {
                     let username = body.username;
-
                     let numberRandom = Math.floor(Math.random() * 20);
                     let tokenRefresh = await bcrypt.hash(`${configs.jwt.secret_refresh}${body.username}${numberRandom}`, 10);
                     
                     token = jwt.sign(
-                        { user_id: user[0].dataValues.id, username },
+                        { user_id: user[0].ID, username },
                         configs.jwt.secret,
                         {
                           expiresIn: Number(configs.jwt.ttl),
                         }
                     );
-                    tokenUpdate = await coreModels.users.update({
-                        token: token,
-                        tokenRefresh: tokenRefresh,
-                        updatedAt: new Date()
-                    },{
-                        where: {id: user[0].dataValues.id}
-                    })
+                    tokenUpdate = await db.sequelize.query(`update pf_users set TOKEN='${String(token)}', TOKEN_REFRESH= '${String(tokenRefresh)}', UPDATE_AT= SYSDATETIME() where ID = '${user[0].ID}'`, { type: QueryTypes.SELECT });
 
-                    user = await coreModels.users.findAll({
-                        where: {
-                            username: username
-                        }
-                    })
+                    user = await db.sequelize.query(`select * from pf_users a where a.USERNAME = '${body.username}'`, { type: QueryTypes.SELECT });
 
-                    user[0].dataValues.token = token;
-                    log.data = user[0].dataValues;
+                    user[0].TOKEN = token;
+                    user[0].password = null;
+                    log.data = new UserModel(user[0]);
                     log.status = 1;
                     log.code = 200;
                     log.msg = 'Login success';
+                    console.log(log);
                 }
                 catch(error) {
                     console.log(error);
@@ -140,20 +130,12 @@ const authServices = {
             code: 400,
             status: 0
         }
-        const user = await coreModels.users.findAll({
-            where: {
-                id: body.id
-            }
-        })
-        if (user && (await bcrypt.compare(body.oldPassword, user[0].dataValues.password))) {
+        let user = await db.sequelize.query(`select * from pf_users a where a.ID = '${body.id}'`, { type: QueryTypes.SELECT });
+
+        if (user && (await bcrypt.compare(body.oldPassword, user[0].PASSWORD))) {
             try {
                 let encryptedPassword = await bcrypt.hash(body.newPassword, 10);
-                passwordUpdate = await coreModels.users.update({
-                    password: encryptedPassword,
-                    updatedAt: new Date()
-                },{
-                    where: {id: body.id}
-                })
+                passwordUpdate = db.sequelize.query(`update pf_users set PASSWORD = '${encryptedPassword}', UPDATE_AT=SYSDATETIME() WHERE ID = ${body.id}`, { type: QueryTypes.SELECT });
             }
             catch(error) {
                 console.log(error);
@@ -169,37 +151,31 @@ const authServices = {
         }
     },
     infor: async (userId) => {
+        let newUser = null;
         let checkReturn = {
             code: 400,
             status: 0,
             data: {}
         }
         if(userId) {
-            const user = await coreModels.users.findAll({
-                where: {
-                    id: userId
-                }
-            })
+
+            let user = await db.sequelize.query(`select * from pf_users a where a.ID = '${userId}'`, { type: QueryTypes.SELECT });
             if(user == [] || user == '' || user == null || user == undefined) {
                 checkReturn.code = 200;
                 return checkReturn;
             }
             checkReturn.code = 200;
             checkReturn.status = 1;
-            if(user[0]?.dataValues) {
-                checkReturn.data['id'] = user[0].dataValues['id'];
-                checkReturn.data['employeeId'] = user[0].dataValues['employeeId'];
-                checkReturn.data['email'] = user[0].dataValues['email'];
-                checkReturn.data['username'] = user[0].dataValues['username'];
-                checkReturn.data['roleId'] = user[0].dataValues['roleId'];
-                checkReturn.data['status'] = user[0].dataValues['status'];
-                checkReturn.data['createdAt'] = user[0].dataValues['createdAt'];
-                checkReturn.data['updatedAt'] = user[0].dataValues['updatedAt'];
+            if(user[0]) {
+                user[0]['PASSWORD'] = null;
+                user[0]['ROLE_ID'] = null;
+                user[0]['POSITION_ID'] = null;
+                newUser = new UserModel(user[0]);
             }
             
-            return checkReturn;
+            return newUser;
         }
-        return checkReturn
+        return newUser
     },
 
     refreshToken: async (body) => {
@@ -211,40 +187,28 @@ const authServices = {
         };
 
         try {
-            let user = await coreModels.users.findAll({
-                where: {
-                    id: body.id
-                }
-            })
+            let user = await db.sequelize.query(`select * from pf_users a where a.ID = '${body.id}'`, { type: QueryTypes.SELECT });
 
-            if(user && user[0]?.dataValues.username == body.username) {
-                if(user[0].dataValues.tokenRefresh == body.refreshToken) {
+            if(user && user[0].USERNAME == body.username) {
+                if(user[0].TOKEN_REFRESH == body.refreshToken) {
                     let username = body.username;
                     let token = jwt.sign(
-                        { user_id: user[0].dataValues.id, username },
+                        { user_id: user[0].ID, username },
                         configs.jwt.secret,
                         {
                           expiresIn: Number(configs.jwt.ttl),
                         }
                     );
 
-                    tokenUpdate = await coreModels.users.update({
-                        token: token,
-                        updatedAt: new Date()
-                    },{
-                        where: {id: user[0].dataValues.id}
-                    })
+                    tokenUpdate = await db.sequelize.query(`update pf_users set TOKEN='${String(token)}', UPDATE_AT= SYSDATETIME() where ID = '${user[0].ID}'`, { type: QueryTypes.SELECT });
 
-                    user = await coreModels.users.findAll({
-                        where: {
-                            id: body.id
-                        }
-                    })
+                    user = await db.sequelize.query(`select * from pf_users a where a.ID = '${body.id}'`, { type: QueryTypes.SELECT });
 
+                    user[0].password = null;
                     log.code = '200';
                     log.status = 1;
                     log.msg = 'Token refresh success';
-                    log.data = user[0].dataValues;
+                    log.data = new UserModel(user[0]);
                 }
                 else {
                     log.code = '200';

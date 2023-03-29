@@ -26,8 +26,8 @@ export class HostingModel {
 
     constructor(data: any) {
         this.id = String(data.id) || '';
-        this.ipaddress = data.iPAddress || '';
-        this.ipaddressf5 = data.iPAddressF5 || '';
+        this.ipaddress = data.ipaddress || '';
+        this.ipaddressf5 = data.ipaddressf5 || '';
         this.hostname = data.hostname || '';
         this.port = String(data.port) ?? '';
         this.priority = data.priority || '';
@@ -44,8 +44,8 @@ export class HostingModel {
         this.server = String(data.server) ?? null;
         this.createdat = data.createdAt || '';
         this.updatedat = data.updatedAt || '';
-        this.vlanName = data.nameVlan || '';
-        this.serverName = data.nameServer || '';
-        this.portName = data.namePort || '';
+        this.vlanName = data.vlanName || '';
+        this.serverName = data.serverName || '';
+        this.portName = data.portName || '';
     }
 }

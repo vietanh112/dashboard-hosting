@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('hosting', {
+        await queryInterface.createTable('nw_hosting', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
@@ -56,17 +56,17 @@ module.exports = {
             server: {
                 type: Sequelize.INTEGER
             },
-            createdAt: {
+            CREATE_AT: {
                 allowNull: false,
                 type: Sequelize.DATE
             },
-            updatedAt: {
+            UPDATE_AT: {
                 allowNull: false,
                 type: Sequelize.DATE
             }
         }, {charset: 'utf8', collate: 'utf8_unicode_ci'});
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('hosting');
+        await queryInterface.dropTable('nw_hosting');
     }
 };

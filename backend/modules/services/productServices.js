@@ -3,6 +3,10 @@ const coreModels = require('../models/index');
 const { Op } = require("sequelize");
 const db =  require('../models');
 const { QueryTypes } = require('sequelize');
+const HostingModel = require('../entities/nw_hosting');
+const VlanModel = require('../entities/nw_vlan');
+const ServerModel = require('../entities/nw_server');
+const PortModel = require('../entities/nw_port');
 
 const productServices = {
     getList: async (criteria, page, limit) => {
@@ -24,7 +28,7 @@ const productServices = {
             strQuery = 'where ';
             for(let i = 0; i < arrayKeys.length; i++) {
                 if(arrayKeys[i] == 'keyword'){
-                    strQuery = strQuery + `(a.iPAddress like '%${arrayValues[i]}%' OR a.hostName like '%${arrayValues[i]}%')`;
+                    strQuery = strQuery + `(a.IPADDRESS like '%${arrayValues[i]}%' OR a.HOSTNAME like '%${arrayValues[i]}%')`;
                 }
                 else {
                     strQuery = strQuery + `a.${arrayKeys[i]} = '${arrayValues[i]}'`;
@@ -35,139 +39,31 @@ const productServices = {
             }
         }
         try {
-            data = await db.sequelize.query(`select a.*, b.name as nameServer, c.name as nameVlan, d.port as namePort 
-                                        from hosting a 
-                                        left join (select name, id from server) b on a.server = b.id 
-                                        left join (select name, id from vlan) c on a.vlan = c.id 
-                                        left join (select port, id from port) d on a.port = d.id 
-                                        ${strQuery} order by createdAt DESC
+            data = await db.sequelize.query(`select a.*, b.NAME as NAME_SERVER, c.NAME as NAME_VLAN, d.port as NAME_PORT 
+                                        from nw_hosting a 
+                                        left join (select NAME, ID from nw_server) b on a.SERVER = b.ID 
+                                        left join (select NAME, ID from nw_vlan) c on a.VLAN = c.ID 
+                                        left join (select PORT, ID from nw_port) d on a.PORT = d.ID 
+                                        ${strQuery} order by CREATE_AT DESC
                                         offset ${Number(limit) * Number(page)} rows
                                         fetch next ${limit} rows only`, { type: QueryTypes.SELECT });
+
+            let newData = [];
+            if (data.length > 0) {
+                for(let i of data) {
+                    newData.push(new HostingModel(i));
+                }
+            }
             total = data.length;
-            // if (criteria) {
-            //     if(Object.keys(criteria).length > 2) {
-            //         let newCriteria = {};
-            //         for (const [key, value] of Object.entries(criteria)) {
-            //             if(key != 'keyword') {
-            //                 newCriteria[key] = value
-            //             }
-            //         }
-            //         if('keyword' in criteria) {
-            //             data = await coreModels.hosting.findAll({
-            //                 where: {
-            //                     [Op.and]: [
-            //                         {
-            //                             [Op.or]: {
-            //                                 iPAddress: {
-            //                                     [Op.like]: `%${criteria.keyword}%`
-            //                                 },
-            //                                 hostName: {
-            //                                     [Op.like]: `%${criteria.keyword}%`
-            //                                 }
-            //                             }
-            //                         },
-            //                         newCriteria
-            //                     ]   
-            //                 },
-            //                 limit: limit,
-            //                 offset: Number(limit) * Number(page)
-            //             });
-            //             total = await coreModels.hosting.count({
-            //                 where: {
-            //                     [Op.and]: [
-            //                         {
-            //                             [Op.or]: {
-            //                                 iPAddress: {
-            //                                     [Op.like]: `%${criteria.keyword}%`
-            //                                 },
-            //                                 hostName: {
-            //                                     [Op.like]: `%${criteria.keyword}%`
-            //                                 }
-            //                             }
-            //                         },
-            //                         newCriteria
-            //                     ]   
-            //                 },
-            //             })
-            //         }
-            //         else {
-            //             data = await coreModels.hosting.findAll({
-            //                 where: {
-            //                     [Op.and]: [
-            //                         newCriteria
-            //                     ]
-            //                 },
-            //                 limit: limit,
-            //                 offset: Number(limit) * Number(page)
-            //             });
-            //             total = await coreModels.hosting.count({
-            //                 where: {
-            //                     [Op.and]: [
-            //                         newCriteria
-            //                     ]
-            //                 },
-            //             })
-            //         }
-            //     }
-            //     else {
-            //         if(criteria.keyword) {
-            //             data = await coreModels.hosting.findAll({
-            //                 where: {
-            //                     [Op.or]: {
-            //                         iPAddress: {
-            //                             [Op.like]: `%${criteria.keyword}%`
-            //                         },
-            //                         hostName: {
-            //                             [Op.like]: `%${criteria.keyword}%`
-            //                         }
-            //                     }
-            //                 },
-            //                 limit: limit,
-            //                 offset: Number(limit) * Number(page)
-            //             })
-            //             total = await coreModels.hosting.count({
-            //                 where: {
-            //                     [Op.or]: {
-            //                         iPAddress: {
-            //                             [Op.like]: `%${criteria.keyword}%`
-            //                         },
-            //                         hostName: {
-            //                             [Op.like]: `%${criteria.keyword}%`
-            //                         }
-            //                     }
-            //                 },
-            //             })
-            //         }
-            //         else {
-            //             data = await coreModels.hosting.findAll(
-            //                 {
-            //                     where: criteria,
-            //                     limit: limit,
-            //                     offset: Number(limit) * Number(page)
-            //                 }
-            //             );
-            //             total = await coreModels.hosting.count({
-            //                 where: criteria,
-            //             })
-            //         }
-            //     }
-            // }
-            // else {
-            //     data = await coreModels.hosting.findAll({
-            //         limit: limit,
-            //         offset: Number(limit) * Number(page)
-            //     });
-            //     total = await coreModels.hosting.count();
-            // }
             log.code = 200;
             log.status = 1;
             log.msg = "query success";
-            log.data.data = data;
+            log.data.data = newData;
             log.data.total = total;
 
         } catch (error) {
             log.code = 201;
-            log.msg = "query failed";
+            log.msg = "error";
         }
         return log;
     },
@@ -178,24 +74,7 @@ const productServices = {
             status: 0
         };
         try {
-            const data = await coreModels.hosting.create({
-                iPAddress: body.ipaddress,
-                iPAddressF5: body.ipaddressf5,
-                hostname: body.hostname,
-                port: Number(body.port),
-                priority: body.priority,
-                env: body.env,
-                type: body.type,
-                middleware: body.middleware,
-                information: body.information,
-                machineType: body.machineType,
-                os: body.os,
-                note: body.note,
-                na: body.na,
-                status: body.status,
-                vlan: body.vlan,
-                server: body.server
-            })
+            let data = await db.sequelize.query(`INSERT INTO nw_hosting VALUES ('${body.ipaddress}', '${body.ipaddressf5}', '${body.hostname}', ${Number(body.port)}, '${body.priority}', '${body.env}', '${body.type}', '${body.middleware}', N'${body.information}', '${body.machineType}', '${body.os}', '${body.note}', '${body.na}', ${body.status}, ${body.vlan}, ${body.server}, GETDATE() , GETDATE() )`, { type: QueryTypes.SELECT });
             if(data) {
                 log.code = 200;
                 log.msg = 'success';
@@ -205,7 +84,7 @@ const productServices = {
         } catch (error) {
             console.log(error);
             log.code = 200;
-            log.msg = 'query failed';
+            log.msg = 'error';
             return log
         }
     },
@@ -216,11 +95,7 @@ const productServices = {
         };
         if(hostingId) {
             try {
-                const data = await coreModels.hosting.destroy({
-                    where: {
-                        id: hostingId
-                    }
-                })
+                let data = await db.sequelize.query(`delete nw_hosting where ID = ${hostingId}`, { type: QueryTypes.SELECT });
                 if(data) {
                     log.code = 200;
                     log.msg = 'success';
@@ -239,30 +114,8 @@ const productServices = {
             msg: 'error'
         };
         try {
-            const data = await coreModels.hosting.update(
-                {
-                    iPAddress: body.ipaddress,
-                    iPAddressF5: body.ipaddressf5,
-                    hostname: body.hostname,
-                    port: Number(body.port),
-                    priority: body.priority,
-                    env: body.env,
-                    type: body.type,
-                    middleware: body.middleware,
-                    information: body.information,
-                    machineType: body.machineType,
-                    os: body.os,
-                    note: body.note,
-                    na: body.na,
-                    status: body.status,
-                    vlan: body.vlan,
-                    server: body.server,
-                    updatedAt: new Date()
-                },
-                {
-                    where: {id: hostingId}
-                }
-            )
+            let data = await db.sequelize.query(`UPDATE nw_hosting SET IPADDRESS='${body.ipaddress}', IPADDRESSF5='${body.ipaddressf5}', HOSTNAME='${body.hostname}', PORT=${Number(body.port)}, PRIORITY=${body.priority}', ENV='${body.env}', TYPE='${body.type}', MIDDLEWARE='${body.middleware}', INFORMATION=N'${body.information}', MACHINE_TYPE='${body.machineType}', OS='${body.os}', NOTE='${body.note}', NA='${body.na}', STATUS=${body.status}, VLAN=${body.vlan}, SERVER=${body.server}, CREATE_AT=GETDATE()  WHERE ID = ${hostingId}`, { type: QueryTypes.SELECT });
+            
             if(data) {
                 log.code = 200;
                 log.msg = 'success';
@@ -294,7 +147,7 @@ const productServices = {
             strQuery = 'where ';
             for(let i = 0; i < arrayKeys.length; i++) {
                 if(arrayKeys[i] == 'keyword'){
-                    strQuery = strQuery + `a.name like '%${arrayValues[i]}%'`;
+                    strQuery = strQuery + `a.NAME like '%${arrayValues[i]}%'`;
                 }
                 else {
                     strQuery = strQuery + `a.${arrayKeys[i]} = '${arrayValues[i]}'`;
@@ -305,23 +158,28 @@ const productServices = {
             }
         }
         try {
-            data = await db.sequelize.query(`select a.*, b.name as nameServer 
-                                        from vlan a 
-                                        left join (select name, id from server) b on a.server = b.id 
-                                        ${strQuery} order by createdAt DESC
+            data = await db.sequelize.query(`select a.*, b.NAME as NAME_SERVER 
+                                        from nw_vlan a 
+                                        left join (select NAME, ID from nw_server) b on a.SERVER = b.ID 
+                                        ${strQuery} order by CREATE_AT DESC
                                         offset ${Number(limit) * Number(page)} rows
                                         fetch next ${limit} rows only`, { type: QueryTypes.SELECT });
         } catch (error) {
             res.code = '200';
-            res.msg = 'Query failed';
+            res.msg = 'error';
             return res
         }
         total =  data.length;
-
+        let newData = [];
+        if(data.length > 0){
+            for(let i of data) {
+                newData.push(new VlanModel(i))
+            }
+        }
         res.status = 1;
         res.code = 200;
         res.msg = 'success';
-        res.data.data = data;
+        res.data.data = newData;
         res.data.total = total;
         return res;
     },
@@ -332,25 +190,15 @@ const productServices = {
             status: 0,
         };
         try {
-            let data = await coreModels.vlan.update(
-                {
-                    name: body.name,
-                    status: body.status,
-                    description: body.description,
-                    server: body.server,
-                    updatedAt: new Date()
-                },
-                {
-                    where: {id: vlanId}
-                }
-            )
+            let data = await db.sequelize.query(`UPDATE nw_vlan SET NAME='${body.name}', STATUS='${body.status}', DESCRIPTION=N'${body.description}', SERVER = '${body.server}', UPDATE_AT = GETDATE()  WHERE ID = ${vlanId}`, { type: QueryTypes.SELECT });
+            
             res.code = 200;
             res.msg = 'success';
             res.status = 1;
             return res
         } catch (error) {
             res.code = 200;
-            res.msg = 'query failed';
+            res.msg = 'error';
             return res
         }
     },
@@ -361,13 +209,7 @@ const productServices = {
             status: 0,
         };
         try {
-            let data = await coreModels.vlan.create({
-                name: body.name,
-                status: body.status,
-                description: body.description,
-                status: body.status,
-                server: body.server
-            })
+            let data = await db.sequelize.query(`INSERT INTO nw_vlan VALUES ('${body.name}', N'${body.description}', '${body.status}', '${body.server}', GETDATE() , GETDATE() )`, { type: QueryTypes.SELECT });
            
             res.code = 200;
             res.msg = 'success';
@@ -375,7 +217,7 @@ const productServices = {
             return res
         } catch (error) {
             res.code = 200;
-            res.msg = 'query failed'; 
+            res.msg = 'error'; 
         }
         return res
     },
@@ -387,18 +229,14 @@ const productServices = {
         };
         if(vlanId) {
             try {
-                let data = await coreModels.vlan.destroy({
-                    where: {
-                        id: vlanId
-                    }
-                })
+                let data = await db.sequelize.query(`DELETE nw_vlan Where ID = '${vlanId}'`, { type: QueryTypes.SELECT });
                 res.code = 200;
                 res.msg = 'success';
                 res.status = 1;
                 return res
             } catch (error) {
                 res.code = 200;
-                res.msg = 'query failed'
+                res.msg = 'error'
                 return res;
             }
         }
@@ -425,7 +263,7 @@ const productServices = {
             strQuery = 'where ';
             for(let i = 0; i < arrayKeys.length; i++) {
                 if(arrayKeys[i] == 'keyword'){
-                    strQuery = strQuery + `a.name like '%${arrayValues[i]}%'`;
+                    strQuery = strQuery + `a.NAME like '%${arrayValues[i]}%'`;
                 }
                 else {
                     strQuery = strQuery + `a.${arrayKeys[i]} = '${arrayValues[i]}'`;
@@ -437,8 +275,8 @@ const productServices = {
         }
 
         try {
-            data = await db.sequelize.query(`select * from server a 
-                                        ${strQuery} order by createdAt DESC
+            data = await db.sequelize.query(`select * from nw_server a 
+                                        ${strQuery} order by CREATE_AT DESC
                                         offset ${Number(limit) * Number(page)} rows
                                         fetch next ${limit} rows only`, { type: QueryTypes.SELECT });
         } catch (error) {
@@ -446,13 +284,18 @@ const productServices = {
             res.code = 200;
             res.data.data = [];
             res.data.total = 0;
-            res.msg = 'query failed';
+            res.msg = 'error';
             return res;
         }
 
         total =  data.length;
-
-        res.data.data = data;
+        let newData = [];
+        if(data.length > 0) {
+            for(let i of data) {
+                newData.push(new ServerModel(i));
+            }
+        }
+        res.data.data = newData;
         res.data.total = total;
         res.status = 1;
         res.code = 200;
@@ -468,18 +311,14 @@ const productServices = {
         };
         if(serverId) {
             try {
-                let data = await coreModels.server.destroy({
-                    where: {
-                        id: serverId
-                    }
-                })
+                let data = await db.sequelize.query(`DELETE nw_server Where ID = '${serverId}'`, { type: QueryTypes.SELECT });
                 res.code = 200;
                 res.msg = 'success';
                 res.status = '1';
                 return res
             } catch (error) {
                 res.code = 200;
-                res.msg = 'query failed';
+                res.msg = 'error';
                 return res;
             }
         }
@@ -492,23 +331,14 @@ const productServices = {
             status: 0
         };
         try {
-            let data = await coreModels.server.update(
-                {
-                    name: body.name,
-                    status: body.status,
-                    description: body.description,
-                    updatedAt: new Date()
-                },
-                {
-                    where: {id: serverId}
-                }
-            )
+            let data = await db.sequelize.query(`UPDATE nw_server SET NAME='${body.name}', STATUS='${body.status}', DESCRIPTION=N'${body.description}', UPDATE_AT = GETDATE()  WHERE ID = ${serverId}`, { type: QueryTypes.SELECT });
+            
             res.code = 200;
             res.msg = 'success';
             res.status = 1
         } catch (error) {
             res.code = 200;
-            res.msg = 'query failed';
+            res.msg = 'error';
         }
         return res
     },
@@ -519,18 +349,14 @@ const productServices = {
             status: 0
         };
         try {
-            let data = await coreModels.server.create({
-                name: body.name,
-                status: body.status,
-                description: body.description,
-                status: body.status
-            })
+            let data = await db.sequelize.query(`INSERT INTO nw_server VALUES ('${body.name}', N'${body.description}', '${body.status}', GETDATE() , GETDATE() )`, { type: QueryTypes.SELECT });
+           
             res.code = 200;
             res.msg = 'success';
             res.status = 1
         } catch (error) {
             res.code = 200;
-            res.msg = 'query failed';
+            res.msg = 'error';
         }
         return res
     },
@@ -555,7 +381,7 @@ const productServices = {
             strQuery = 'where ';
             for(let i = 0; i < arrayKeys.length; i++) {
                 if(arrayKeys[i] == 'keyword'){
-                    strQuery = strQuery + `a.port like '%${arrayValues[i]}%'`;
+                    strQuery = strQuery + `a.PORT like '%${arrayValues[i]}%'`;
                 }
                 else {
                     strQuery = strQuery + `a.${arrayKeys[i]} = '${arrayValues[i]}'`;
@@ -566,25 +392,30 @@ const productServices = {
             }
         }
         try {
-            data = await db.sequelize.query(`select a.*, b.name as nameServer 
-                                            from port a 
-                                            left join (select name, id from server) b on a.server = b.id 
-                                            ${strQuery} order by createdAt DESC
+            data = await db.sequelize.query(`select a.*, b.NAME as NAME_SERVER 
+                                            from nw_port a 
+                                            left join (select NAME, ID from nw_server) b on a.SERVER = b.ID 
+                                            ${strQuery} order by CREATE_AT DESC
                                             offset ${Number(limit) * Number(page)} rows
                                             fetch next ${limit} rows only`, { type: QueryTypes.SELECT });
             total = await data.length;
-
+            let newData = [];
+            if(data.length > 0){
+                for(let i of data) {
+                    newData.push(new PortModel(i))
+                }
+            }
             res.status = 1;
             res.code = 200;
             res.msg = 'success';
-            res.data.data = data;
+            res.data.data = newData;
             res.data.total = total;
 
             return res;
         } catch (error) {
             console.log(error);
             res.code = 200;
-            res.msg = 'query failed';
+            res.msg = 'error';
             return res
         }
     },
@@ -596,11 +427,7 @@ const productServices = {
         };
         if(portId) {
             try {
-                let data = await coreModels.port.destroy({
-                    where: {
-                        id: portId
-                    }
-                })
+                let data = await db.sequelize.query(`DELETE nw_port Where ID = '${portId}'`, { type: QueryTypes.SELECT });
                 
                 res.code = 200;
                 res.msg = 'success';
@@ -608,7 +435,7 @@ const productServices = {
                 return res
             } catch (error) {
                 res.code = 200;
-                res.msg = 'query failed'
+                res.msg = 'error'
                 return res;
             }
         }
@@ -621,18 +448,7 @@ const productServices = {
             status: 0
         };
         try {
-            let data = await coreModels.port.update(
-                {
-                    port: body.port,
-                    status: body.status,
-                    description: body.description,
-                    server: body.server,
-                    updatedAt: new Date()
-                },
-                {
-                    where: {id: portId}
-                }
-            )
+            let data = await db.sequelize.query(`UPDATE nw_port SET PORT='${body.port}', STATUS='${body.status}', DESCRIPTION=N'${body.description}', SERVER = '${body.server}', UPDATE_AT = GETDATE()  WHERE ID = ${portId}`, { type: QueryTypes.SELECT });
             
             res.code = 200;
             res.msg = 'success';
@@ -640,7 +456,7 @@ const productServices = {
         } catch (error) {
             console.log(error);
             res.code = 200;
-            res.msg = 'query failed';
+            res.msg = 'error';
         }
         return res
     },
@@ -651,20 +467,15 @@ const productServices = {
             status: 0
         };
         try {
-            let data = await coreModels.port.create({
-                port: body.port,
-                status: body.status,
-                description: body.description,
-                status: body.status,
-                server: body.server
-            })
+            let data = await db.sequelize.query(`INSERT INTO nw_port VALUES ('${body.port}', N'${body.description}', '${body.status}', '${body.server}', GETDATE() , GETDATE() )`, { type: QueryTypes.SELECT });
+           
             res.code = 200;
             res.msg = 'success';
             res.status = 1;
         } catch (error) {
             console.log(error);
             res.code = 200;
-            res.msg = 'query failed';
+            res.msg = 'error';
         }
         return res
     },

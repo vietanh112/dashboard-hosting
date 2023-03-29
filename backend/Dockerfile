@@ -6,7 +6,7 @@ COPY ["package.json", "package-lock.json*", "./"]
 
 RUN npm install
 
-COPY . .
+ADD . .
 
 EXPOSE 4001
 

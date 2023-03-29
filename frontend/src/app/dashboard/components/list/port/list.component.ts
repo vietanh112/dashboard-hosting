@@ -31,6 +31,7 @@ export class DashboardListPort implements OnInit, AfterViewInit {
     limit: number = 10;
     listPort: any = [];
     listServer: any = [];
+    listServerBase: any = [];
     listVlan: any = [];
     hosting: HostingModel = undefined;
     port: any = undefined;

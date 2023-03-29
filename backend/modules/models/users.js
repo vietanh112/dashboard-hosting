@@ -1,7 +1,7 @@
 'use strict';
 const {Model} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class users extends Model {
+    class pf_users extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -10,28 +10,29 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
         }
     };
-    users.init({
-        id: {
+    pf_users.init({
+        ID: {
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
             type: DataTypes.INTEGER
         },
-        employeeId: DataTypes.STRING,
-        username: DataTypes.STRING,
-        password: DataTypes.STRING,
-        email: DataTypes.STRING,
-        roleId: DataTypes.INTEGER,
-        allow: DataTypes.INTEGER,
-        status: DataTypes.INTEGER,
-        token: DataTypes.STRING,
-        tokenRefresh: DataTypes.STRING,
-        createdAt: DataTypes.DATE,
-        updatedAt: DataTypes.DATE
+        EMPLOYEE_ID: DataTypes.STRING,
+        USERNAME: DataTypes.STRING,
+        PASSWORD: DataTypes.STRING,
+        EMAIL: DataTypes.STRING,
+        ROLE_ID: DataTypes.INTEGER,
+        POSITION_ID: DataTypes.INTEGER,
+        ALLOW: DataTypes.INTEGER,
+        STATUS: DataTypes.INTEGER,
+        TOKEN: DataTypes.STRING,
+        TOKEN_REFRESH: DataTypes.STRING,
+        CREATE_AT: DataTypes.DATE,
+        UPDATE_AT: DataTypes.DATE
     }, {
         sequelize,
-        tableName: 'users',
-        modelName: 'users',
+        tableName: 'pf_users',
+        modelName: 'pf_users',
     });
-    return users;
+    return pf_users;
 };

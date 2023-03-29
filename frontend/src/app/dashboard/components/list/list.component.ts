@@ -220,6 +220,8 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
             this.loadingState = false;
             this.listHosting = res.list;
             this.totalHosting = res.total;
+            console.log(this.listHosting);
+            
         })
         const params = [];
         for (const i in queries) {

@@ -16,8 +16,8 @@ export class VlanModel {
         this.description = data.description || '';
         this.server = String(data.server) ?? null;
         this.status = String(data.status) ?? null;
+        this.nameServer = data.nameServer || '';
         this.createdAt = data.createdAt || '';
         this.updatedAt = data.updatedAt || '';
-        this.nameServer = data.nameServer || '';
     }
 }

@@ -108,6 +108,7 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
             this.getSearch();
             this.getList();
             this.getInfoModal();
+            
         }, 0)
     }
 
@@ -132,7 +133,7 @@ export class DashboardListVlan implements OnInit, AfterViewInit {
 
     getInfoModal() {
         this.searchService.listServer({}).subscribe(res => {
-            this.listServerModal = res.list;
+            this.listServerModal = res;
         })
     }
 

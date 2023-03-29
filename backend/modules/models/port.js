@@ -1,7 +1,7 @@
 'use strict';
 const {Model} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class port extends Model {
+    class nw_port extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -10,23 +10,23 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
         }
     };
-    port.init({
-        id: {
+    nw_port.init({
+        ID: {
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
             type: DataTypes.INTEGER
         },
-        port: DataTypes.STRING,
-        description: DataTypes.STRING,
-        status: DataTypes.INTEGER,
-        server: DataTypes.INTEGER,
-        createdAt: DataTypes.DATE,
-        updatedAt: DataTypes.DATE
+        PORT: DataTypes.STRING,
+        DESCRIPTION: DataTypes.STRING,
+        STATUS: DataTypes.INTEGER,
+        SERVER: DataTypes.INTEGER,
+        CREATE_AT: DataTypes.DATE,
+        UPDATE_AT: DataTypes.DATE
     }, {
         sequelize,
-        tableName: 'port',
-        modelName: 'port',
+        tableName: 'nw_port',
+        modelName: 'nw_port',
     });
-    return port;
+    return nw_port;
 };

@@ -18,7 +18,6 @@ export class AuthGuard implements CanActivate {
 
         if (currentUser && (currentUser.createdTime + currentUser.expiresIn) > Math.round(date.getTime()/1000) && currentUser['status'] == 1) {
             let expiresOut = currentUser.createdTime + currentUser.expiresIn;
-
             if((expiresOut - environment.jwt.timeRefresh) < Math.round(date.getTime()/1000)) {
                 let body = {
                     id: currentUser.id,

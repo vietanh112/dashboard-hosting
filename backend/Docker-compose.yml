@@ -1,0 +1,41 @@
+version: '3'
+networks:
+  app-tier:
+services:
+  # mssql:
+  #   container_name: dashboard-mssql
+  #   ports:
+  #       - '1433:1433'
+  #   networks:
+  #     - app-tier
+  #   build:
+  #     context: ./mssql
+  #   healthcheck:
+  #     test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -Q "SELECT 1" || exit 1
+  #     interval: 10s
+  #     timeout: 3s
+  #     retries: 10
+  #     start_period: 10s
+  #   volumes:
+  #     - ./mssql/mssql_data/mssql_data:/mssql/var/opt/mssql/data
+  #     - ./mssql/mssql_data/mssql_log:/mssql/var/opt/mssql/log
+  #     - ./mssql/mssql_data/mssql_backup:/mssql/var/opt/mssql/backup
+  #   environment:
+  #       - ACCEPT_EULA=Y
+  #       - MSSQL_PID=Express
+  #       - MSSQL_SA_PASSWORD=Vanhbeo123!
+  #       - MSSQL_DATA_DIR=/mssql/var/opt/mssql/data
+  #       - MSSQL_LOG_DIR=/mssql/var/opt/mssql/log
+  #       - MSSQL_BACKUP_DIR=/mssql/var/opt/mssql/backup
+  app:
+    container_name: nodejs-app
+    build:
+      context: .
+    image: 'anhnhv/nodeapp'
+    ports:
+        - '4001:4001'
+    depends_on:
+      mssql:
+        condition: service_healthy
+    networks:
+      - app-tier

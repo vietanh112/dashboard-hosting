@@ -1,7 +1,7 @@
 'use strict';
 const {Model} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class hosting extends Model {
+    class nw_hosting extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -10,35 +10,35 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
         }
     };
-    hosting.init({
-        id: {
+    nw_hosting.init({
+        ID: {
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
             type: DataTypes.INTEGER
         },
-        iPAddress: DataTypes.STRING,
-        iPAddressF5: DataTypes.STRING,
-        hostname: DataTypes.STRING,
-        port: DataTypes.INTEGER,
-        priority: DataTypes.STRING(50),
-        env:  DataTypes.STRING(50),
-        type: DataTypes.STRING(50),
-        middleware: DataTypes.STRING(50),
-        information: DataTypes.STRING,
-        machineType: DataTypes.STRING,
-        os: DataTypes.STRING(50),
-        note: DataTypes.STRING,
-        na: DataTypes.STRING,
-        status: DataTypes.INTEGER,
-        vlan: DataTypes.INTEGER,
-        server: DataTypes.INTEGER,
-        createdAt: DataTypes.DATE,
-        updatedAt: DataTypes.DATE
+        IPADDRESS: DataTypes.STRING,
+        IPADDRESSF5: DataTypes.STRING,
+        HOSTNAME: DataTypes.STRING,
+        PORT: DataTypes.INTEGER,
+        PRIORITY: DataTypes.STRING(50),
+        ENV:  DataTypes.STRING(50),
+        TYPE: DataTypes.STRING(50),
+        MIDDLEWARE: DataTypes.STRING(50),
+        INFORMATION: DataTypes.STRING,
+        MACHINE_TYPE: DataTypes.STRING,
+        OS: DataTypes.STRING(50),
+        NOTE: DataTypes.STRING,
+        NA: DataTypes.STRING,
+        STATUS: DataTypes.INTEGER,
+        VLAN: DataTypes.INTEGER,
+        SERVER: DataTypes.INTEGER,
+        CREATE_AT: DataTypes.DATE,
+        UPDATE_AT: DataTypes.DATE
     }, {
         sequelize,
-        tableName: 'hosting',
-        modelName: 'hosting',
+        tableName: 'nw_hosting',
+        modelName: 'nw_hosting',
     });
-    return hosting;
+    return nw_hosting;
 };

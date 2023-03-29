@@ -4,6 +4,9 @@ const { Op } = require("sequelize");
 const configs = require('../../configs/configs');
 const db =  require('../models');
 const { QueryTypes } = require('sequelize');
+const VlanModel = require('../entities/nw_vlan');
+const ServerModel = require('../entities/nw_server');
+const PortModel = require('../entities/nw_port');
 
 const searchServices = {
     getList: async (type) => {
@@ -61,14 +64,14 @@ const searchServices = {
             strQuery = 'where ';
             for(let i = 0; i < arrayKeys.length; i++) {
                 if(arrayKeys[i] == 'keyword'){
-                    strQuery = strQuery + `a.port like '%${arrayValues[i]}%'`;
+                    strQuery = strQuery + `a.PORT like '%${arrayValues[i]}%'`;
                 }
                 else {
                     if(arrayValues[i] == '') {
-                        strQuery = strQuery + `a.${arrayKeys[i]} like '%${arrayValues[i]}%'`;
+                        strQuery = strQuery + `a.${arrayKeys[i].toUpperCase()} like '%${arrayValues[i]}%'`;
                     }
                     else {
-                        strQuery = strQuery + `a.${arrayKeys[i]} = '${arrayValues[i]}'`;
+                        strQuery = strQuery + `a.${arrayKeys[i].toUpperCase()} = '${arrayValues[i]}'`;
                     }
                 };
                 if(i < (arrayKeys.length - 1)) {
@@ -78,10 +81,17 @@ const searchServices = {
         }
 
         try {
-            data = await db.sequelize.query(`select a.* from port a ${strQuery} order by createdAt DESC offset 0 rows fetch next 10 rows only`, { type: QueryTypes.SELECT });
+            data = await db.sequelize.query(`select a.* from nw_port a ${strQuery} order by CREATE_AT DESC offset 0 rows fetch next 10 rows only`, { type: QueryTypes.SELECT });
+            
+            let newData = [];
+            if(data.length > 0) {
+                for (let i of data) {
+                    newData.push(new PortModel(i));
+                }
+            }
             res.code = 200;
             res.status = 1;
-            res.data = data;
+            res.data = newData;
             return res;
 
         } catch (error) {
@@ -106,14 +116,14 @@ const searchServices = {
             strQuery = 'where ';
             for(let i = 0; i < arrayKeys.length; i++) {
                 if(arrayKeys[i] == 'keyword'){
-                    strQuery = strQuery + `a.name like '%${arrayValues[i]}%'`;
+                    strQuery = strQuery + `a.NAME like '%${arrayValues[i]}%'`;
                 }
                 else {
                     if(arrayValues[i] == '') {
-                        strQuery = strQuery + `a.${arrayKeys[i]} like '%${arrayValues[i]}%'`;
+                        strQuery = strQuery + `a.${arrayKeys[i].toUpperCase()} like '%${arrayValues[i]}%'`;
                     }
                     else {
-                        strQuery = strQuery + `a.${arrayKeys[i]} = '${arrayValues[i]}'`;
+                        strQuery = strQuery + `a.${arrayKeys[i].toUpperCase()} = '${arrayValues[i]}'`;
                     }
                 };
                 if(i < (arrayKeys.length - 1)) {
@@ -123,11 +133,17 @@ const searchServices = {
         }
 
         try {
-            data = await db.sequelize.query(`select a.* from server a ${strQuery} order by createdAt DESC offset 0 rows fetch next 10 rows only`, { type: QueryTypes.SELECT });
+            data = await db.sequelize.query(`select a.* from nw_server a ${strQuery} order by CREATE_AT DESC offset 0 rows fetch next 10 rows only`, { type: QueryTypes.SELECT });
 
+            let newData = [];
+            if(data.length > 0) {
+                for (let i of data) {
+                    newData.push(new ServerModel(i));
+                }
+            }
             res.code = 200;
             res.status = 1;
-            res.data = data;
+            res.data = newData;
             return res;
 
         } catch (error) {
@@ -150,16 +166,17 @@ const searchServices = {
         let strQuery = '';
         if (arrayKeys.length == arrayValues.length && arrayKeys.length > 0) {
             strQuery = 'where ';
+            console.log(arrayKeys);
             for(let i = 0; i < arrayKeys.length; i++) {
                 if(arrayKeys[i] == 'keyword'){
-                    strQuery = strQuery + `a.name like '%${arrayValues[i]}%'`;
+                    strQuery = strQuery + `a.NAME like '%${arrayValues[i]}%'`;
                 }
                 else {
                     if(arrayValues[i] == '') {
-                        strQuery = strQuery + `a.${arrayKeys[i]} like '%${arrayValues[i]}%'`;
+                        strQuery = strQuery + `a.${arrayKeys[i].toUpperCase()} like '%${arrayValues[i]}%'`;
                     }
                     else {
-                        strQuery = strQuery + `a.${arrayKeys[i]} = '${arrayValues[i]}'`;
+                        strQuery = strQuery + `a.${arrayKeys[i].toUpperCase()} = '${arrayValues[i]}'`;
                     }
                 };
                 if(i < (arrayKeys.length - 1)) {
@@ -169,11 +186,17 @@ const searchServices = {
         }
 
         try {
-            data = await db.sequelize.query(`select a.* from vlan a ${strQuery} order by createdAt DESC offset 0 rows fetch next 10 rows only`, { type: QueryTypes.SELECT });
+            data = await db.sequelize.query(`select a.* from nw_vlan a ${strQuery} order by CREATE_AT DESC offset 0 rows fetch next 10 rows only`, { type: QueryTypes.SELECT });
 
+            let newData = [];
+            if(data.length > 0) {
+                for (let i of data) {
+                    newData.push(new VlanModel(i));
+                }
+            }
             res.code = 200;
             res.status = 1;
-            res.data = data;
+            res.data = newData;
 
             return res;
 

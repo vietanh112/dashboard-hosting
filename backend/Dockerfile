@@ -5,6 +5,8 @@ WORKDIR /usr/src/app
 COPY ["package.json", "package-lock.json*", "./"]
 
 RUN npm install
+RUN cp -r .env.example .env
+RUN cp -r configs_example configs
 
 ADD . .
 

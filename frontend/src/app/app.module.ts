@@ -10,6 +10,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { RouterModule } from '@angular/router';
 //Core components
 import {DashboardComponentLayout} from './_core/components/layout/layout.component';
+import {CoreComponentLayout} from './_core/components/layout-core/layout.component';
 import {CoreComponentSidebar} from './_core/components/sidebar/sidebar.component';
 import {CoreComponentHeader} from './_core/components/header/header.component';
 import {CoreComponentFooter} from './_core/components/footer/footer.component';
@@ -27,19 +28,22 @@ import {AuthComponentHeader} from './_core/components/header-auth/header.compone
 
 import {JwtInterceptor} from './_helpers/jwt.interceptor';
 
+
 @NgModule({
   declarations: [
     AppComponent,
     //Core Components
     DashboardComponentLayout,
+    CoreComponentLayout,
     CoreComponentSidebar,
     CoreComponentHeader,
     CoreComponentFooter,
-    AuthComponentChangePassword,
-    AuthComponentInfor,
+    
     //auth
     AuthComponentLayout,
-    AuthComponentHeader
+    AuthComponentHeader,
+    AuthComponentChangePassword,
+    AuthComponentInfor,
   ],
   imports: [
     BrowserModule,

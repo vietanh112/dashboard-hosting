@@ -204,7 +204,117 @@ const searchServices = {
             console.log(error);
             return res
         }
+    },
+
+    getRole: async (criteria) => {
+        let data;
+        let res = {
+            status: 0,
+            code: 204,
+            msg: 'success',
+            data: []
+        }
+
+        let arrayKeys = Object.keys(criteria);
+        let arrayValues = Object.values(criteria);
+        let strQuery = '';
+        if (arrayKeys.length == arrayValues.length && arrayKeys.length > 0) {
+            strQuery = 'where ';
+            console.log(arrayKeys);
+            for(let i = 0; i < arrayKeys.length; i++) {
+                if(arrayKeys[i] == 'keyword'){
+                    strQuery = strQuery + `a.NAME like '%${arrayValues[i]}%'`;
+                }
+                else {
+                    if(arrayValues[i] == '') {
+                        strQuery = strQuery + `a.${arrayKeys[i].toUpperCase()} like '%${arrayValues[i]}%'`;
+                    }
+                    else {
+                        strQuery = strQuery + `a.${arrayKeys[i].toUpperCase()} = '${arrayValues[i]}'`;
+                    }
+                };
+                if(i < (arrayKeys.length - 1)) {
+                    strQuery = strQuery + ' and ';
+                }
+            }
+        }
+
+        try {
+            data = await db.sequelize.query(`select a.* from pf_users_roles a ${strQuery} order by CREATE_AT DESC offset 0 rows fetch next 10 rows only`, { type: QueryTypes.SELECT });
+
+            let newData = [];
+            if(data.length > 0) {
+                for (let i of data) {
+                    newData.push(new VlanModel(i));
+                }
+            }
+            res.code = 200;
+            res.status = 1;
+            res.data = newData;
+
+            return res;
+
+        } catch (error) {
+            console.log(error);
+            return res
+        }
+    },
+
+    getPosition: async (criteria) => {
+        let data;
+        let res = {
+            status: 0,
+            code: 204,
+            msg: 'success',
+            data: []
+        }
+
+        let arrayKeys = Object.keys(criteria);
+        let arrayValues = Object.values(criteria);
+        let strQuery = '';
+        if (arrayKeys.length == arrayValues.length && arrayKeys.length > 0) {
+            strQuery = 'where ';
+            console.log(arrayKeys);
+            for(let i = 0; i < arrayKeys.length; i++) {
+                if(arrayKeys[i] == 'keyword'){
+                    strQuery = strQuery + `a.NAME like '%${arrayValues[i]}%'`;
+                }
+                else {
+                    if(arrayValues[i] == '') {
+                        strQuery = strQuery + `a.${arrayKeys[i].toUpperCase()} like '%${arrayValues[i]}%'`;
+                    }
+                    else {
+                        strQuery = strQuery + `a.${arrayKeys[i].toUpperCase()} = '${arrayValues[i]}'`;
+                    }
+                };
+                if(i < (arrayKeys.length - 1)) {
+                    strQuery = strQuery + ' and ';
+                }
+            }
+        }
+
+        try {
+            data = await db.sequelize.query(`select a.* from pf_users_position a ${strQuery} order by CREATE_AT DESC offset 0 rows fetch next 10 rows only`, { type: QueryTypes.SELECT });
+
+            let newData = [];
+            if(data.length > 0) {
+                for (let i of data) {
+                    newData.push(new VlanModel(i));
+                }
+            }
+            res.code = 200;
+            res.status = 1;
+            res.data = newData;
+
+            return res;
+
+        } catch (error) {
+            console.log(error);
+            return res
+        }
     }
+
+
 }
 
 module.exports = searchServices

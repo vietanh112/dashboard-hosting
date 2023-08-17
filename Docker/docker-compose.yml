@@ -1,0 +1,58 @@
+version: '3'
+services:
+  # Nginx Service
+  web:
+    container_name: dashboard-nginx
+    image: nginx
+    restart: always
+    build: ./nginx/build
+    command: nginx -g "daemon off;"
+    ports:
+      - "80:80"
+      # - "443:443"
+    volumes:
+      # - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      # - ./nginx/sites-enabled:/etc/nginx/conf.d/sites-enabled
+      # - ./nginx/logs:/var/log/nginx
+      # - ./nginx/ssl:/etc/ssl
+      # - ./nginx/certs:/etc/nginx/certs
+      - ./nginx/html/dashboard-hosting:/var/www/html
+    
+  mssql:
+    container_name: dashboard-mssql
+    build: ./mssql/build
+    ports:
+        - 1433:1433
+    volumes:
+        - ./mssql/data:/var/opt/mssql/data
+
+  backend:
+    depends_on:
+      - mssql
+    container_name: dashboard-nodejs
+    build: ../backend
+    ports: 
+     - "4001:4001"
+    volumes:
+     - ../backend:/app
+     - ../../../configs/dashboard-hosting/configs:/usr/src/app/configs
+     - ../../../configs/dashboard-hosting/.env:/usr/src/app/.env
+
+  frontend:
+    container_name: dashboard-angular
+    build: ../frontend
+    ports: 
+     - "4200:4200"
+    volumes:
+     - ../frontend:/usr/src/app/
+     - ../../../configs/dashboard-hosting/environments:/usr/src/app/src/environments
+     
+  #DB UI management service
+  # redis:
+  #   container_name: docker-redis
+  #   image: redis
+  #   restart: always
+  #   ports: 
+  #     - "6379:6379" 
+  #   volumes:
+  #     - ./redis:/var/lib/redis

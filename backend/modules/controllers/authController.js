@@ -164,5 +164,31 @@ module.exports = {
                 return
             }
         }
+    },
+
+    listUser: async (req, res) => {
+        const criteria = {};
+        const page = req.query.page ? parseInt(req.query.page) : 0;
+        const limit = req.query.limit ? parseInt(req.query.limit) : 10;
+        for (const [key, value] of Object.entries(req.query)) {
+            if(key != 'page' && key != 'limit') {
+                if(key == 'id') {
+                    criteria[key] = Number(value);
+                }
+                else {
+                    criteria[key] = value;
+                }
+            }
+        }
+
+        const data = await authServices.listUser(criteria, page, limit);
+        const response = {
+            status: data.status,
+            code: data.code,
+            message: data.msg,
+            data: data.data ?? []
+        }
+
+        return res.json(response)
     }
 }

@@ -1,36 +1,36 @@
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('port', {
-            id: {
+        await queryInterface.createTable('nw_port', {
+            ID: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            port: {
+            PORT: {
                 type: Sequelize.STRING
             },
-            description: {
+            DESCRIPTION: {
                 type: Sequelize.STRING
             },
-            status: {
+            STATUS: {
                 type: Sequelize.INTEGER
             },
-            server: {
+            SERVER: {
                 type: Sequelize.INTEGER
             },
-            createdAt: {
+            CREATE_AT: {
                 allowNull: false,
                 type: Sequelize.DATE
             },
-            updatedAt: {
+            UPDATE_AT: {
                 allowNull: false,
                 type: Sequelize.DATE
             }
         }, {charset: 'utf8', collate: 'utf8_unicode_ci'});
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('port');
+        await queryInterface.dropTable('nw_port');
     }
 };

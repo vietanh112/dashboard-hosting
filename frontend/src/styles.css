@@ -45,3 +45,9 @@
     align-items: center;
     justify-content: center;
   }
+
+.label-block {
+    display: block;
+    margin-bottom: 0.5rem;
+    width: 100%;
+}

@@ -9,8 +9,7 @@ import {AuthComponentLogin} from './components/login/login.component';
 import {AuthComponentLogout} from './components/logout/logout.component';
 import {AuthComponentRegister} from './components/register/register.component';
 import {AuthComponentForgotPassword} from './components/forgot-password/forgot-password.component';
-import {AuthComponentChangePassword} from './components/change-password/change-password.component';
-import  {AuthComponentManageList} from './components/manage/list.component';
+import  {AuthComponentManage} from './components/manage/list.component';
 //Modal
 
 import {AntDesignModule} from '../shared/ant-design.module';
@@ -21,8 +20,7 @@ import {AntDesignModule} from '../shared/ant-design.module';
         AuthComponentLogout,
         AuthComponentRegister,
         AuthComponentForgotPassword,
-        AuthComponentManageList
-        // AuthComponentChangePassword
+        AuthComponentManage
     ],
     imports: [
         AntDesignModule,

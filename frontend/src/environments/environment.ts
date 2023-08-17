@@ -16,7 +16,9 @@ export const environment = {
           forgotPassword: '',
           changePassword: 'auth/change-password',
           infor: 'auth/{USER_ID}/infor',
-          refreshToken: 'auth/refresh-token'
+          refreshToken: 'auth/refresh-token',
+          listUser: 'auth/list-user',
+          deleteUser: 'auth/delete-user'
         },
         product: {
           list: 'dashboard/product/list',
@@ -40,12 +42,14 @@ export const environment = {
           getList: 'dashboard/search/select-search',
           listServer: 'dashboard/search/list-server',
           listPort: 'dashboard/search/list-port',
-          listVlan: 'dashboard/search/list-vlan'
+          listVlan: 'dashboard/search/list-vlan',
+          listRole: 'auth/search/list-role',
+          listPosition: 'auth/search/list-position'
         }
       }
   },
   jwt: {
-    timeRefresh: 3540
+    timeRefresh: 600
   }
 };
 

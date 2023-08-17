@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
         UPDATE_AT: DataTypes.DATE
     }, {
         sequelize,
+        timestamps: false,
         tableName: 'nw_server',
         modelName: 'nw_server',
     });

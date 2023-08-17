@@ -2,58 +2,58 @@
 module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.createTable('nw_hosting', {
-            id: {
+            ID: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            iPAddress: {
+            IPADDRESS: {
                 type: Sequelize.STRING
             },
-            iPAddressF5: {
+            IPADDRESSF5: {
                 type: Sequelize.STRING
             },
-            hostname: {
+            HOSTNAME: {
                 type: Sequelize.STRING
             },
-            port: {
+            PORT: {
                 type: Sequelize.INTEGER
             },
-            priority: {
+            PRIORITY: {
                 type: Sequelize.STRING(5)
             },
-            env: {
+            ENV: {
                 type: Sequelize.STRING(5)
             },
-            type: {
+            TYPE: {
                 type: Sequelize.STRING(5)
             },
-            middleware: {
+            MIDDLEWARE: {
                 type: Sequelize.STRING(5)
             },
-            information: {
+            INFORMATION: {
                 type: Sequelize.STRING
             },
-            machineType: {
+            MACHINE_TYPE: {
                 type: Sequelize.STRING
             },
-            os: {
+            OS: {
                 type: Sequelize.STRING(5)
             },
-            note: {
+            NOTE: {
                 type: Sequelize.STRING
             },
-            na: {
+            NA: {
                 type: Sequelize.STRING
             },
-            status: {
+            STATUS: {
                 type: Sequelize.INTEGER
             },
-            vlan: {
+            VLAN: {
                 type: Sequelize.INTEGER
             },
-            server: {
+            SERVER: {
                 type: Sequelize.INTEGER
             },
             CREATE_AT: {

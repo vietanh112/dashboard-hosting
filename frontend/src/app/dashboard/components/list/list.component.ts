@@ -171,8 +171,6 @@ export class DashboardListHosting implements OnInit, AfterViewInit {
 
     showModalCreate() {
         this.checkVisibleCreate = true;
-        console.log(this.listPort);
-
     }
 
     showModalCreateVlan() {

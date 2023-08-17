@@ -1,51 +1,54 @@
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('users', {
-            id: {
+        await queryInterface.createTable('pf_users', {
+            ID: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            employeeId: {
+            EMPLOYEE_ID: {
                 type: Sequelize.STRING,
             },
-            username: {
+            USERNAME: {
                 type: Sequelize.STRING
             },
-            password: {
+            PASSWORD: {
                 type: Sequelize.STRING
             },
-            email: {
+            EMAIL: {
                 type: Sequelize.STRING
             },
-            roleId: {
+            ROLE_ID: {
                 type: Sequelize.INTEGER
             },
-            allow: {
+            POSITION_ID: {
                 type: Sequelize.INTEGER
             },
-            status: {
+            ALLOW: {
                 type: Sequelize.INTEGER
             },
-            token: {
+            STATUS: {
+                type: Sequelize.INTEGER
+            },
+            TOKEN: {
                 type: Sequelize.STRING
             },
-            tokenRefresh: {
+            TOKEN_REFRESH: {
                 type: Sequelize.STRING
             },
-            createdAt: {
+            CREATE_AT: {
                 allowNull: false,
                 type: Sequelize.DATE
             },
-            updatedAt: {
+            UPDATE_AT: {
                 allowNull: false,
                 type: Sequelize.DATE
             }
         }, {charset: 'utf8', collate: 'utf8_unicode_ci'});
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('users');
+        await queryInterface.dropTable('pf_users');
     }
 };

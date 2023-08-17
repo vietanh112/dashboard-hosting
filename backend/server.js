@@ -73,6 +73,9 @@ app.route(`/auth/:userId/infor`).get([], async(req, res) => {
 app.route(`/auth/refresh-token`).patch([], async(req, res) => {
     return authController.refreshToken(req, res);
 })
+app.route(`/auth/list-user`).get([], async(req, res) => {
+    return authController.listUser(req, res);
+})
 
 
 //Routes
@@ -143,4 +146,10 @@ app.route(`/dashboard/search/list-port`).get([], async(req, res) => {
 })
 app.route(`/dashboard/search/list-vlan`).get([], async(req, res) => {
     return searchController.listVlan(req, res);
+})
+app.route(`/auth/search/list-role`).get([], async(req, res) => {
+    return searchController.listRole(req, res);
+})
+app.route(`/auth/search/list-position`).get([], async(req, res) => {
+    return searchController.listPosition(req, res);
 })

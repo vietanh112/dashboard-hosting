@@ -5,7 +5,7 @@ import {Location} from "@angular/common";
 
 
 @Component({
-    selector: 'app-core-layout',
+    selector: 'app-layout',
     templateUrl: './layout.component.html',
     styleUrls: ['./layout.component.scss']
 })

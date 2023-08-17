@@ -3,6 +3,7 @@ const productController = require('../controllers/productController')
 
 
 
+
 module.exports = function(app) {
     // Product
     app.route(`dashboard/product/list`)

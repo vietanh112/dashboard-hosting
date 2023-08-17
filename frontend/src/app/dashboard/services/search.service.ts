@@ -8,6 +8,8 @@ import {HostingModel} from '../models/host.model';
 import {PortModel} from '../models/port.model';
 import {ServerModel} from '../models/server.model';
 import {VlanModel} from '../models/vlan.model';
+import {RoleModel} from '../../auth/models/role.model';
+import {PositionModel} from '../../auth/models/position.model';
 
 declare const commons: any;
 @Injectable({
@@ -150,5 +152,56 @@ export class SearchService {
         return rs;
         })
     )
-}
+    }
+
+    listRole(queries: any) {
+        let options: any = {
+            params: {},
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        };
+        // tslint:disable-next-line:forin
+        for (const i in queries) {
+            options['params'][i] = queries[i];
+        }
+        return this.apiService.get(this.apiServerPaths.search.listRole, options, map((response: any) => {
+          let rs: any[] = [];
+            if(response.status == 1 && response.code == 200) {
+                if(response.data) {
+                    response.data.forEach((item: any) => {
+                        rs.push(new RoleModel(item));
+                    });
+                }
+            }
+            return rs;
+            })
+        )
+    }
+    listPosition(queries: any) {
+        let options: any = {
+            params: {},
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        };
+        // tslint:disable-next-line:forin
+        for (const i in queries) {
+            options['params'][i] = queries[i];
+        }
+        return this.apiService.get(this.apiServerPaths.search.listRole, options, map((response: any) => {
+            console.log(response);
+            
+        let rs: any[] = [];
+            if(response.status == 1 && response.code == 200) {
+                if(response.data) {
+                    response.data.forEach((item: any) => {
+                        rs.push(new PositionModel(item));
+                    });
+                }
+            }
+            return rs;
+            })
+        )
+    }
 }

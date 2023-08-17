@@ -114,7 +114,7 @@ const productServices = {
             msg: 'error'
         };
         try {
-            let data = await db.sequelize.query(`UPDATE nw_hosting SET IPADDRESS='${body.ipaddress}', IPADDRESSF5='${body.ipaddressf5}', HOSTNAME='${body.hostname}', PORT=${Number(body.port)}, PRIORITY=${body.priority}', ENV='${body.env}', TYPE='${body.type}', MIDDLEWARE='${body.middleware}', INFORMATION=N'${body.information}', MACHINE_TYPE='${body.machineType}', OS='${body.os}', NOTE='${body.note}', NA='${body.na}', STATUS=${body.status}, VLAN=${body.vlan}, SERVER=${body.server}, CREATE_AT=GETDATE()  WHERE ID = ${hostingId}`, { type: QueryTypes.SELECT });
+            let data = await db.sequelize.query(`UPDATE nw_hosting SET IPADDRESS='${body.ipaddress}', IPADDRESSF5='${body.ipaddressf5}', HOSTNAME='${body.hostname}', PORT=${Number(body.port)}, PRIORITY='${body.priority}', ENV='${body.env}', TYPE='${body.type}', MIDDLEWARE='${body.middleware}', INFORMATION=N'${body.information}', MACHINE_TYPE='${body.machineType}', OS='${body.os}', NOTE='${body.note}', NA='${body.na}', STATUS=${body.status}, VLAN=${body.vlan}, SERVER=${body.server}, CREATE_AT=GETDATE()  WHERE ID = ${hostingId}`, { type: QueryTypes.SELECT });
             
             if(data) {
                 log.code = 200;

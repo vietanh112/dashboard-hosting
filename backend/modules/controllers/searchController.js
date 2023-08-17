@@ -90,5 +90,53 @@ module.exports = {
                 data: []
             })
         }
+    },
+    listRole: async (req, res) => {
+        let criteria = {};
+        
+        for (const [key, value] of Object.entries(req.query)) {
+            criteria[key] = value;
+        }
+        try {
+            const obj = await searchServices.getRole(criteria);
+            const response = {
+                status: obj.status,
+                code: obj.code,
+                message: obj.msg,
+                data: obj.data ?? []
+            }
+            return res.json(response)
+        } catch (error) {
+            return res.json({
+                status: 0,
+                code: 204,
+                message: "Failed",
+                data: []
+            })
+        }
+    },
+    listPosition: async (req, res) => {
+        let criteria = {};
+        for (const [key, value] of Object.entries(req.query)) {
+            criteria[key] = value;
+        }
+        try {
+            const obj = await searchServices.getPosition(criteria);
+            
+            const response = {
+                status: obj.status,
+                code: obj.code,
+                message: obj.msg,
+                data: obj.data ?? []
+            }
+            return res.json(response)
+        } catch (error) {
+            return res.json({
+                status: 0,
+                code: 204,
+                message: "Failed",
+                data: []
+            })
+        }
     }
 }

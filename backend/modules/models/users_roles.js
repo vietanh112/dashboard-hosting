@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         UPDATE_AT: DataTypes.DATE
     }, {
         sequelize,
+        timestamps: false,
         tableName: 'pf_users_roles',
         modelName: 'pf_users_roles',
     });

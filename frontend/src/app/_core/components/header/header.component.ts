@@ -37,6 +37,20 @@ export class CoreComponentHeader implements OnInit, AfterViewInit {
         this.currentUser = this.authenticationService.currentUserValue;
     }
 
+    checkRole(numb: number) {
+        if(this.currentUser.roleId == numb) {
+            return true
+        } 
+        return false;
+    }
+
+    checkLogin() {
+        if(this.currentUser != null) {
+            return true
+        } 
+        return false;
+    }
+
     changePassword(e: any) {
         if(e) {
             this.checkVisibleChangePassword = false;

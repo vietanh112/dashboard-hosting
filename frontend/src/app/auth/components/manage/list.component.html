@@ -1,0 +1,95 @@
+<div class="style-loading" *ngIf="loadingState">
+    <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+  </div>
+  
+  <div class="inner-content">
+    <div style="margin: 20px 0;display: flex;justify-content: space-between;">
+        <div style="display: flex;align-items: center;">
+          <span class="fw-bold">Tìm kiếm: </span>
+          <div style="margin-left: 10px;">
+            <input nz-input placeholder="Từ khóa" [(ngModel)]="search.keyword" nzSize="default" />
+          </div>
+          <div style="margin-left: 10px;">
+            <nz-select nzShowSearch (nzOnSearch)="searchRole($event)" style="width: 120px;" [(ngModel)]="search.roleId" nzPlaceHolder="Role" [nzServerSearch]="true">
+              <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of listRole"></nz-option>
+            </nz-select>
+          </div>
+          <div style="margin-left: 10px;">
+            <nz-select nzShowSearch (nzOnSearch)="searchPosition($event)" style="width: 120px;" [(ngModel)]="search.positionId" nzPlaceHolder="Position" [nzServerSearch]="true">
+              <nz-option [nzValue]="item.id" [nzLabel]="item.port" *ngFor="let item of listPosition"></nz-option>
+            </nz-select>
+          </div>
+          <div style="margin-left: 10px;">
+            <nz-select style="width: 120px;" [(ngModel)]="search.status" nzPlaceHolder="Status">
+              <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of status"></nz-option>
+            </nz-select>
+          </div>
+          <div style="margin-left: 10px;">
+            <button nz-button nzType="primary" (click)="getListUser()">
+              <span nz-icon nzType="search"></span>
+              Tìm kiếm
+            </button>
+          </div>
+        </div>
+        <div>
+          <button *ngIf="currentUser?.roleId < 3" nz-button [nzType]="'primary'" nzSize='large' (click)="showModalCreate()"><span>Tạo mới User</span></button>
+        </div>
+    </div>
+    <nz-table #nzTable [nzData]="listUser" nzTableLayout="fixed" nzShowSizeChanger [nzShowPagination]="false">
+        <thead>
+          <tr>
+            <th class="text-center" style="width: 80px;">STT</th>
+            <th class="text-center">Employee ID</th>
+            <th class="text-center">Username</th>
+            <th>Email</th>
+            <th class="text-center" style="width: 120px;">Status</th>
+            <th class="text-center">Role ID</th>
+            <th class="text-center">Position ID</th>
+            <th class="text-center" style="width: 120px;">Options</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of nzTable.data; let i = index">
+            <td class="text-center">{{ i + 1}}</td>
+            <td class="text-center">{{ data.employeeId }}</td>
+            <td class="text-center">{{ data.username }}</td>
+            <td>
+              {{data.email}}
+            </td>
+            <td class="text-center">
+              <ng-container *ngFor="let i of tag">
+                <nz-tag [nzColor]="i.name" *ngIf="data.status == i.status">{{i.msg}}</nz-tag>
+              </ng-container>
+            </td>
+            <td class="text-center">
+              {{data.roleName}}
+            </td>
+            <td class="text-center">
+                {{data.positionName}}
+              </td>
+            <td class="text-center">
+              <button nz-button nz-dropdown [nzDropdownMenu]="menu4" style="border-radius: 50%;">
+
+                <i nz-icon nzType="ellipsis" nzTheme="outline"></i>
+              </button>
+              <nz-dropdown-menu #menu4="nzDropdownMenu">
+                <ul nz-menu>
+                  <li *ngIf="currentUser?.roleId < 3" nz-menu-item (click)="showModalUpdate(data)">
+                    <span style="margin-right: 12px;"><i nz-icon nzType="edit" nzTheme="outline"></i></span>
+                    Chỉnh sửa User
+                  </li>
+                  <li *ngIf="currentUser?.roleId < 3" nz-menu-item (click)="showConfirmDelete(data.id)">
+                    <span style="margin-right: 12px;"><i nz-icon nzType="rest" nzTheme="outline"></i></span>
+                    Xóa User
+                  </li>
+                </ul>
+              </nz-dropdown-menu>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+      <!-- <ng-template #totalTemplate let-total> Total {{listHosting.length}} / {{ totalList }} items </ng-template> -->
+      <div style="margin-top: 1.5rem;display: flex;justify-content: flex-end;">
+        <nz-pagination [nzPageIndex]="page" [nzTotal]="totalUser" nzShowSizeChanger [nzPageSize]="10" [nzPageSizeOptions]="sizePage" (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)"></nz-pagination>
+      </div>
+</div>

@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 import {environment} from "../environments/environment";
 import {DashboardComponentLayout} from "../app/_core/components/layout/layout.component";
+import {CoreComponentLayout} from "../app/_core/components/layout-core/layout.component";
 import {CustomPreloadingStrategy} from './custom-preloading';
 import {AuthComponentLayout} from './_core/components/layout-auth/layout.component';
 
@@ -13,11 +14,11 @@ const routes: Routes = [
         pathMatch: 'full'
     },
     //auth
-    {
-        path: '',
-        loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
-        data: { preload: true }
-    },
+    // {
+    //     path: '',
+    //     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+    //     data: { preload: true }
+    // },
     // dashboard
     {
         path: 'dashboard',
@@ -30,18 +31,30 @@ const routes: Routes = [
             }
         ]
     },
+    // core
+    {
+        path: 'core',
+        component: CoreComponentLayout,
+        children: [
+            {
+                path: '',
+                loadChildren: () => import('./core/core.module').then(m => m.CoreModule),
+                data: { preload: true }
+            }
+        ]
+    },
     // auth-manage
-    // {
-    //     path: 'auth',
-    //     component: AuthComponentLayout,
-    //     children: [
-    //         {
-    //             path: '',
-    //             loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
-    //             data: { preload: true }
-    //         }
-    //     ]
-    // },
+    {
+        path: 'auth',
+        component: AuthComponentLayout,
+        children: [
+            {
+                path: '',
+                loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+                data: { preload: true }
+            }
+        ]
+    },
     
     /**
      * Page 404

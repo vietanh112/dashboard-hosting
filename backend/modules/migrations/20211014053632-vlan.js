@@ -1,36 +1,36 @@
 'use strict';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('vlan', {
-            id: {
+        await queryInterface.createTable('nw_vlan', {
+            ID: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            name: {
+            NAME: {
                 type: Sequelize.STRING
             },
-            description: {
+            DESCRIPTION: {
                 type: Sequelize.STRING
             },
-            server: {
+            SERVER: {
                 type: Sequelize.INTEGER
             },
-            status: {
+            STATUS: {
                 type: Sequelize.INTEGER
             },
-            createdAt: {
+            CREATE_AT: {
                 allowNull: false,
                 type: Sequelize.DATE
             },
-            updatedAt: {
+            UPDATE_AT: {
                 allowNull: false,
                 type: Sequelize.DATE
             }
         }, {charset: 'utf8', collate: 'utf8_unicode_ci'});
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('vlan');
+        await queryInterface.dropTable('nw_vlan');
     }
 };

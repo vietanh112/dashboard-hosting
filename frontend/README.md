@@ -9,3 +9,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 # Build index.html
 RUN `ng build --prod`
 ren vào folder frontend/dist/dashboard-hosting
+
+# Copy dist to nginx
+`rm -rf Docker/nginx/html/dashboard-hosting`
+`cp -r frontend/dist/dashboard-hosting Docker/nginx/html/dashboard-hosting`

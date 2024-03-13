@@ -14,12 +14,12 @@ HighchartsMore(Highcharts);
 HighchartsSolidGauge(Highcharts);
 
 @Component({
-    selector: 'app-dashboard-core-list-server',
+    selector: 'app-dashboard-list-server-server',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss']
 })
 
-export class CoreEodList implements OnInit, AfterViewInit {
+export class CoreScriptList implements OnInit, AfterViewInit {
     loadingState: boolean = false;
 
     status: any = [

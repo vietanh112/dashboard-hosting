@@ -27,7 +27,7 @@ export class AuthComponentLogin implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.loginForm = this.formBuilder.group({
             username: ["", [Validators.required, Validators.minLength(4), Validators.maxLength(30)]],
-            password: ["", [Validators.required, Validators.pattern('[A-Za-z0-9]{4,20}')]],
+            password: ["", [Validators.required, Validators.pattern('[A-Za-z0-9!@#$%^&*()]{4,20}')]],
         })
     }
     ngAfterViewInit(): void {

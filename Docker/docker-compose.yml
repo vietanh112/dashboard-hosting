@@ -1,9 +1,19 @@
 version: '3'
 services:
+  
+  # DB
+  mssql:
+    container_name: dashboard-mssql
+    build: ./mssql/build
+    ports:
+        - 1433:1433
+    volumes:
+        - ./mssql/data:/var/opt/mssql/data
+
   # Nginx Service
   web:
     container_name: dashboard-nginx
-    image: nginx
+    image: nginx:ng1
     restart: always
     build: ./nginx/build
     command: nginx -g "daemon off;"
@@ -17,19 +27,18 @@ services:
       # - ./nginx/ssl:/etc/ssl
       # - ./nginx/certs:/etc/nginx/certs
       - ./nginx/html/dashboard-hosting:/var/www/html
-    
-  mssql:
-    container_name: dashboard-mssql
-    build: ./mssql/build
-    ports:
-        - 1433:1433
-    volumes:
-        - ./mssql/data:/var/opt/mssql/data
 
+  #Backend
   backend:
     depends_on:
       - mssql
     container_name: dashboard-nodejs
+    image: nodejs:node1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://dashboard-mssql:1433"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     build: ../backend
     ports: 
      - "4001:4001"
@@ -38,14 +47,14 @@ services:
      - ../../../configs/dashboard-hosting/configs:/usr/src/app/configs
      - ../../../configs/dashboard-hosting/.env:/usr/src/app/.env
 
-  frontend:
-    container_name: dashboard-angular
-    build: ../frontend
-    ports: 
-     - "4200:4200"
-    volumes:
-     - ../frontend:/usr/src/app/
-     - ../../../configs/dashboard-hosting/environments:/usr/src/app/src/environments
+  # frontend:
+  #   container_name: dashboard-angular
+  #   build: ../frontend
+  #   ports: 
+  #    - "4200:4200"
+  #   volumes:
+  #    - ../frontend:/usr/src/app/
+  #    - ../../../configs/dashboard-hosting/environments:/usr/src/app/src/environments
      
   #DB UI management service
   # redis:

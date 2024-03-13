@@ -47,14 +47,20 @@
                 </li>
               </ul>
             </li>
-            <li nz-submenu nzTitle="CORE" class="fw-bold">
+            <li style="display: none;" nz-submenu nzTitle="CORE" class="fw-bold">
               <ul>
                 <li nz-menu-item [nzSelected]="this.router.url.indexOf('core/eod/list') != -1">
                   <a [routerLink]="['/core', 'eod', 'list']">
                     EOD
                   </a>
                 </li>
-                
+              </ul>
+              <ul>
+                <li nz-menu-item [nzSelected]="this.router.url.indexOf('core/script/list') != -1">
+                  <a [routerLink]="['/core', 'script', 'list']">
+                    SCRIPT
+                  </a>
+                </li>
               </ul>
             </li>
           </ul>
